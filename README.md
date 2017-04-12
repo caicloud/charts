@@ -59,6 +59,10 @@ privileged: bool
 # PullIfNotPresent
 # Always
 pullPolicy: string
+# 容器命令, 例如 [./mongod]
+command: string array
+# 容器命令参数, 例如 [--smallfiles, --port=27018]
+commandArgs: string array
 ```
 
 #### 类型： envs
