@@ -56,7 +56,7 @@ image: string
 # 是否使用特权模式，默认值为 false
 privileged: bool
 # 镜像 pull 策略，可选值为：
-# PullIfNotPresent
+# IfNotPresent
 # Always
 pullPolicy: string
 # 容器命令, 例如 [./mongod]
