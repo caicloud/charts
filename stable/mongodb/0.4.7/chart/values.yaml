@@ -1,0 +1,74 @@
+_config:
+  _metadata:
+    name: "mongodb"
+    version: "0.4.7"
+    description: ""
+  mongodb:
+    containers:
+      mongodb:
+        image: "bitnami/mongodb:3.4.2-r0"
+        privileged: false
+        pullPolicy: "IfNotPresent"
+        _hidden:
+          privileged: true
+        _alias:
+          image: "镜像地址"
+          pullPolicy: "镜像下载策略"
+    envs:
+      secret:
+      - name: "MONGODB_ROOT_PASSWORD"
+        value: "root"
+      - name: "MONGODB_PASSWORD"
+        value: "123456"
+      info:
+      - name: "MONGODB_USERNAME"
+        value: "mgouser"
+      - name: "MONGODB_DATABASE"
+        value: "default"
+    volumes:
+      data:
+        name: ""
+        readonly: false
+        mountPath: "/bitnami/mongodb"
+        storageRequest: "10Gi"
+        _hidden:
+          readonly: true
+        _readonly:
+          mountPath: true
+          storageRequest: true
+        _alias:
+          name: "数据卷名称"
+          mountPath: "挂载路径"
+          storageRequest: "数据卷最小容量"
+    resources:
+      resource:
+        cpuRequest: "100m"
+        cpuLimit: "500m"
+        memoryRequest: "128Mi"
+        memoryLimit: "512Mi"
+        _alias:
+          cpuRequest: "需求 cpu 资源"
+          cpuLimit: "cpu 资源使用上限"
+          memoryRequest: "需求内存资源"
+          memoryLimit: "内存资源使用上限"
+    services:
+      mongodb:
+        name: ""
+        type: "ClusterIP"
+        ports:
+        - protocol: "TCP"
+          port: "27017"
+          nodePort: ""
+          targetPort: "27017"
+          _readonly:
+            protocol: true
+            targetPort: true
+          _alias:
+            protocol: "服务协议"
+            port: "服务端口"
+            nodePort: "节点端口"
+            targetPort: "应用端口"
+        _alias:
+          name: "服务名称"
+          ports: "端口列表"
+
