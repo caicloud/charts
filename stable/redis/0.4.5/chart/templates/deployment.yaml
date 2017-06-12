@@ -1,0 +1,65 @@
+{{ $container := .Values._config.redis.containers.redis }}
+{{ $env := .Values._config.redis.envs.secret }}
+{{ $volume := .Values._config.redis.volumes.data }}
+{{ $resource := .Values._config.redis.resources.resource }}
+{{ $service := .Values._config.redis.services.redis }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ template "fullname" . }}
+        image: "{{ $container.image }}"
+        imagePullPolicy: {{ $container.pullPolicy }}
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ if ne $service.name "" -}} {{ $service.name }} {{- else -}} {{ template "fullname" . }} {{- end }}
+              key: {{ $env.name }}
+        ports:
+        {{ range $i, $v := $service.ports -}}
+        - name: redis{{ $i }}
+          containerPort: {{ $v.targetPort }}
+        {{- end }}
+        livenessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: {{ $resource.cpuRequest }}
+            memory: {{ $resource.memoryRequest }}
+          limits:
+            cpu: {{ $resource.cpuLimit }}
+            memory: {{ $resource.memoryLimit }}
+        volumeMounts:
+        - name: redis-data
+          mountPath: {{ $volume.mountPath }}
+      volumes:
+      - name: redis-data
+      {{- if ne $volume.name "" }}
+        persistentVolumeClaim:
+          claimName: {{ $volume.name }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}
+
