@@ -6,7 +6,7 @@ _config:
   mysql:
     containers:
       init:
-        image: "busybox:1.25.0"
+        image: "cargo.caicloudprivatetest.com/library/busybox:1.25.0"
         privileged: false
         pullPolicy: "IfNotPresent"
         _hidden:
@@ -15,7 +15,7 @@ _config:
           image: "镜像地址"
           pullPolicy: "镜像下载策略"
       mysql:
-        image: "mysql:5.7.14"
+        image: "cargo.caicloudprivatetest.com/library/mysql:5.7.14"
         privileged: false
         pullPolicy: "IfNotPresent"
         _hidden:

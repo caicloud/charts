@@ -26,7 +26,7 @@ spec:
         - name: {{ $v.name }}
           valueFrom:
             secretKeyRef:
-              name: {{ if ne $service.name "" -}} {{ $service.name }} {{- else -}} {{ template "fullname" $global }} {{- end }}
+              name: {{ template "fullname" $global }}
               key: {{ $v.name }}
         {{ end }}
         {{ range $v := $info }}
