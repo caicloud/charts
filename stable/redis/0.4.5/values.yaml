@@ -1,12 +1,12 @@
 _config:
   _metadata:
-    name: "mongodb"
-    version: "0.4.7"
+    name: "redis"
+    version: "0.4.5"
     description: ""
-  mongodb:
+  redis:
     containers:
-      mongodb:
-        image: "bitnami/mongodb:3.4.2-r0"
+      redis:
+        image: "cargo.caicloudprivatetest.com/library/redis:3.2.9"
         privileged: false
         pullPolicy: "IfNotPresent"
         _hidden:
@@ -16,20 +16,13 @@ _config:
           pullPolicy: "镜像下载策略"
     envs:
       secret:
-      - name: "MONGODB_ROOT_PASSWORD"
-        value: "root"
-      - name: "MONGODB_PASSWORD"
+        name: "REDIS_PASSWORD"
         value: "123456"
-      info:
-      - name: "MONGODB_USERNAME"
-        value: "mgouser"
-      - name: "MONGODB_DATABASE"
-        value: "default"
     volumes:
       data:
         name: ""
         readonly: false
-        mountPath: "/bitnami/mongodb"
+        mountPath: "/bitnami/redis"
         storageRequest: "10Gi"
         _hidden:
           readonly: true
@@ -52,14 +45,14 @@ _config:
           memoryRequest: "需求内存资源"
           memoryLimit: "内存资源使用上限"
     services:
-      mongodb:
+      redis:
         name: ""
         type: "ClusterIP"
         ports:
         - protocol: "TCP"
-          port: "27017"
+          port: "6379"
           nodePort: ""
-          targetPort: "27017"
+          targetPort: "6379"
           _readonly:
             protocol: true
             targetPort: true

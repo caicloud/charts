@@ -3,6 +3,7 @@
 {{ $volume := .Values._config.redis.volumes.data }}
 {{ $resource := .Values._config.redis.resources.resource }}
 {{ $service := .Values._config.redis.services.redis }}
+{{ $global := . }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -23,7 +24,7 @@ spec:
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ if ne $service.name "" -}} {{ $service.name }} {{- else -}} {{ template "fullname" . }} {{- end }}
+              name: {{ template "fullname" $global }}
               key: {{ $env.name }}
         ports:
         {{ range $i, $v := $service.ports -}}
