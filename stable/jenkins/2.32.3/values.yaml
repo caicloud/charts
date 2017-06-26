@@ -1,0 +1,75 @@
+_config:
+  _metadata:
+    name: "jenkins"
+    version: "2.32.3"
+    description: ""
+  jenkins:
+    containers:
+      jenkins:
+        image: "cargo.caicloud.io/caicloud/jenkins:2.32.3"
+        privileged: false
+        pullPolicy: "IfNotPresent"
+        _hidden:
+          privileged: true
+        _alias:
+          image: "镜像地址"
+          pullPolicy: "镜像下载策略"
+    volumes:
+      data:
+        name: ""
+        readonly: false
+        mountPath: "/var/jenkins_home"
+        storageRequest: "1Gi"
+        _hidden:
+          readonly: true
+        _readonly:
+          mountPath: true
+          storageRequest: true
+        _alias:
+          name: "数据卷名称"
+          mountPath: "挂载路径"
+          storageRequest: "数据卷最小容量"
+    resources:
+      resource:
+        cpuRequest: "0.5"
+        cpuLimit: "1"
+        memoryRequest: "500Mi"
+        memoryLimit: "1Gi"
+        _alias:
+          cpuRequest: "需求 cpu 资源"
+          cpuLimit: "cpu 资源使用上限"
+          memoryRequest: "需求内存资源"
+          memoryLimit: "内存资源使用上限"
+    services:
+      jenkins:
+        name: "jenkins-svc"
+        type: "NodePort"
+        ports:
+        - protocol: "TCP"
+          port: "80"
+          nodePort: ""
+          targetPort: "8080"
+          _readonly:
+            protocol: true
+            targetPort: true
+          _alias:
+            protocol: "服务协议"
+            port: "服务端口"
+            nodePort: "节点端口"
+            targetPort: "应用端口"
+        - protocol: "TCP"
+          port: "50000"
+          nodePort: ""
+          targetPort: "50000"
+          _readonly:
+            protocol: true
+            targetPort: true
+          _alias:
+            protocol: "服务协议"
+            port: "服务端口"
+            nodePort: "节点端口"
+            targetPort: "应用端口"
+        _alias:
+          name: "服务名称"
+          ports: "端口列表"
+

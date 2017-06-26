@@ -1,0 +1,53 @@
+{{ $container := .Values._config.jenkins.containers.jenkins }}
+{{ $volume := .Values._config.jenkins.volumes.data }}
+{{ $resource := .Values._config.jenkins.resources.resource }}
+{{ $service := .Values._config.jenkins.services.jenkins }}
+{{ $global := . }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ template "fullname" . }}
+        image: "{{ $container.image }}"
+        imagePullPolicy: {{ $container.pullPolicy }}
+        ports:
+        {{ range $i, $v := $service.ports }}
+        - name: jenkins{{ $i }}
+          containerPort: {{ $v.targetPort }}
+        {{ end }}
+        livenessProbe:
+          httpGet:
+            path: /login
+            {{ with index $service.ports 0 -}}
+            port: {{ .targetPort }}
+            {{- end }}
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+        volumeMounts:
+        - name: data
+          mountPath: {{ $volume.mountPath }}
+        resources:
+          requests:
+            cpu: {{ $resource.cpuRequest }}
+            memory: {{ $resource.memoryRequest }}
+          limits:
+            cpu: {{ $resource.cpuLimit }}
+            memory: {{ $resource.memoryLimit }}
+      volumes:
+      - name: data
+      {{- if ne $volume.name "" }}
+        persistentVolumeClaim:
+          claimName: {{ $volume.name }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}
+
