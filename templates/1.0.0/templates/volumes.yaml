@@ -1,0 +1,71 @@
+{{/* Generates all dynamic volumes */}}
+
+
+{{/* Creates pvc for storage class */}}
+{{- $g := . -}}
+{{- range $index, $controller := .Values._config.controllers -}}
+{{- $controllerName := include "fullname" (list $g $index) -}}
+{{- range $controller.volumes -}}
+{{- if eq .type "Dynamic" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  {{- if eq $controller.type "StatefulSet" }}
+  name: {{ $controller.controller.name | default $controllerName }}-{{ .name }}
+  {{- else }}
+  name: {{ $controllerName }}
+  {{- end }}
+  labels:
+    "volume.caicloud.io/type" : {{ .type }}
+    "controller.caicloud.io/release": {{ $g.Release.Name }}
+    "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+spec:
+  accessModes:
+  {{- range .source.modes }}
+  - {{ . }}
+  {{- end }}
+  storageClassName: {{ .source.class }}
+  resources:
+    requests:
+      storage: {{ .storage.request }}
+    {{- if hasKey .storage "limit" }}
+    limits:
+      storage: {{ .storage.limit }}
+    {{- end }}
+---
+{{ end -}}
+{{- end -}}
+{{- end -}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

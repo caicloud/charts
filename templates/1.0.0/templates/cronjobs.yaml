@@ -1,0 +1,53 @@
+{{/* Generates all CronJobs */}}
+
+{{- $g := . -}}
+
+
+
+
+
+{{- range $index, $controller := .Values._config.controllers -}}
+{{- if eq $controller.type "CronJob" -}}
+{{- $controllerName := include "fullname" (list $g $index) -}}
+
+
+
+---
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: {{ $controllerName }}
+  labels:
+    "controller.caicloud.io/release": {{ $g.Release.Name }}
+    "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+{{- with $controller }}
+spec:
+  schedule: {{ .rule }}
+  startingDeadlineSeconds: {{ .deadline }}
+  concurrencyPolicy: {{ .policy }}
+  suspend: {{ .suspend }}
+  {{- with .history }}
+  successfulJobsHistoryLimit: {{ .success }}
+  failedJobsHistoryLimit: {{ .fail }}
+  {{- end }}
+  jobTemplate:
+    parallelism: {{ .parallelism }}
+    completions: {{ .completions }}
+    activeDeadlineSeconds: {{ .active }}
+    template:
+      metadata:
+        labels:
+          "controller.caicloud.io/release": {{ $g.Release.Name }}
+          "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+          "controller.caicloud.io/name": {{ $controllerName }}
+          {{- include "schelabels" $controller.schedule | indent 10 }}
+      spec:
+      {{- include "podspec" (list $controller $controllerName) | indent 8 }}
+{{- end }}
+---
+
+
+
+{{- end -}}
+{{- end -}}
+

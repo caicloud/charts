@@ -1,0 +1,50 @@
+{{/* Generates all services */}}
+
+{{- $g := . -}}
+
+{{ template "required" list .Values ".Values" "_config.controllers" "list"}}
+
+{{- range $index, $controller := .Values._config.controllers -}}
+{{- template "required" list $controller ".Values._config.controllers" "type" "string" -}}
+{{- $controllerName := include "fullname" (list $g $index) -}}
+
+{{- if .services -}}
+{{- range .services }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name | quote }}
+  labels:
+    "service.caicloud.io/export" : {{ .export | quote }}
+    "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+    "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
+spec:
+  type: {{ .type | quote }}
+  selector:
+    {{- if eq $controller.type "StatefulSet" }}
+    "controller.caicloud.io/name": {{ $controller.controller.name | default $controllerName | quote }}
+    {{- else }}
+    "controller.caicloud.io/name": {{ $controllerName | quote }}
+    {{- end }}
+  ports:
+  {{- $s := . -}}
+  {{- range .ports }}
+  - name: {{ (printf "%s-%.0f" .protocol .port) | lower | quote }}
+    {{- if eq .protocol "UDP" }}
+    protocol: "UDP"
+    {{- else }}
+    protocol: "TCP"
+    {{- end }}
+    port: {{ .port }}
+    targetPort: {{ .targetPort }}
+    {{- if eq $s.type "NodePort" -}} nodePort: {{ .nodePort }} {{- end -}}
+  {{- end }}
+---
+
+{{ end -}}
+{{- end -}}
+{{- end -}}
+
+
+
