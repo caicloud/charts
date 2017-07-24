@@ -24,6 +24,7 @@ _config:
     description: string   # Chart 创建时的描述，不随 Chart 更新而更新
     creationTime: string  # Chart 创建时间，不随 Chart 更新而更新
     source: string        # Chart 存储的位置，为 Release 提供 Chart 来源信息，比如 /library/mysql/5.6.22
+    class: string         # Chart 运行时分类信息，对 Release 分类，目前有 Default 和 System 两个类别
     template:             # Chart 模板信息，为模板自动升级提供信息
       type: string        # Chart 模板类型
       version: semvar     # Chart 模板版本号
