@@ -57,6 +57,7 @@ containers:
   envFrom:
   {{- include "envfile" .envFrom | indent 2 }}
   env:
+  {{- include "downwardenv" .downwardPrefix | indent 2 }}
   {{- include "env" .env | indent 2 }}
   resources:
   {{- include "resources" .resources | indent 4 }}
@@ -126,6 +127,26 @@ containers:
 {{- end -}}
 {{- end -}}
 
+
+{{- define "downwardenv" -}}
+{{- $prefix := . | default "ENV" | upper }}
+- name: {{ $prefix }}_POD_NAMESPACE
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.namespace
+- name: {{ $prefix }}_POD_NAME
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.name
+- name: {{ $prefix }}_POD_IP
+  valueFrom:
+    fieldRef:
+      fieldPath: status.podIP
+- name: {{ $prefix }}_NODE_NAME
+  valueFrom:
+    fieldRef:
+      fieldPath: spec.nodeName
+{{- end -}}
 
 {{- define "resources" -}}
 {{- with .requests }}

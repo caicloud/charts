@@ -80,6 +80,7 @@ _config:
         name: someconfigmap
         prefix: XXXX_
         optional: false
+      downwardPrefix: MY_ENV
       env:
       - name: XXSS_
         value: "sd"
