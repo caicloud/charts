@@ -19,7 +19,7 @@ hostIPC: {{ .host.ipc }}
 volumes:
 {{- template "volumes" (list $controller.volumes $name) }}
 initContainers:
-{{- template "containers" $controller.initializers }}
+{{- template "containers" $controller.initContainers }}
 containers:
 {{- template "containers" $controller.containers }}
 {{- end -}}

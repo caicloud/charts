@@ -49,7 +49,7 @@ _config:
     pod:
       host:
         network: true
-    initializers:
+    initContainers:
     - image: mysql-init:v1.0.0
       mounts:
       - name: db-volume
