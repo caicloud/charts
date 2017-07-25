@@ -1,13 +1,40 @@
 # Chart 模版配置规范定义
 
-规范主要用于定义 Chart 配置文件 values.yaml 的逻辑结构和类型。
+### 目录
+- [概述](#概述)
+- [基础结构描述](#基础结构描述)
+- [配置控制器定义](#配置控制器定义)
+  - [类型：controller](#类型controller)
+    - [controller：Deployment](controllerdeployment)
+    - [controller：StatefulSet](controllerstatefulset)
+    - [controller：DaemonSet](controllerdaemonset)
+    - [controller：Job](controllerjob)
+    - [controller：CronJob](controllercronjob)
+  - [类型：schedule](#类型schedule)
+  - [类型：pod](#类型pod)
+  - [类型：initContainer，container](#类型initcontainercontainer)
+    - [probe：liveness，readiness](#probelivenessreadiness)
+    - [handler：liveness，readiness，postStart，preStop](#handlerlivenessreadinesspoststartprestop)
+      - [method：EXEC](#methodexec)
+      - [method：HTTP](#methodhttp)
+      - [method：TCP](#methodtcp)
+  - [类型：volume](#类型volume)
+    - [source：Dynamic，Isolated](#sourcedynamicisolated)
+    - [source：Static](#sourcestatic)
+    - [source：Temp](#sourcetemp)
+    - [source：Config，Secret](#sourceconfigsecret)
+  - [类型：service](#类型service)
+- [一个配置文件的例子](#一个配置文件的例子)
+
+### 概述
+规范主要用于定义 Chart 配置文件 values.yaml 的逻辑结构和类型。  
 我们将一个 Chart 包含的内容定义为一个应用，一个应用通常包含 Pod Controller，Service，Config，Volume 四块主要内容：
 - Pod Controller：Deployment，StatefulSet，DaemonSet，Job，CronJob
 - Service：Service
 - Config：ConfigMap，Secret
 - Volume：PVC，ConfigMap，Secret，EmptyDir
 
-上述的对应关系并没有包含所有的 Kubernetes 资源，即我们认为其他资源是与应用是弱/无耦合的。
+上述的对应关系并没有包含所有的 Kubernetes 资源，即我们认为其他资源是与应用是弱/无耦合的。  
 并且其中 ConfigMap，Secret 也不是由 Chart 主动创建的，而是应当在应用创建之前就应该在集群中存在，并由应用引用，产生单向依赖。
 
 ### 基础结构描述
@@ -16,7 +43,7 @@
 ```yaml
 # 顶级配置 key ，固定为 _config
 _config: 
-  # 在配置文件中，所有以 _ 开头的字段用于存储特殊信息，这些信息不会被模板使用。  
+  # 在配置文件中，所有以 _ 开头的字段用于存储特殊信息。  
   # 模板元数据，表示当前配置所属的 Chart 信息，此处数据用于存储模版最原始的信息
   _metadata:
     name: string          # Chart 创建时的名称，不随 Chart 更新而更新
@@ -30,7 +57,7 @@ _config:
       version: semvar     # Chart 模板版本号
   # 配置控制器组，配置控制器组可以包含多个配置控制器
   # 此处的配置控制器与上面所描述的 Pod Controller 不同，此处的配置控制器具有如下等价关系：
-  # 配置控制器 = 1个 Pod Controller 配置 + 1个 容器组 配置 + 0个或多个 初始化容器 配置 + 
+  # 配置控制器 = 1个 Pod Controller 配置 + 1个 调度 配置 + 1个 容器组 配置 + 0个或多个 初始化容器 配置 + 
   #              1个或多个 基本容器 配置 + 0个或多个 数据卷 配置 + 0个或多个 服务 配置
   controllers:
   - type: string          # 指定控制器的类型，可以是 Deployment，StatefulSet，DaemonSet，Job，CronJob
@@ -40,7 +67,7 @@ _config:
       ...
     pod:                  # 容器组信息，指定当前控制器下的所有容器（包括 initializers 和 containers）共享的设置内容
       ...
-    initializers:         # 初始化容器数组，可用于放置仅用于初始化阶段的容器，比如初始化数据
+    initContainers:       # 初始化容器数组，可用于放置仅用于初始化阶段的容器，比如初始化数据
     - ...
     containers:           # 基本容器数组，用于放置真正执行工作的容器
     - ...
@@ -53,7 +80,17 @@ chartX:
   _config:
     ...
 ```
+`_metadata`仅仅用于描述模板的基本信息。
+- name，version，description，creationTime 用于描述 Chart 的原始信息。由于 Chart 的名称可能会随着编排发生变更，因此在此处存储 Chart 的原始信息，方便 Chart 溯源。
+- template 用于描述 Chart 的模板信息。主要用于实现 template 的升级。template 发生功能变更后，将依据这个名称和版本号进行自动升级。
+- source 用于在 Release 中描述当前 Release 使用的 Chart 的来源地址。方便实现从 Release 追溯到 Chart 的存储位置。
+- class 用于给 Release 分类。用于区分用户应用和系统应用。系统应用一般不显示在用户的应用列表中。
 
+
+`_metadata`的 name，version，description，creationTime，template 字段在 helm 为 Chart 加入 Annotation 字段后，会被放置到 Chart 的 Annotation 中。  
+`_metadata`的 source，class 字段在 helm 为 Release 加入 Annotation 字段后，会被放置到 Release 的 Annotation 中。  
+
+helm 为 Chart 加入 Annotation 字段后，这几个字段将被放置到 Annotation 中。
 ### 配置控制器定义
 
 字段类型定义：
@@ -75,10 +112,11 @@ float(3.14)
 string("default value")
 bool(true)
 ```
+所有有默认值的字段都是 Optional 的。
 
-#### 类型： controller
+#### 类型：controller
 
-##### controller: Deployment
+##### controller：Deployment
 ```yaml
 replica: uint(1)                       # 实例数量
 strategy:                              # 实例滚动更新策略，两个选项不能同时为0
@@ -89,24 +127,24 @@ ready: uint(0)                         # 实例从 Available 到 Ready 的最短
 一个实例在运行时等价于一个容器组，可以通过 replica 指定需要的实例数量，即可在集群中同时跑多个实例。  
 当实例的配置需要更新时，根据更新策略决定如何重启实例。unavailable 表明当前控制器可以先关闭多少个运行中的实例。surge 表示当前控制器可以在 replica 的基础上多创建多少个新的实例。即在滚动更新过程中，实例的数量可能在[max(replica-unavailable,0),replica+surge]区间。  
 
-##### controller: StatefulSet
+##### controller：StatefulSet
 ```yaml
 replica: uint(1)                       # 实例数量
-name: string                           # 实例前缀名
-domain: string                         # 实例域名
+name: string("")                       # 实例前缀名
+domain: string("")                     # 实例域名
 ```
 指定 name 和 domain 后，可通过 name-序号.domain 的形式访问每个实例。
-比如 replica = 2, name = "web", domain = "cluster", 那么同一个分区内可使用 web-0.cluster web-1.cluster 访问两个实例，同时能够直接使用 cluster 访问任意一个实例（RoundRobin）。  
+比如 replica = 2, name = "web", domain = "cluster", 那么同一个分区内可使用 web-0.cluster，web-1.cluster 访问两个实例，同时能够直接使用 cluster 访问任意一个实例（RoundRobin）。  
 由于前缀名称和域名具有分区范围内的唯一性，因此同一个分区内的应用不能具有相同的 name 和 domain。同时由于 domain 能够被用于访问任意一个实例，因此也不能与同一分区下的 services 冲突。
 
-##### controller: DaemonSet
+##### controller：DaemonSet
 ```yaml
 strategy:                              # 实例滚动更新策略，两个选项不能同时为0
   unavailable: pint(1)                 # 最大不可用数量
 ready: uint(0)                         # 实例从 Available 到 Ready 的最短时间
 ```                                
                                    
-##### controller: Job              
+##### controller：Job
 ```yaml                            
 parallelism: pint(1)                   # 最大并行实例数量
 completions: pint(1)                   # 总共需要完成的实例数量
@@ -117,7 +155,7 @@ active: uint(0)                        # 单个实例执行的最长时间，0�
 - 并行：completions = n, parallelism >= n  即可让 n 个实例同时并行执行
 - 控制并行：completions = n, parallelism = k, k < n 即可让 n 个实例同时只有 k 个在执行。其中一个实例完成才能让下一个实例开始执行
 
-##### controller: CronJob
+##### controller：CronJob
 ```yaml
 rule: string                           # 定时规则，比如 "*/1 * * * *"
 deadline: uint(0)                      # 任务启动超时时间
@@ -138,22 +176,22 @@ active: uint(0)                        # 单个实例执行的最长时间，0�
 - Forbid：如果上次的任务尚未完成，那么跳过本次任务的执行
 - Replace：取消上次的任务，并开始执行本次的任务
 
-#### 类型： schedule
+#### 类型：schedule
 ```yaml
-scheduler: string("")                                  # 调度器名称，可选项为 空字符串
+scheduler: string("")                                  # 调度器名称，可选项为 空字符串，为空表示使用默认调度器
 labels:                                                # 控制器及 容器组 标签
-  string: string
+  string: string                                       # 这里的 key 在模板中自动加上前缀 `schedule.caicloud.io/`
 affinity:                                              # 亲和性设置
   pod:
     type: string("Required")                           # 类型可以为 Required 或 Prefered
     terms:
     - weight: pint                                     # 权重，只有类型为 Prefered 时可以设置该字段，[1-100]
-      topologyKey: string("kubernetes.io/hostname")    # Node 域
+      topologyKey: string("kubernetes.io/hostname")    # 拓补域
       namespaces:                                      # 指定分区，不指定表示仅在当前分区
       - string                                       
       selector:                                        # 选择器，用于设置匹配的标签
         labels:                                        # 直接指定标签值
-          string: string                             
+          string: string                               # 这里的 key 在模板中自动加上前缀 `schedule.caicloud.io/`
         expressions:                                   # 通过表达式查找标签
         - key: string                                
           operator: string                             # 操作符 In，NotIn，Exists，DoesNotExist
@@ -164,7 +202,7 @@ affinity:                                              # 亲和性设置
     terms:
     - weight: 10                                       # 权重，只有类型为 Prefered 时可以设置该字段，[1-100]
       expressions:                                     # 通过表达式查找标签，表达式为 AND 表达式
-      - key: string                                  
+      - key: string                                    # 这里的 key 不会自动加上前缀
         operator: string                               # 操作符 In，NotIn，Exists，DoesNotExist，Gt，Lt
         value:                                       
         - string                                     
@@ -183,13 +221,24 @@ topologyKey 具有如下值:
 kubernetes.io/hostname
 failure-domain.beta.kubernetes.io/zone
 failure-domain.beta.kubernetes.io/region
-beta.kubernetes.io/instance-type
-beta.kubernetes.io/os
-beta.kubernetes.io/arch
 ```
+拓补域用于定义一个节点集合。目前常用的拓补域的 key 有如上三种。拓补域与 Pod 的 亲和性/反亲和性 相关。  
+一个拓补域至少有一个节点，所有的 亲和性/反亲和性 的权重计算都是在一个域中进行。  
+比如有多个域，当一个 Pod 在调度时，调度器会根据 亲和性/反亲和性 的设置，在多个域中寻找一个权重最高的域，然后将 Pod 调度到该域中的一个节点上。  
+`kubernetes.io/hostname`与其他两个稍有不同。这个 key 在每个节点上都有不同的值，也就是说，集群里的每个节点都构成了只有一个节点的域。  
+
+
+
 容忍策略 NoExecute 尚未实现。
 
-#### 类型： pod
+关于 Pod 和 Node 的 Label 前缀问题的说明：
+1. Pod 在这里有默认前缀 `schedule.caicloud.io/`。也就是说在设置 Pod 的 标签 和 亲和性/反亲和性 的时候，都不需要在 key 中加上前缀。
+2. Node 在这里都没有默认前缀，并且 Node 的 亲和性/容忍 设置中的 key 都不会自动加上某个特定的前缀。
+出现这种设置的原因是 Pod 的 亲和性/反亲和性 设置都是在应用中可以定义的，因此在应用中可以规定这个统一前缀。  
+而 Node 不归应用管理，因此不能确定 Node 中是否会使用前缀或使用多少个前缀。所以不对 Node 相关的 调度 设置设定统一的 key 前缀。
+
+
+#### 类型：pod
 ```yaml
 restart: string("Always")              # 重启策略，可以为 Always，OnFailure，Never
 dns: string("Default")                 # DNS 策略，可以为 Default，ClusterFirstWithHostNet，ClusterFirst
@@ -201,9 +250,9 @@ host:
   pid: bool(false)                     # 与主机共享 pid namespace
   ipc: bool(false)                     # 与主机共享 ipc namespace
 ```
-主机名和子域名构成 Pod 的访问域名：hostname.subdomain.namespace.svc.cluster_domain  
+主机名和子域名构成 Pod 的访问域名：hostname.subdomain.namespace.svc.clusterdomain
 
-#### 类型：initializer container
+#### 类型：initContainer，container
 ```yaml
 name: string("")                       # 容器名称
 image: string                          # 镜像地址
@@ -223,6 +272,7 @@ envFrom:                               # env from，来自 Config 或 Secret
   type: string("Config")               # 配置来源，可以是 Config 或 Secret
   name: string                         # Config 或 Secret 的名称
   optional: bool(false)                # 是否可选，即目标不存在也就忽略而不是报错
+downwardPrefix: string("ENV")          # 默认环境变量前缀
 env:                                   # env
 - name: string                         # 环境变量名称
   value: string                        # 环境变量值
@@ -259,7 +309,7 @@ lifecycle:                             # 生命周期（参考 handler 设置）
     ...
 ```
 
-##### probe: liveness readiness
+##### probe：liveness，readiness
 ```yaml
 handler:                               # 调用 handler 检查方式
   ... 
@@ -271,20 +321,20 @@ threshold:
   failure: pint(3)                     # 连续多少次请求失败则认为不健康
 ```
 
-##### handler: liveness readiness postStart preStop
+##### handler：liveness，readiness，postStart，preStop
 ```yaml
 type: string(HTTP)                     # handler 类型，可以为 HTTP，EXEC，TCP
 method:                                # handler 方法
   ...
 ```
 
-##### method: EXEC
+###### method：EXEC
 ```yaml
 command:                               # 执行命令
 - string
 ```
 
-##### method: HTTP
+###### method：HTTP
 ```yaml
 scheme: string(HTTP)                   # HTTP 或 HTTPS
 host: string("")                       # 请求头中的 Host 字段值
@@ -295,7 +345,7 @@ header:                                # 请求头
   value: string                        # Header 值
 ```
 
-##### method: TCP
+###### method：TCP
 ```yaml
 port: pint                             # TCP 端口
 ```
@@ -305,7 +355,7 @@ TCP 类型的方法目前还没有实现，不能使用。
 #### 类型：volume
 ```yaml
 name: string                           # 数据卷名称，在容器中被引用
-type: string("Temp")                   # Isolated Dynamic Static Temp Config Secret，Isolated 仅在控制器为 StatefulSet 时可用
+type: string("Temp")                   # 可选项为 Isolated，Dynamic，Static，Temp，Config，Secret。Isolated 仅在控制器为 StatefulSet 时可用
 source:                                # source 的设置与 type 有关
   ... 
 storage:                               # 存储需求
@@ -313,35 +363,41 @@ storage:                               # 存储需求
   limit: string("10Gi")                # 请求的最大存储容量
 ```
 
-##### source: Dynamic Isolated
+##### source：Dynamic，Isolated
 ```yaml
     class: string                      # 存储方案名称
     mode: string("ReadWriteOnce")      # 数据卷读写模式，可以为 ReadWriteOnce，ReadOnlyMany，ReadWriteMany
 ```
+Dynamic 和 Isolated 两种类型的数据卷实际上都是使用存储方案来实现，即通过创建 PVC 并关联 storage class。  
+但是 Dynamic 只用于创建单一的 PVC，如果多个容器引用同一个 Dynamic，那么实际上多个副本是共享数据卷的（多副本时 mode 不能为 ReadWriteOnce）。  
+Isolated 类型仅用于 StatefulSet 类型的控制器。StatefulSet 会根据 Isolated 的设置动态创建多个 PVC，并且每个 Pod 会绑定不同的 PVC，即每个 Pod 的数据卷是独立的。
 
-##### source: Static
+##### source：Static
 ```yaml
     target: string                     # 已创建的数据卷名称
     readonly: bool(false)              # 是否以只读形式挂载
 ```
+Static 类型的数据卷只能用于使用已经创建好数据卷（PVC）。
 
-##### source: Temp
+##### source：Temp
 ```yaml
     medium: string("")                 # 存储介质，可以为 空字符串 或 Memory
 ```
+Temp 表示使用临时数据卷 EmptyDir。
 
-##### source: Config Secret
+##### source：Config，Secret
 ```yaml
     target: string                     # 已创建的 Config 或 Secret
     items:
     - key: string                      # 配置文件 data 中的 key
-      path: string                     # 设置 key 对应的值在数据卷中的路径
+      path: string                     # 设置 key 对应的值在数据卷中的绝对路径
       mode: string("0644")             # 文件读写模式，如果这里为空则使用默认文件读写模式
     default: string("0644")            # 默认文件读写模式
     optional: bool(false)              # 是否允许指定的 Config 或 Secret 不存在
 ```
+Config 和 Secret 表示使用 配置 或 秘钥 作为数据卷。能够指定 配置 和 秘钥 的多个 key 作为文件使用。
 
-#### 类型： services
+#### 类型：service
 ```yaml
 name: string                           # 服务名称
 type: string(ClusterIP)                # 服务类型，可以是 ClusterIP，NodePort
@@ -362,52 +418,97 @@ ports:
 ```yaml
 _config:
   _metadata:
-    name: example
+    name: template
     version: 1.0.0
-    description: "An example for describing a structure of config"
-    creationTime: "2017-07-13 12:00:00"
-    source: "/library/example/1.0.0"
+    description: "A basic template for application"
+    creationTime: "2017-07-14 12:00:00"
+    source: "/library/template/1.0.0"
+    class: Default
     template:
-      type: "caicloud.io/application"
+      type: "template.caicloud.io/application"
       version: 1.0.0
   controllers:
   - type: StatefulSet
     controller:
       replica: 3
-      name: mysql
-      domain: box
     schedule:
       labels:
         cpu: heavy
         io: heavy
+      affinity:
+        node:
+          type: Prefered
+          terms:
+          - weight: 10
+            expressions:
+            - key: cpu
+              operator: NotIn
+              values:
+              - heavy
+              - midium
+        pod:
+          type: Required
+          terms:
+          - selector:
+              labels:
+                cpu: heavy
       antiaffinity:
         pod:
           type: Prefered
           terms:
-            weight: 10
+          - weight: 10
             selector:
               expressions:
               - key: cpu
                 operator: In
-                value:
+                values:
                 - heavy
                 - midium
     pod:
       host:
         network: true
-    initializers:
-      image: mysql-init:v1.0.0
+    initContainers:
+    - image: mysql-init:v1.0.0
       mounts:
       - name: db-volume
         path: /var/lib/mysql
+      resources:
+        requests:
+          cpu: 120m
+          memory: 100Mi
+          gpu: 1
+        limits:
+          cpu: 120m
+          memory: 100Mi
+      lifecycle:
+        postStart:
+          type: "TCP"
+          method:
+            port: 443
     containers:
-      image: mysql:v5.6
+    - image: mysql:v5.6
       ports:
       - protocol: TCP
         port: 3306
       mounts:
       - name: db-volume
         path: /var/lib/mysql
+      envFrom:
+      - type: Config
+        name: someconfigmap
+        prefix: XXXX_
+        optional: false
+      downwardPrefix: MY_ENV
+      env:
+      - name: XXSS_
+        value: "sd"
+      resources:
+        requests:
+          cpu: 120m
+          memory: 100Mi
+        limits:
+          cpu: 120m
+          memory: 100Mi
       probe:
         liveness:
           handler:
@@ -416,38 +517,47 @@ _config:
               port: 80
               path: /liveness
           delay: 10
+        readiness:
+          handler:
+            type: EXEC
+            method:
+              command:
+              - curl
+              - http://localhost
+          delay: 15
     volumes:
-    - name: db-volume
-      type: Static
+    - name: isolated1
+      type: Isolated
       source:
-        readonly: false
+        class: hdd
+        modes:
+        - ReadWriteOnce
+      storage:
+        request: 5Gi
+    - name: db-volume
+      type: Dynamic
+      source:
+        class: ssd
+        modes:
+        - ReadWriteMany
       storage:
         request: 5Gi
         limit: 100Gi
     services:
     - name: mysql
+      type: ClusterIP
+      export: true
       ports:
-      - protocol: TCP
-        targetPort: 3306
-        port: 3306
-  - type: CronJob
-    controller:
-      rule: "0 3 * * *"
-      deadline: 100
-      policy: Forbid
-    containers:
-      image: mysql-backup:v5.6
-      mounts:
-      - name: db-backup
-        path: /var/lib/mysql-backup
-    volumes:
-    - name: db-backup
-      type: Static
-      source:
-        readonly: false
-      storage:
-        request: 100Gi
-        limit: 1000Gi
+      - protocol: HTTP
+        targetPort: 80
+        port: 80
+    - name: mysql2
+      type: ClusterIP
+      export: false
+      ports:
+      - protocol: HTTPS
+        targetPort: 443
+        port: 443
 subchart:
   _config:
     略
