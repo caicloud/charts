@@ -21,7 +21,7 @@
   - [类型：volume](#类型volume)
     - [source：Dynamic，Dedicated](#sourcedynamicdedicated)
     - [source：Static](#sourcestatic)
-    - [source：Temp](#sourcetemp)
+    - [source：Scratch](#sourcescratch)
     - [source：Config，Secret](#sourceconfigsecret)
   - [类型：service](#类型service)
 - [一个配置文件的例子](#一个配置文件的例子)
@@ -355,7 +355,7 @@ TCP 类型的方法目前还没有实现，不能使用。
 #### 类型：volume
 ```yaml
 name: string                           # 数据卷名称，在容器中被引用
-type: string("Temp")                   # 可选项为 Dedicated，Dynamic，Static，Temp，Config，Secret。Dedicated 仅在控制器为 StatefulSet 时可用
+type: string("Scratch")                # 可选项为 Dedicated，Dynamic，Static，Scratch，Config，Secret。Dedicated 仅在控制器为 StatefulSet 时可用
 source:                                # source 的设置与 type 有关
   ... 
 storage:                               # 存储需求
@@ -383,7 +383,7 @@ Static 类型的数据卷只能用于使用已经创建好数据卷（PVC）。
 ```yaml
     medium: string("")                 # 存储介质，可以为 空字符串 或 Memory
 ```
-Temp 表示使用临时数据卷 EmptyDir。
+Scratch 表示使用临时数据卷 EmptyDir。
 
 ##### source：Config，Secret
 ```yaml
