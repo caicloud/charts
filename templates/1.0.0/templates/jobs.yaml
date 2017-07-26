@@ -1,0 +1,44 @@
+{{/* Generates all Jobs */}}
+
+{{- $g := . -}}
+
+
+
+
+
+{{- range $index, $controller := .Values._config.controllers -}}
+{{- if eq $controller.type "Job" -}}
+{{- $controllerName := include "fullname" (list $g $index) -}}
+
+
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $controllerName }}
+  labels:
+    "controller.caicloud.io/release": {{ $g.Release.Name }}
+    "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+{{- with $controller }}
+spec:
+  parallelism: {{ .parallelism }}
+  completions: {{ .completions }}
+  activeDeadlineSeconds: {{ .active }}
+  template:
+    metadata:
+      labels:
+        "controller.caicloud.io/release": {{ $g.Release.Name }}
+        "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+        "controller.caicloud.io/name": {{ $controllerName }}
+        {{- include "schelabels" $controller.schedule | indent 8 }}
+    spec:
+    {{- include "podspec" (list $controller $controllerName) | indent 6 }}
+{{- end }}
+---
+
+
+
+{{- end -}}
+{{- end -}}
+

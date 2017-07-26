@@ -1,0 +1,142 @@
+_config:
+  _metadata:
+    name: template
+    version: 1.0.0
+    description: "A basic template for application"
+    creationTime: "2017-07-14 12:00:00"
+    source: "/library/template/1.0.0"
+    class: Default
+    template:
+      type: "template.caicloud.io/application"
+      version: 1.0.0
+  controllers:
+  - type: StatefulSet
+    controller:
+      replica: 3
+    schedule:
+      labels:
+        cpu: heavy
+        io: heavy
+      affinity:
+        node:
+          type: Prefered
+          terms:
+          - weight: 10
+            expressions:
+            - key: cpu
+              operator: NotIn
+              values:
+              - heavy
+              - midium
+        pod:
+          type: Required
+          terms:
+          - selector:
+              labels:
+                cpu: heavy
+      antiaffinity:
+        pod:
+          type: Prefered
+          terms:
+          - weight: 10
+            selector:
+              expressions:
+              - key: cpu
+                operator: In
+                values:
+                - heavy
+                - midium
+    pod:
+      host:
+        network: true
+    initContainers:
+    - image: mysql-init:v1.0.0
+      mounts:
+      - name: db-volume
+        path: /var/lib/mysql
+      resources:
+        requests:
+          cpu: 120m
+          memory: 100Mi
+          gpu: 1
+        limits:
+          cpu: 120m
+          memory: 100Mi
+      lifecycle:
+        postStart:
+          type: "TCP"
+          method:
+            port: 443
+    containers:
+    - image: mysql:v5.6
+      ports:
+      - protocol: TCP
+        port: 3306
+      mounts:
+      - name: db-volume
+        path: /var/lib/mysql
+      envFrom:
+      - type: Config
+        name: someconfigmap
+        prefix: XXXX_
+        optional: false
+      downwardPrefix: MY_ENV
+      env:
+      - name: XXSS_
+        value: "sd"
+      resources:
+        requests:
+          cpu: 120m
+          memory: 100Mi
+        limits:
+          cpu: 120m
+          memory: 100Mi
+      probe:
+        liveness:
+          handler:
+            type: HTTP
+            method:
+              port: 80
+              path: /liveness
+          delay: 10
+        readiness:
+          handler:
+            type: EXEC
+            method:
+              command:
+              - curl
+              - http://localhost
+          delay: 15
+    volumes:
+    - name: dedicated1
+      type: Dedicated
+      source:
+        class: hdd
+        modes:
+        - ReadWriteOnce
+      storage:
+        request: 5Gi
+    - name: db-volume
+      type: Dynamic
+      source:
+        class: ssd
+        modes:
+        - ReadWriteMany
+      storage:
+        request: 5Gi
+        limit: 100Gi
+    services:
+    - name: mysql
+      type: ClusterIP
+      export: true
+      ports:
+      - protocol: HTTP
+        targetPort: 80
+        port: 80
+    - name: mysql2
+      type: ClusterIP
+      export: false
+      ports:
+      - protocol: HTTPS
+        targetPort: 443
+        port: 443

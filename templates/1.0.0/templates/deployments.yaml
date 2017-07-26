@@ -1,0 +1,48 @@
+{{/* Generates all Deployments */}}
+
+{{- $g := . -}}
+
+
+
+
+
+{{- range $index, $controller := .Values._config.controllers -}}
+{{- if eq $controller.type "Deployment" -}}
+{{- $controllerName := include "fullname" (list $g $index) -}}
+
+
+
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ $controllerName }}
+  labels:
+    "controller.caicloud.io/release": {{ $g.Release.Name }}
+    "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+{{- with $controller }}
+spec:
+  replicas: {{ .replica }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .unavailabel }}
+      maxSurge: {{ .surge }}
+  minReadySeconds: {{ .ready }}
+  template:
+    metadata:
+      labels:
+        "controller.caicloud.io/release": {{ $g.Release.Name }}
+        "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+        "controller.caicloud.io/name": {{ $controllerName }}
+        {{- include "schelabels" $controller.schedule | indent 8 }}
+    spec:
+    {{- include "podspec" (list $controller $controllerName) | indent 6 }}
+{{- end }}
+---
+
+
+
+{{- end -}}
+{{- end -}}
+
