@@ -108,8 +108,8 @@ _config:
               - http://localhost
           delay: 15
     volumes:
-    - name: isolated1
-      type: Isolated
+    - name: dedicated1
+      type: Dedicated
       source:
         class: hdd
         modes:

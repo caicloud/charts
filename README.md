@@ -19,7 +19,7 @@
       - [method：HTTP](#methodhttp)
       - [method：TCP](#methodtcp)
   - [类型：volume](#类型volume)
-    - [source：Dynamic，Isolated](#sourcedynamicisolated)
+    - [source：Dynamic，Dedicated](#sourcedynamicdedicated)
     - [source：Static](#sourcestatic)
     - [source：Temp](#sourcetemp)
     - [source：Config，Secret](#sourceconfigsecret)
@@ -355,7 +355,7 @@ TCP 类型的方法目前还没有实现，不能使用。
 #### 类型：volume
 ```yaml
 name: string                           # 数据卷名称，在容器中被引用
-type: string("Temp")                   # 可选项为 Isolated，Dynamic，Static，Temp，Config，Secret。Isolated 仅在控制器为 StatefulSet 时可用
+type: string("Temp")                   # 可选项为 Dedicated，Dynamic，Static，Temp，Config，Secret。Dedicated 仅在控制器为 StatefulSet 时可用
 source:                                # source 的设置与 type 有关
   ... 
 storage:                               # 存储需求
@@ -363,14 +363,14 @@ storage:                               # 存储需求
   limit: string("10Gi")                # 请求的最大存储容量
 ```
 
-##### source：Dynamic，Isolated
+##### source：Dynamic，Dedicated
 ```yaml
     class: string                      # 存储方案名称
     mode: string("ReadWriteOnce")      # 数据卷读写模式，可以为 ReadWriteOnce，ReadOnlyMany，ReadWriteMany
 ```
-Dynamic 和 Isolated 两种类型的数据卷实际上都是使用存储方案来实现，即通过创建 PVC 并关联 storage class。  
+Dynamic 和 Dedicated 两种类型的数据卷实际上都是使用存储方案来实现，即通过创建 PVC 并关联 storage class。  
 但是 Dynamic 只用于创建单一的 PVC，如果多个容器引用同一个 Dynamic，那么实际上多个副本是共享数据卷的（多副本时 mode 不能为 ReadWriteOnce）。  
-Isolated 类型仅用于 StatefulSet 类型的控制器。StatefulSet 会根据 Isolated 的设置动态创建多个 PVC，并且每个 Pod 会绑定不同的 PVC，即每个 Pod 的数据卷是独立的。
+Dedicated 类型仅用于 StatefulSet 类型的控制器。StatefulSet 会根据 Dedicated 的设置动态创建多个 PVC，并且每个 Pod 会绑定不同的 PVC，即每个 Pod 的数据卷是独立的。
 
 ##### source：Static
 ```yaml
@@ -379,7 +379,7 @@ Isolated 类型仅用于 StatefulSet 类型的控制器。StatefulSet 会根据 
 ```
 Static 类型的数据卷只能用于使用已经创建好数据卷（PVC）。
 
-##### source：Temp
+##### source：Scratch
 ```yaml
     medium: string("")                 # 存储介质，可以为 空字符串 或 Memory
 ```
@@ -526,8 +526,8 @@ _config:
               - http://localhost
           delay: 15
     volumes:
-    - name: isolated1
-      type: Isolated
+    - name: dedicated1
+      type: Dedicated
       source:
         class: hdd
         modes:

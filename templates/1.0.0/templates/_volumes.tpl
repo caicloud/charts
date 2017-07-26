@@ -5,7 +5,7 @@
 {{- $volumes := index . 0 -}}
 {{- $cname := index . 1 -}}
 {{- range $volumes -}}
-{{- if ne .type "Isolated" }}
+{{- if ne .type "Dedicated" }}
 - name: {{ .name }}
 {{- if eq .type "Dynamic" }}
   persistentVolumeClaim: 
@@ -49,10 +49,10 @@
 {{- end -}}
 
 
-{{/* isolated generates volume templates for StatefulSet */}}
-{{- define "isolated" -}}
+{{/* dedicated generates volume templates for StatefulSet */}}
+{{- define "dedicated" -}}
 {{- range . -}}
-{{- if eq .type "Isolated" }}
+{{- if eq .type "Dedicated" }}
 - metadata:
     name: {{ .name }}
   spec:
