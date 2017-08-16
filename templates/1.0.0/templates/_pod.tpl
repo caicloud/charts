@@ -19,9 +19,9 @@ hostIPC: {{ .host.ipc }}
 volumes:
 {{- template "volumes" (list $controller.volumes $name) }}
 initContainers:
-{{- template "containers" $controller.initContainers }}
+{{- template "containers" (list $controller.initContainers "i") }}
 containers:
-{{- template "containers" $controller.containers }}
+{{- template "containers" (list $controller.containers "c") }}
 {{- end -}}
 
 
@@ -29,9 +29,12 @@ containers:
 
 {{/* containers generates all containers for a pod */}}
 {{- define "containers" -}}
-{{- range $index, $container := . -}}
+{{- $containers := index . 0 -}}
+{{- $prefix := index . 1 -}}
+
+{{- range $index, $container := $containers -}}
 {{- with $container }}
-- name: {{ .name | default (printf "c%d" $index) }}
+- name: {{ .name | default (printf "%s%d" $prefix $index) }}
   image: {{ .image }}
   imagePullPolicy: {{ .imagePullPolicy }}
   tty: {{ .tty }}
