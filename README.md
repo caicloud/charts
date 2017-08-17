@@ -308,6 +308,8 @@ lifecycle:                             # 生命周期（参考 handler 设置）
   preStop:                             # 停止前调用，调用后无论成功失败都会终止容器
     ...
 ```
+initContainer 不支持 readiness probe 和 lifecycle，因此在 initContainer 中不能设置这几项。  
+initContainer 是串行执行的，一个成功后才能执行下一个。 
 
 ##### probe：liveness，readiness
 ```yaml
@@ -474,17 +476,11 @@ _config:
         path: /var/lib/mysql
       resources:
         requests:
-          cpu: 120m
+          cpu: 100m
           memory: 100Mi
-          gpu: 1
         limits:
-          cpu: 120m
+          cpu: 100m
           memory: 100Mi
-      lifecycle:
-        postStart:
-          type: "TCP"
-          method:
-            port: 443
     containers:
     - image: mysql:v5.6
       ports:
@@ -493,6 +489,8 @@ _config:
       mounts:
       - name: db-volume
         path: /var/lib/mysql
+      - name: shared-volume
+        path: /var/lib/logs
       envFrom:
       - type: Config
         name: someconfigmap
@@ -504,10 +502,10 @@ _config:
         value: "sd"
       resources:
         requests:
-          cpu: 120m
+          cpu: 100m
           memory: 100Mi
         limits:
-          cpu: 120m
+          cpu: 100m
           memory: 100Mi
       probe:
         liveness:
@@ -526,7 +524,7 @@ _config:
               - http://localhost
           delay: 15
     volumes:
-    - name: dedicated1
+    - name: db-volume
       type: Dedicated
       source:
         class: hdd
@@ -534,7 +532,7 @@ _config:
         - ReadWriteOnce
       storage:
         request: 5Gi
-    - name: db-volume
+    - name: shared-volume
       type: Dynamic
       source:
         class: ssd

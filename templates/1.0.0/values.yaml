@@ -56,17 +56,11 @@ _config:
         path: /var/lib/mysql
       resources:
         requests:
-          cpu: 120m
+          cpu: 100m
           memory: 100Mi
-          gpu: 1
         limits:
-          cpu: 120m
+          cpu: 100m
           memory: 100Mi
-      lifecycle:
-        postStart:
-          type: "TCP"
-          method:
-            port: 443
     containers:
     - image: mysql:v5.6
       ports:
@@ -75,6 +69,8 @@ _config:
       mounts:
       - name: db-volume
         path: /var/lib/mysql
+      - name: shared-volume
+        path: /var/lib/logs
       envFrom:
       - type: Config
         name: someconfigmap
@@ -86,10 +82,10 @@ _config:
         value: "sd"
       resources:
         requests:
-          cpu: 120m
+          cpu: 100m
           memory: 100Mi
         limits:
-          cpu: 120m
+          cpu: 100m
           memory: 100Mi
       probe:
         liveness:
@@ -108,7 +104,7 @@ _config:
               - http://localhost
           delay: 15
     volumes:
-    - name: dedicated1
+    - name: db-volume
       type: Dedicated
       source:
         class: hdd
@@ -116,7 +112,7 @@ _config:
         - ReadWriteOnce
       storage:
         request: 5Gi
-    - name: db-volume
+    - name: shared-volume
       type: Dynamic
       source:
         class: ssd
@@ -126,7 +122,7 @@ _config:
         request: 5Gi
         limit: 100Gi
     services:
-    - name: mysql
+    - name: mysql1
       type: ClusterIP
       export: true
       ports:

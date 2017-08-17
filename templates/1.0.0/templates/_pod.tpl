@@ -15,13 +15,21 @@ hostNetwork: {{ .host.network }}
 hostPID: {{ .host.pid }}
 hostIPC: {{ .host.ipc }}
 {{- end }}
+{{- with $controller.schedule }}
 {{- template "schedule" $controller.schedule }}
+{{- end }}
+{{- with $controller.volumes }}
 volumes:
 {{- template "volumes" (list $controller.volumes $name) }}
+{{- end }}
+{{- with $controller.initContainers }}
 initContainers:
-{{- template "containers" $controller.initContainers }}
+{{- template "containers" (list $controller.initContainers "i") }}
+{{- end }}
+{{- with $controller.containers }}
 containers:
-{{- template "containers" $controller.containers }}
+{{- template "containers" (list $controller.containers "c") }}
+{{- end }}
 {{- end -}}
 
 
@@ -29,9 +37,12 @@ containers:
 
 {{/* containers generates all containers for a pod */}}
 {{- define "containers" -}}
-{{- range $index, $container := . -}}
+{{- $containers := index . 0 -}}
+{{- $prefix := index . 1 -}}
+
+{{- range $index, $container := $containers -}}
 {{- with $container }}
-- name: {{ .name | default (printf "c%d" $index) }}
+- name: {{ .name | default (printf "%s%d" $prefix $index) }}
   image: {{ .image }}
   imagePullPolicy: {{ .imagePullPolicy }}
   tty: {{ .tty }}

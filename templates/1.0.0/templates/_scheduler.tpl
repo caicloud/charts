@@ -18,7 +18,7 @@ affinity: {{ .scheduler }}
       {{- range .affinity.node.terms }}
       - matchExpressions:
         {{- range .expressions }}
-        - key: {{ .key }}"
+        - key: {{ .key }}
           operator: {{ .operator | quote }}
           values:
           {{- range .values }}
@@ -33,7 +33,7 @@ affinity: {{ .scheduler }}
       preference:
         matchExpressions:
         {{- range .expressions }}
-        - key: {{ .key }}"
+        - key: {{ .key }}
           operator: {{ .operator | quote }}
           values:
           {{- range .values }}
@@ -84,7 +84,7 @@ requiredDuringSchedulingIgnoredDuringExecution:
   {{- range .namespaces }}
   - {{ . }}
   {{- end }}
-  topologyKey: {{ .topologyKey }}
+  topologyKey: {{ .topologyKey | default "kubernetes.io/hostname" }}
 {{- end }}
 {{- else }}
 preferredDuringSchedulingIgnoredDuringExecution:
@@ -113,7 +113,7 @@ preferredDuringSchedulingIgnoredDuringExecution:
     {{- range .namespaces }}
     - {{ . }}
     {{- end }}
-    topologyKey: {{ .topologyKey }} 
+    topologyKey: {{ .topologyKey | default "kubernetes.io/hostname" }} 
 {{- end }}
 {{- end }}
 {{- end -}}
