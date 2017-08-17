@@ -129,7 +129,7 @@ _config:
       - protocol: HTTP
         targetPort: 80
         port: 80
-    - name: mysql21
+    - name: mysql2
       type: ClusterIP
       export: false
       ports:

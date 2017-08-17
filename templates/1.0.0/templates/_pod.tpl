@@ -15,13 +15,21 @@ hostNetwork: {{ .host.network }}
 hostPID: {{ .host.pid }}
 hostIPC: {{ .host.ipc }}
 {{- end }}
+{{- with $controller.schedule }}
 {{- template "schedule" $controller.schedule }}
+{{- end }}
+{{- with $controller.volumes }}
 volumes:
 {{- template "volumes" (list $controller.volumes $name) }}
+{{- end }}
+{{- with $controller.initContainers }}
 initContainers:
 {{- template "containers" (list $controller.initContainers "i") }}
+{{- end }}
+{{- with $controller.containers }}
 containers:
 {{- template "containers" (list $controller.containers "c") }}
+{{- end }}
 {{- end -}}
 
 
