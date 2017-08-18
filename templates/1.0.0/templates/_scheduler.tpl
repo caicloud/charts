@@ -66,7 +66,7 @@ requiredDuringSchedulingIgnoredDuringExecution:
     {{- if hasKey .selector "labels" }}
     matchLabels:
     {{- range $k, $v := .selector.labels }}
-      {{ $k | quote }}: {{ $v | quote }}
+      "schedule.caicloud.io/{{ $k }}": {{ $v | quote }}
     {{- end }}
     {{- end }}
     {{- if hasKey .selector "expressions" }}
@@ -95,7 +95,7 @@ preferredDuringSchedulingIgnoredDuringExecution:
       {{- if hasKey .selector "labels" }}
       matchLabels:
       {{- range $k, $v := .selector.labels }}
-        {{ $k | quote }}: {{ $v | quote }}
+        "schedule.caicloud.io/{{ $k }}": {{ $v | quote }}
       {{- end }}
       {{- end }}
       {{- if hasKey .selector "expressions" }}
