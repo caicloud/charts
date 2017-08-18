@@ -38,7 +38,7 @@ spec:
     {{- end }}
     port: {{ .port }}
     targetPort: {{ .targetPort }}
-    {{- if eq $s.type "NodePort" -}} nodePort: {{ .nodePort }} {{- end -}}
+    {{ if eq $s.type "NodePort" -}} nodePort: {{ .nodePort }} {{- end -}}
   {{- end }}
 ---
 

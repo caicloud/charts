@@ -5,11 +5,11 @@
 - [基础结构描述](#基础结构描述)
 - [配置控制器定义](#配置控制器定义)
   - [类型：controller](#类型controller)
-    - [controller：Deployment](controllerdeployment)
-    - [controller：StatefulSet](controllerstatefulset)
-    - [controller：DaemonSet](controllerdaemonset)
-    - [controller：Job](controllerjob)
-    - [controller：CronJob](controllercronjob)
+    - [controller：Deployment](#controllerdeployment)
+    - [controller：StatefulSet](#controllerstatefulset)
+    - [controller：DaemonSet](#controllerdaemonset)
+    - [controller：Job](#controllerjob)
+    - [controller：CronJob](#controllercronjob)
   - [类型：schedule](#类型schedule)
   - [类型：pod](#类型pod)
   - [类型：initContainer，container](#类型initcontainercontainer)
@@ -433,6 +433,8 @@ _config:
   - type: StatefulSet
     controller:
       replica: 3
+      name: "asda2222"
+      domain: "asdas"
     schedule:
       labels:
         cpu: heavy
@@ -542,7 +544,7 @@ _config:
         request: 5Gi
         limit: 100Gi
     services:
-    - name: mysql
+    - name: mysql1
       type: ClusterIP
       export: true
       ports:
@@ -550,12 +552,33 @@ _config:
         targetPort: 80
         port: 80
     - name: mysql2
-      type: ClusterIP
+      type: NodePort
       export: false
       ports:
       - protocol: HTTPS
         targetPort: 443
         port: 443
+        nodePort: 31222
+  - type: Deployment
+    controller:
+      replica: 1
+    containers:
+    - image: cargo.caicloudprivatetest.com/caicloud/simplelog
+      resources:
+        requests:
+          cpu: 100m
+          memory: 100Mi
+        limits:
+          cpu: 100m
+          memory: 100Mi
+    services:
+    - name: log1
+      type: ClusterIP
+      export: true
+      ports:
+      - protocol: HTTP
+        targetPort: 80
+        port: 80
 subchart:
   _config:
     略

@@ -5,9 +5,9 @@
 {{- define "fullname" -}}
   {{- $global := index . 0 -}}
   {{- $index := index . 1 -}}
-  {{- $release := $global.Release.Name | trunc 40 | trimSuffix "-" | lower -}}
-  {{- $chart := include "cid" $global -}}
-  {{- printf "%s-c%s-%d" $release $chart $index -}}
+  {{- $release := $global.Release.Name | trunc 30 | trimSuffix "-" | lower -}}
+  {{- $chart := $global.Chart.Name | trunc 20 | trimSuffix "-" | lower -}}
+  {{- printf "%s-%s-%d" $release $chart $index -}}
 {{- end -}}
 
 

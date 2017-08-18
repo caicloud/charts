@@ -13,6 +13,8 @@ _config:
   - type: StatefulSet
     controller:
       replica: 3
+      name: "asda2222"
+      domain: "asdas"
     schedule:
       labels:
         cpu: heavy
@@ -130,9 +132,30 @@ _config:
         targetPort: 80
         port: 80
     - name: mysql2
-      type: ClusterIP
+      type: NodePort
       export: false
       ports:
       - protocol: HTTPS
         targetPort: 443
         port: 443
+        nodePort: 31222
+  - type: Deployment
+    controller:
+      replica: 1
+    containers:
+    - image: cargo.caicloudprivatetest.com/caicloud/simplelog
+      resources:
+        requests:
+          cpu: 100m
+          memory: 100Mi
+        limits:
+          cpu: 100m
+          memory: 100Mi
+    services:
+    - name: log1
+      type: ClusterIP
+      export: true
+      ports:
+      - protocol: HTTP
+        targetPort: 80
+        port: 80
