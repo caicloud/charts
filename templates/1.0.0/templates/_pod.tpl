@@ -11,9 +11,11 @@ dnsPolicy: {{ .dns }}
 hostname: {{ .hostname }}
 subdomain: {{ .subdomain }}
 terminationGracePeriodSeconds: {{ .termination }}
-hostNetwork: {{ .host.network }}
-hostPID: {{ .host.pid }}
-hostIPC: {{ .host.ipc }}
+{{- with .host }}
+hostNetwork: {{ .network }}
+hostPID: {{ .pid }}
+hostIPC: {{ .ipc }}
+{{- end }}
 {{- end }}
 {{- with $controller.schedule }}
 {{- template "schedule" $controller.schedule }}
