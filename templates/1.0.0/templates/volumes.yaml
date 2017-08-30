@@ -14,7 +14,7 @@ metadata:
   {{- if eq $controller.type "StatefulSet" }}
   name: {{ $controller.controller.name | default $controllerName }}-{{ .name }}
   {{- else }}
-  name: {{ $controllerName }}
+  name: {{ $controllerName }}-{{ .name }}
   {{- end }}
   labels:
     "volume.caicloud.io/type" : {{ .type }}
