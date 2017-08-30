@@ -368,7 +368,8 @@ storage:                               # 存储需求
 ##### source：Dynamic，Dedicated
 ```yaml
     class: string                      # 存储方案名称
-    mode: string("ReadWriteOnce")      # 数据卷读写模式，可以为 ReadWriteOnce，ReadOnlyMany，ReadWriteMany
+    modes:
+    - string("ReadWriteOnce")          # 数据卷读写模式，可以为 ReadWriteOnce，ReadOnlyMany，ReadWriteMany
 ```
 Dynamic 和 Dedicated 两种类型的数据卷实际上都是使用存储方案来实现，即通过创建 PVC 并关联 storage class。  
 但是 Dynamic 只用于创建单一的 PVC，如果多个容器引用同一个 Dynamic，那么实际上多个副本是共享数据卷的（多副本时 mode 不能为 ReadWriteOnce）。  
