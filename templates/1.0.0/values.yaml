@@ -82,6 +82,8 @@ _config:
       env:
       - name: XXSS_
         value: "sd"
+      - name: Sdsaa
+        value: "10"
       resources:
         requests:
           cpu: 100m

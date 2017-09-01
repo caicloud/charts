@@ -125,7 +125,7 @@ containers:
 {{- define "env" -}}
 {{- range . }}
 - name: {{ .name }}
-  value: {{ .value }}
+  value: {{ .value | quote }}
   {{- with .from }}
   valueFrom:
     {{- if eq .type  "Config" -}}
