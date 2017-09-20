@@ -5,9 +5,14 @@
 {{- define "fullname" -}}
   {{- $global := index . 0 -}}
   {{- $index := index . 1 -}}
+  {{- $metadata := $global.Values._config._metadata -}}
   {{- $release := $global.Release.Name | trunc 30 | trimSuffix "-" | lower -}}
   {{- $chart := $global.Chart.Name | trunc 20 | trimSuffix "-" | lower -}}
-  {{- printf "%s-%s-%d" $release $chart $index -}}
+  {{- if and $metadata (hasKey $metadata "revision") -}}
+    {{- printf "%s-%s-v%.0f-%d" $release $chart $metadata.revision $index -}}
+  {{- else -}}
+    {{- printf "%s-%s-v1-%d" $release $chart $index -}}
+  {{- end -}}
 {{- end -}}
 
 
