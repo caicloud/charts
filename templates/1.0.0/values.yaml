@@ -5,6 +5,7 @@ _config:
     description: "A basic template for application"
     creationTime: "2017-07-14 12:00:00"
     source: "/library/template/1.0.0"
+    revision: 1
     class: Default
     template:
       type: "template.caicloud.io/application"
