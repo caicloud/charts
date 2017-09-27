@@ -1,67 +1,47 @@
 _config:
   _metadata:
-    name: "redis"
-    version: "0.4.5"
-    description: ""
-  redis:
+    name: redis
+    version: 0.4.5
+    description: "Open source, advanced key-value store. It is often referred to as a data structure server since keys can contain strings, hashes, lists, sets and sorted sets."
+    template:
+      type: "template.caicloud.io/application"
+      version: 1.0.0
+  controllers:
+  - type: Deployment
+    controller:
+      replica: 1
     containers:
-      redis:
-        image: "cargo.caicloudprivatetest.com/library/redis:3.2.9"
-        privileged: false
-        pullPolicy: "IfNotPresent"
-        _hidden:
-          privileged: true
-        _alias:
-          image: "镜像地址"
-          pullPolicy: "镜像下载策略"
-    envs:
-      secret:
-        name: "REDIS_PASSWORD"
+    - image: "cargo.caicloudprivatetest.com/library/redis:3.2.9"
+      imagePullPolicy: Always
+      ports:
+      - protocol: TCP
+        port: 6379
+      mounts:
+      - name: storage
+        path: /bitnami/redis
+      env:
+      - name: REDIS_PASSWORD
         value: "123456"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
     volumes:
-      data:
-        name: ""
-        readonly: false
-        mountPath: "/bitnami/redis"
-        storageRequest: "10Gi"
-        _hidden:
-          readonly: true
-        _readonly:
-          mountPath: true
-          storageRequest: true
-        _alias:
-          name: "数据卷名称"
-          mountPath: "挂载路径"
-          storageRequest: "数据卷最小容量"
-    resources:
-      resource:
-        cpuRequest: "100m"
-        cpuLimit: "500m"
-        memoryRequest: "128Mi"
-        memoryLimit: "512Mi"
-        _alias:
-          cpuRequest: "需求 cpu 资源"
-          cpuLimit: "cpu 资源使用上限"
-          memoryRequest: "需求内存资源"
-          memoryLimit: "内存资源使用上限"
+    - name: storage
+      type: Scratch
+      source:
+        medium: ""
+      storage:
+        request: 10Gi
+        limit: 10Gi
     services:
-      redis:
-        name: ""
-        type: "ClusterIP"
-        ports:
-        - protocol: "TCP"
-          port: "6379"
-          nodePort: ""
-          targetPort: "6379"
-          _readonly:
-            protocol: true
-            targetPort: true
-          _alias:
-            protocol: "服务协议"
-            port: "服务端口"
-            nodePort: "节点端口"
-            targetPort: "应用端口"
-        _alias:
-          name: "服务名称"
-          ports: "端口列表"
-
+    - name: "redis"
+      type: ClusterIP
+      export: true
+      ports:
+      - protocol: TCP
+        targetPort: 6379
+        port: 6379
