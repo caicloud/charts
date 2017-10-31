@@ -128,11 +128,11 @@ containers:
   value: {{ .value | quote }}
   {{- with .from }}
   valueFrom:
-    {{- if eq .type  "Config" -}}
+    {{ if eq .type  "Config" -}}
     configMapKeyRef:
-    {{- else -}}
+    {{- else }}
     secretKeyRef:
-    {{- end -}}
+    {{- end }}
       name: {{ .name }}
       key: {{ .key }}
       optional: {{ .optional }}
