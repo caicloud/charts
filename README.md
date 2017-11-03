@@ -244,7 +244,7 @@ failure-domain.beta.kubernetes.io/region
 #### 类型：pod
 ```yaml
 restart: string("Always")              # 重启策略，可以为 Always，OnFailure，Never
-dns: string("Default")                 # DNS 策略，可以为 Default，ClusterFirstWithHostNet，ClusterFirst
+dns: string("ClusterFirst")            # DNS 策略，可以为 Default，ClusterFirstWithHostNet，ClusterFirst
 hostname: string("")                   # 主机名
 subdomain: string("")                  # 子域名
 termination: uint(30)                  # 优雅退出时间
