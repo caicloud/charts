@@ -16,6 +16,9 @@ _config:
       replica: 3
       name: "asda2222"
       domain: "asdas"
+      annotations:
+      - key: "controller.caicloud.io/feature-1.0.0"
+        value: "{'test':'controller'}"
     schedule:
       labels:
         cpu: heavy
@@ -52,6 +55,9 @@ _config:
     pod:
       host:
         network: true
+      annotations:
+      - key: "pod.caicloud.io/feature-1.0.0"
+        value: "{'test':'pod'}"
     initContainers:
     - image: mysql-init:v1.0.0
       mounts:

@@ -1,4 +1,4 @@
-# Chart 模版配置规范定义
+# Chart 模版配置规范定义（v1.0.0）
 
 ### 目录
 - [概述](#概述)
@@ -49,9 +49,6 @@ _config:
     name: string          # Chart 创建时的名称，不随 Chart 更新而更新
     version: semvar       # Chart 创建时的版本号，不随 Chart 更新而更新
     description: string   # Chart 创建时的描述，不随 Chart 更新而更新
-    creationTime: string  # Chart 创建时间，不随 Chart 更新而更新
-    source: string        # Chart 存储的位置，为 Release 提供 Chart 来源信息，比如 /library/mysql/5.6.22
-    class: string         # Chart 运行时分类信息，对 Release 分类，目前有 Default 和 System 两个类别
     template:             # Chart 模板信息，为模板自动升级提供信息
       type: string        # Chart 模板类型
       version: semvar     # Chart 模板版本号
@@ -81,16 +78,9 @@ chartX:
     ...
 ```
 `_metadata`仅仅用于描述模板的基本信息。
-- name，version，description，creationTime 用于描述 Chart 的原始信息。由于 Chart 的名称可能会随着编排发生变更，因此在此处存储 Chart 的原始信息，方便 Chart 溯源。
-- template 用于描述 Chart 的模板信息。主要用于实现 template 的升级。template 发生功能变更后，将依据这个名称和版本号进行自动升级。
-- source 用于在 Release 中描述当前 Release 使用的 Chart 的来源地址。方便实现从 Release 追溯到 Chart 的存储位置。
-- class 用于给 Release 分类。用于区分用户应用和系统应用。系统应用一般不显示在用户的应用列表中。
+- name，version，description 用于描述 Chart 的原始信息。用于从配置直接创建 Chart。
+- template 用于描述 Chart 的模板信息。主要用于实现 Chart 的创建和升级。template 发生功能变更后，可依据模板名称和版本号进行升级。
 
-
-`_metadata`的 name，version，description，creationTime，template 字段在 helm 为 Chart 加入 Annotation 字段后，会被放置到 Chart 的 Annotation 中。  
-`_metadata`的 source，class 字段在 helm 为 Release 加入 Annotation 字段后，会被放置到 Release 的 Annotation 中。  
-
-helm 为 Chart 加入 Annotation 字段后，这几个字段将被放置到 Annotation 中。
 ### 配置控制器定义
 
 字段类型定义：
@@ -115,6 +105,19 @@ bool(true)
 所有有默认值的字段都是 Optional 的。
 
 #### 类型：controller
+
+所有类型的 controller 共有字段如下：
+```yaml
+annotations:                           # 控制器附加信息,仅用于保存控制器额外信息
+  - key: string                        # 键
+    value: string                      # 值
+```
+key 必须符合如下要求：
+```
+1. `前缀/键`或者`键`，比如 `caicloud.io/apple`和`apple`
+2. 前缀是域名形式，必须符合 DNS_SUBDOMAIN，即`(([A-Za-z0-9][-A-Za-z0-9]*)?[A-Za-z0-9]\.)*([A-Za-z0-9][-A-Za-z0-9]*)?[A-Za-z0-9]`
+3. 键必须符合 ([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]
+```
 
 ##### controller：Deployment
 ```yaml
@@ -249,8 +252,15 @@ host:
   network: bool(false)                 # 与主机共享 network namespace
   pid: bool(false)                     # 与主机共享 pid namespace
   ipc: bool(false)                     # 与主机共享 ipc namespace
+annotations:                           # 容器组附加信息,仅用于保存容器组额外信息
+  - key: string                        # 键
+    value: string                      # 值
 ```
-主机名和子域名构成 Pod 的访问域名：hostname.subdomain.namespace.svc.clusterdomain
+在 controller 类型为 Deployment 时，restart 只能为 Always。  
+主机名和子域名构成 Pod 的访问域名：hostname.subdomain.namespace.svc.clusterdomain。  
+容器组的 annotations 用于存放用于扩展容器组能力的额外信息。可以被其他组件读取和识别，实现其他功能。
+key 的规范参考 [controller 的 annotations](#类型controller)
+
 
 #### 类型：initContainer，container
 ```yaml
@@ -264,8 +274,7 @@ args:                                  # 即 Docker CMD
 - string
 workingDir: string("")                 # 工作目录
 ports:                                 # 容器端口
-- name: string("")                     # 端口名称
-  port: pint(80)                       # 端口
+- port: pint(80)                       # 端口
   protocol: string("HTTP")             # 端口协议,可以是 HTTP，HTTPS，TCP，UDP
 envFrom:                               # env from，来自 Config 或 Secret
 - prefix: string("")                   # 所有来自 目标 的 key 都会加这个前缀
@@ -374,6 +383,7 @@ storage:                               # 存储需求
 Dynamic 和 Dedicated 两种类型的数据卷实际上都是使用存储方案来实现，即通过创建 PVC 并关联 storage class。  
 但是 Dynamic 只用于创建单一的 PVC，如果多个容器引用同一个 Dynamic，那么实际上多个副本是共享数据卷的（多副本时 mode 不能为 ReadWriteOnce）。  
 Dedicated 类型仅用于 StatefulSet 类型的控制器。StatefulSet 会根据 Dedicated 的设置动态创建多个 PVC，并且每个 Pod 会绑定不同的 PVC，即每个 Pod 的数据卷是独立的。
+这两种类型的数据卷在部署后，volume 中的所有字段值都不能进行更改。
 
 ##### source：Static
 ```yaml
@@ -415,7 +425,8 @@ ports:
 - ClusterIP：使用该形式暴露的服务，其它应用可以通过服务名访问当前服务
 - NodePort：使用该形式暴露的服务，其它应用可以通过节点 IP 访问当前服务
 
-当服务类型为 NodePort 时，才可以设置 ports 中的 nodePort 字段
+服务类型为 NodePort 时，才可以设置 ports 中的 nodePort 字段。  
+服务在部署后，服务名称不可变更。
 
 ### 一个配置文件的例子
 ```yaml

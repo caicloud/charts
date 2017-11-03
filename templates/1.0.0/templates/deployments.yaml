@@ -20,15 +20,21 @@ metadata:
   labels:
     "controller.caicloud.io/release": {{ $g.Release.Name }}
     "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+  annotations:
+    {{- include "annotations" $controller.controller | indent 4 }}
 {{- with $controller }}
 spec:
+  {{- with .controller }}
   replicas: {{ .replica }}
   strategy:
     type: RollingUpdate
+    {{- with .strategy }}
     rollingUpdate:
-      maxUnavailable: {{ .unavailabel }}
+      maxUnavailable: {{ .unavailable }}
       maxSurge: {{ .surge }}
+    {{- end }}
   minReadySeconds: {{ .ready }}
+  {{- end }}
   template:
     metadata:
       labels:
@@ -36,6 +42,8 @@ spec:
         "controller.caicloud.io/chart": {{ $g.Chart.Name }}
         "controller.caicloud.io/name": {{ $controllerName }}
         {{- include "schelabels" $controller.schedule | indent 8 }}
+      annotations:
+        {{- include "annotations" $controller.pod | indent 8 }}
     spec:
     {{- include "podspec" (list $controller $controllerName) | indent 6 }}
 {{- end }}

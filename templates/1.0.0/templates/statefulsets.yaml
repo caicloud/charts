@@ -46,9 +46,11 @@ metadata:
   labels:
     "controller.caicloud.io/release": {{ $g.Release.Name }}
     "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+  annotations:
+    {{- include "annotations" $controller.controller | indent 4 }}
 spec:
   serviceName: {{ $domain }}
-  replicas: {{ $controller.replicas }}
+  replicas: {{ $controller.controller.replica }}
   template:
     metadata:
       labels:
@@ -56,6 +58,8 @@ spec:
         "controller.caicloud.io/chart": {{ $g.Chart.Name }}
         "controller.caicloud.io/name": {{ $name }}
         {{- include "schelabels" $controller.schedule | indent 8 }}
+      annotations:
+        {{- include "annotations" $controller.pod | indent 8 }}
     spec:
     {{- include "podspec" (list $controller $name) | indent 6 }}
   volumeClaimTemplates:
