@@ -51,10 +51,17 @@
 
 {{/* dedicated generates volume templates for StatefulSet */}}
 {{- define "dedicated" -}}
-{{- range . -}}
+{{- $g := index . 0 -}}
+{{- $name := index . 1 -}}
+{{- $volumes := index . 2 -}}
+{{- range $volumes -}}
 {{- if eq .type "Dedicated" }}
 - metadata:
     name: {{ .name }}
+    labels:
+      "controller.caicloud.io/release": {{ $g.Release.Name }}
+      "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+      "controller.caicloud.io/name": {{ $name }}
   spec:
     accessModes:
     {{- range .source.modes }}

@@ -63,7 +63,7 @@ spec:
     spec:
     {{- include "podspec" (list $controller $name) | indent 6 }}
   volumeClaimTemplates:
-  {{- include "dedicated" $controller.volumes | indent 2 }}
+  {{- include "dedicated" (list $g $name $controller.volumes) | indent 2 }}
 ---
 {{ end -}}
 {{- end -}}
