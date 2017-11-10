@@ -281,7 +281,7 @@ envFrom:                               # env from，来自 Config 或 Secret
   type: string("Config")               # 配置来源，可以是 Config 或 Secret
   name: string                         # Config 或 Secret 的名称
   optional: bool(false)                # 是否可选，即目标不存在也就忽略而不是报错
-downwardPrefix: string("ENV")          # 默认环境变量前缀
+downwardPrefix: string("")             # 默认环境变量前缀
 env:                                   # env
 - name: string                         # 环境变量名称
   value: string                        # 环境变量值
@@ -319,6 +319,12 @@ lifecycle:                             # 生命周期（参考 handler 设置）
 ```
 initContainer 不支持 readiness probe 和 lifecycle，因此在 initContainer 中不能设置这几项。  
 initContainer 是串行执行的，一个成功后才能执行下一个。 
+默认的环境变量包括：
+- `POD_NAMESPACE`
+- `POD_NAME`
+- `POD_IP`
+- `NODE_NAME`
+可以通过 downwardPrefix 为上述环境变量增加前缀。比如 downwardPrefix 为 `ENV_` 时：`POD_NAMESPACE` 变为 `ENV_POD_NAMESPACE`。  
 
 ##### probe：liveness，readiness
 ```yaml

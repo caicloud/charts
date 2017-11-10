@@ -142,20 +142,20 @@ containers:
 
 
 {{- define "downwardenv" -}}
-{{- $prefix := . | default "ENV" | upper }}
-- name: {{ $prefix }}_POD_NAMESPACE
+{{- $prefix := . }}
+- name: {{ $prefix }}POD_NAMESPACE
   valueFrom:
     fieldRef:
       fieldPath: metadata.namespace
-- name: {{ $prefix }}_POD_NAME
+- name: {{ $prefix }}POD_NAME
   valueFrom:
     fieldRef:
       fieldPath: metadata.name
-- name: {{ $prefix }}_POD_IP
+- name: {{ $prefix }}POD_IP
   valueFrom:
     fieldRef:
       fieldPath: status.podIP
-- name: {{ $prefix }}_NODE_NAME
+- name: {{ $prefix }}NODE_NAME
   valueFrom:
     fieldRef:
       fieldPath: spec.nodeName
