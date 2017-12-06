@@ -11,6 +11,7 @@ dnsPolicy: {{ .dns }}
 hostname: {{ .hostname }}
 subdomain: {{ .subdomain }}
 terminationGracePeriodSeconds: {{ .termination }}
+serviceAccountName: {{ .serviceAccountName }}
 {{- with .host }}
 hostNetwork: {{ .network }}
 hostPID: {{ .pid }}
