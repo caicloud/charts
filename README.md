@@ -426,6 +426,9 @@ ports:
   targetPort: pint                     # 容器端口
   port: pint                           # 服务端口
   nodePort: uint(0)                    # 节点端口，[30000,32767]
+annotations:                           # 服务附加信息,仅用于保存服务额外信息
+  - key: string                        # 键
+    value: string                      # 值
 ```
 服务可以以两种形式暴露给外部：
 - ClusterIP：使用该形式暴露的服务，其它应用可以通过服务名访问当前服务
