@@ -23,33 +23,31 @@ echo "Force update: $FORCE_UPDATE"
 tmp=${OUTPUT_DIR}_tmp
 templates=$TEMPLATES_DIR/$TEMPLATE_VERSION/templates
 
-
 function packChart() {
   chartPath=$1
   chart=$(basename $chartPath)
-  for versionPath in $chartPath/*;
-  do
+  for versionPath in $chartPath/*; do
     version=$(basename $versionPath)
-	output=$OUTPUT_DIR/$chart/$version
-	if [[ ! -d $output || $FORCE_UPDATE == "true" ]]; then
+    output=$OUTPUT_DIR/$chart/$version
+    if [[ ! -d $output || $FORCE_UPDATE == "true" ]]; then
       echo "Packing $chart/$version"
 
-	  if [[ $IMAGE_DOMAIN != "" ]]; then
-	    sed -i -E "s|(image:.*)cargo.caicloudprivatetest.com(.*)|\1$IMAGE_DOMAIN\2|g" $versionPath/values.yaml
+      if [[ $IMAGE_DOMAIN != "" ]]; then
+        sed -i -E "s|(image:.*)cargo.caicloudprivatetest.com(.*)|\1$IMAGE_DOMAIN\2|g" $versionPath/values.yaml
       fi
 
-	  mkdir -p $output
+      mkdir -p $output
       cp -R $templates $versionPath/templates
       tar -czf $output/chart.tgz -C $versionPath .
-	  cat $versionPath/Chart.yaml | ruby -ryaml -rjson -e 'puts JSON.generate(YAML.load(ARGF))' > $output/metadata.dat
-	  cat $versionPath/values.yaml | ruby -ryaml -rjson -e 'puts JSON.generate(YAML.load(ARGF))' > $output/values.dat
-      echo -n "SUCCESS" > $output/.status
+      cat $versionPath/Chart.yaml | ruby -ryaml -rjson -e 'puts JSON.generate(YAML.load(ARGF))' >$output/metadata.dat
+      cat $versionPath/values.yaml | ruby -ryaml -rjson -e 'puts JSON.generate(YAML.load(ARGF))' >$output/values.dat
+      echo -n "SUCCESS" >$output/.status
 
       echo "Packed $chart-$version.tgz"
-	else
-	  echo "Ignore $chart/$version"
+    else
+      echo "Ignore $chart/$version"
     fi
-done
+  done
 }
 
 function generate() {
@@ -57,9 +55,8 @@ function generate() {
   mkdir -p $tmp
   mkdir -p $OUTPUT_DIR
   cp -R $INPUT_DIR/* $tmp
-  for chartPath in $tmp/*;
-  do
-  	packChart $chartPath
+  for chartPath in $tmp/*; do
+    packChart $chartPath
   done
   rm -rf $tmp
 }
