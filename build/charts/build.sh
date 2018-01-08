@@ -20,7 +20,7 @@ echo "Start to build charts into $OUTPUT_DIR from $INPUT_DIR"
 echo "Template: $TEMPLATES_DIR/$TEMPLATE_VERSION"
 echo "Image domain: $IMAGE_DOMAIN"
 echo "Force update: $FORCE_UPDATE"
-tmp=${OUTPUT_DIR}_tmp
+tmp=/tmp/charts/
 templates=$TEMPLATES_DIR/$TEMPLATE_VERSION/templates
 
 function packChart() {
