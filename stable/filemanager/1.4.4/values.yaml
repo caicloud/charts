@@ -1,0 +1,57 @@
+_config:
+  _metadata:
+    name: filemanager
+    version: 1.4.4
+    description: |
+      Web File Manager which can be used as a middleware or standalone app.
+  controllers:
+  - containers:
+    - env: []
+      mounts:
+      - path: "/srv"
+        name: data
+      command: []
+      args: []
+      imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/filemanager:1.4.4
+      resources:
+        limits:
+          cpu: '0.25'
+          memory: 512Mi
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+      ports:
+      - protocol: HTTP
+        port: 80
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 80
+        port: 80
+        nodePort: ''
+      name: filemanager
+      type: ClusterIP
+      export: true
+    volumes:
+    - storage:
+        limit: 20Gi
+        request: 10Gi
+      source: {}
+      type: Scratch
+      name: data
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: Deployment
+    controller:
+      replica: 1
+      strategy:
+        unavailable: 0
+        surge: 1

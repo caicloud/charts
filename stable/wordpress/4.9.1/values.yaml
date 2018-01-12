@@ -1,0 +1,59 @@
+_config:
+  _metadata:
+    name: wordpress
+    version: 4.9.1
+    description: |
+      WordPress is a free and open source blogging tool and a content management system (CMS) based on PHP and MySQL, which runs on a web hosting service. 
+  controllers:
+  - containers:
+    - env:
+      - name: WORDPRESS_DB_HOST
+        value: mysql
+      - name: WORDPRESS_DB_USER
+        value: root
+      - name: WORDPRESS_DB_PASSWORD
+        value: root
+      - name: WORDPRESS_DB_NAME
+        value: wordpress
+      - name: WORDPRESS_TABLE_PREFIX
+        value: wp
+      mounts: []
+      command: []
+      args: []
+      imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/wordpress:4.9.1
+      resources:
+        limits:
+          cpu: '0.25'
+          memory: 512Mi
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+      ports:
+      - protocol: HTTP
+        port: 80
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 80
+        port: 80
+        nodePort: ''
+      name: wordpress
+      type: ClusterIP
+      export: true
+    volumes: []
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: Deployment
+    controller:
+      replica: 1
+      strategy:
+        unavailable: 0
+        surge: 1

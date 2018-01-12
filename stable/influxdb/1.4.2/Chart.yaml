@@ -1,0 +1,4 @@
+name: influxdb
+version: 1.4.2
+description: |
+  InfluxData provides a Modern Time Series Platform, designed from the ground up to handle metrics and events. 

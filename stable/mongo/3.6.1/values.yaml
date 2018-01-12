@@ -1,0 +1,57 @@
+_config:
+  _metadata:
+    name: mongo
+    version: 3.6.1
+    description: |
+      NoSQL document-oriented database that stores JSON-like documents with dynamic schemas, simplifying the integration of data in content-driven applications.
+  controllers:
+  - containers:
+    - env: []
+      mounts:
+      - path: "/data"
+        name: data
+      command: []
+      args: []
+      imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/mongo:3.6.1
+      resources:
+        limits:
+          cpu: '0.25'
+          memory: 512Mi
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+      ports:
+      - protocol: HTTP
+        port: 27017
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 27017
+        port: 27017
+        nodePort: ''
+      name: mongo
+      type: ClusterIP
+      export: true
+    volumes:
+    - storage:
+        limit: 20Gi
+        request: 10Gi
+      source: {}
+      type: Scratch
+      name: data
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: Deployment
+    controller:
+      replica: 1
+      strategy:
+        unavailable: 0
+        surge: 1

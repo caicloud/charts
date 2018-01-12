@@ -1,0 +1,63 @@
+_config:
+  _metadata:
+    name: influxdb
+    version: 1.4.2
+    description: |
+      InfluxData provides a Modern Time Series Platform, designed from the ground up to handle metrics and events. 
+  controllers:
+  - containers:
+    - env: []
+      mounts:
+      - path: "/var/lib/influxdb"
+        name: data
+      command: []
+      args: []
+      imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/influxdb:1.4.2-alpine
+      resources:
+        limits:
+          cpu: '0.25'
+          memory: 512Mi
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+      ports:
+      - protocol: HTTP
+        port: 8086
+      - protocol: TCP
+        port: 8088
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 8086
+        port: 8086
+        nodePort: ''
+      - protocol: TCP
+        targetPort: 8088
+        port: 8088
+        nodePort: ''
+      name: influxdb
+      type: ClusterIP
+      export: true
+    volumes:
+    - storage:
+        limit: 20Gi
+        request: 10Gi
+      source: {}
+      type: Scratch
+      name: data
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: Deployment
+    controller:
+      replica: 1
+      strategy:
+        unavailable: 0
+        surge: 1

@@ -1,0 +1,4 @@
+name: filemanager
+version: 1.4.4
+description: |
+  Web File Manager which can be used as a middleware or standalone app.
