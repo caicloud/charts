@@ -1,0 +1,64 @@
+_config:
+  _metadata:
+    name: jenkins
+    version: 2.101
+    description: |
+      Continuous Integration and Continuous Delivery. As an extensible automation server, 
+      Jenkins can be used as a simple CI server or turned into the continuous delivery hub for any project.
+  controllers:
+  - containers:
+    - env: []
+      mounts:
+      - name: home
+        path: "/var/jenkins_home"
+      command: []
+      args: []
+      imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/jenkins:2.101-alpine-enhanced
+      resources:
+        limits:
+          cpu: '3'
+          memory: 3Gi
+        requests:
+          cpu: '2'
+          memory: 2Gi
+      ports:
+      - protocol: HTTP
+        port: 8080
+      - protocol: HTTP
+        port: 50000
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 8080
+        port: 8080
+        nodePort: ''
+      - protocol: HTTP
+        targetPort: 50000
+        port: 50000
+        nodePort: ''
+      name: jenkins
+      type: NodePort
+      export: true
+    volumes:
+    - storage:
+        limit: 20Gi
+        request: 10Gi
+      source: {}
+      type: Scratch
+      name: home
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: Deployment
+    controller:
+      replica: 1
+      strategy:
+        unavailable: 0
+        surge: 1
