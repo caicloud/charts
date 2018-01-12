@@ -1,0 +1,67 @@
+_config:
+  _metadata:
+    name: rabbitmq
+    version: 3.7.2 
+    description: |
+      RabbitMQ is the most widely deployed open source message broker.
+  controllers:
+  - containers:
+    - env: []
+      mounts: []
+      command: []
+      args: []
+      imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/rabbitmq:3.7.2-alpine
+      resources:
+        limits:
+          cpu: '0.25'
+          memory: 512Mi
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+      ports:
+      - protocol: HTTP
+        port: 4369
+      - protocol: HTTP
+        port: 5671
+      - protocol: HTTP
+        port: 5672
+      - protocol: HTTP
+        port: 25672
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 4369
+        port: 4369
+        nodePort: ''
+      - protocol: HTTP
+        targetPort: 5671
+        port: 5671
+        nodePort: ''
+      - protocol: HTTP
+        targetPort: 5672
+        port: 5672
+        nodePort: ''
+      - protocol: HTTP
+        targetPort: 25672
+        port: 25672
+        nodePort: ''
+      name: rabbitmq
+      type: ClusterIP
+      export: true
+    volumes: []
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: StatefulSet
+    controller:
+      replica: 1
+      strategy:
+        unavailable: 0
+        surge: 1
