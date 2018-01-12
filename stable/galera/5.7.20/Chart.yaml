@@ -1,0 +1,4 @@
+name: galera
+version: 5.7.20
+description: |
+  Galera Cluster for MySQL is a synchronous replication solution that can improve availability and performance of MySQL service.

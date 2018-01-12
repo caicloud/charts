@@ -1,0 +1,9 @@
+[mysqld]
+bind-address=0.0.0.0
+binlog_format=ROW
+wsrep_provider=/usr/lib64/galera-3/libgalera_smm.so
+wsrep_provider_options="gcache.size=300M; gcache.page_size=300M"
+wsrep_cluster_name="mysql_cluster"
+wsrep_cluster_address="gcomm://"
+wsrep_sst_auth=user:password
+wsrep_sst_method=rsync
