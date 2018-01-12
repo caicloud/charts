@@ -1,7 +1,7 @@
 _config:
   _metadata:
     name: jenkins
-    version: 2.101
+    version: 2.101.0
     description: |
       Continuous Integration and Continuous Delivery. As an extensible automation server, 
       Jenkins can be used as a simple CI server or turned into the continuous delivery hub for any project.
