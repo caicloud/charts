@@ -1,0 +1,65 @@
+_config:
+  _metadata:
+    name: mysql
+    version: 5.7.20
+    description: |
+      Fast, reliable, scalable, and easy to use open-source relational database.
+  controllers:
+  - containers:
+    - env:
+      - name: MYSQL_ROOT_PASSWORD
+        value: root
+      - name: MYSQL_DATABASE
+        value: db
+      - name: MYSQL_USER
+        value: user
+      - name: MYSQL_PASSWORD
+        value: password
+      mounts:
+      - path: "/var/lib/mysql"
+        name: data
+      command: []
+      args: []
+      imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/mysql:5.7.20
+      resources:
+        limits:
+          cpu: '0.25'
+          memory: 512Mi
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+      ports:
+      - protocol: HTTP
+        port: 3306
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 3306
+        port: 3306
+        nodePort: ''
+      name: mysql
+      type: ClusterIP
+      export: true
+    volumes:
+    - storage:
+        limit: 20Gi
+        request: 10Gi
+      source: {}
+      type: Scratch
+      name: data
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: Deployment
+    controller:
+      replica: 1
+      strategy:
+        unavailable: 0
+        surge: 1
