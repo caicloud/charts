@@ -11,6 +11,7 @@ dnsPolicy: {{ .dns }}
 hostname: {{ .hostname }}
 subdomain: {{ .subdomain }}
 terminationGracePeriodSeconds: {{ .termination }}
+serviceAccountName: {{ .serviceAccountName }}
 {{- with .host }}
 hostNetwork: {{ .network }}
 hostPID: {{ .pid }}
@@ -57,6 +58,21 @@ containers:
   - {{ . }}
   {{- end }}
   workingDir: {{ .workingDir }}
+  {{- with .securityContext }}
+  securityContext:
+    privileged: {{ .privileged }}
+    {{- with .capabilities }}
+    capabilities:
+      add: 
+      {{- range .add }}
+      - {{ . }}
+      {{- end }}
+      drop: 
+      {{- range .drop }}
+      - {{ . }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
   ports:
   {{- range .ports }}
   - name: {{ (printf "%s-%.0f" .protocol .port) | lower | quote }}
@@ -66,6 +82,7 @@ containers:
     protocol: "TCP"
     {{- end }}
     containerPort: {{ .port }}
+    hostPort: {{ .hostPort }}
   {{- end }}
   envFrom:
   {{- include "envfile" .envFrom | indent 2 }}

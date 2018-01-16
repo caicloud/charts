@@ -51,6 +51,8 @@ metadata:
 spec:
   serviceName: {{ $domain }}
   replicas: {{ $controller.controller.replica }}
+  updateStrategy:
+    type: "RollingUpdate"
   template:
     metadata:
       labels:

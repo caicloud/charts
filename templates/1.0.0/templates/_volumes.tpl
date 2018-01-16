@@ -20,6 +20,10 @@
   emptyDir:
     medium: {{ .source.medium }}
 {{- end -}}
+{{- if eq .type "HostPath" }}
+  hostPath:
+    path: {{ .source.path }}
+{{- end -}}
 {{- if eq .type "Config" }}
   configMap:
     name: {{ .source.target }}
