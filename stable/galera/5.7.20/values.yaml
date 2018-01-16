@@ -1,0 +1,74 @@
+_config:
+  _metadata:
+    name: galera
+    version: 5.7.20
+    description: |
+      Galera Cluster for MySQL is a synchronous replication solution that can improve availability and performance of MySQL service.
+  controllers:
+  - containers:
+    - env:
+      - name: GALERA_CLUSTER_DOMAIN
+        value: galera-cluster
+      - name: GALERA_START_DELAY
+        value: '5'
+      - name: GALERA_CLUSTER_NAME
+        value: galera_cluster
+      - name: GALERA_USER
+        value: sst
+      - name: GALERA_PASSWORD
+        value: sstpassword
+      - name: MYSQL_ROOT_PASSWORD
+        value: root
+      - name: MYSQL_DATABASE
+        value: db
+      - name: MYSQL_USER
+        value: user
+      - name: MYSQL_PASSWORD
+        value: password
+      mounts:
+      - path: "/var/lib/mysql"
+        name: data
+      command: []
+      args: []
+      image: cargo.caicloudprivatetest.com/library/galera:5.7.20
+      imagePullPolicy: Always
+      ports:
+      - port: 3306
+        protocol: TCP
+      probe: {}
+      resources:
+        limits:
+          cpu: 1
+          memory: 1Gi
+        requests:
+          cpu: 1
+          memory: 1Gi
+    services:
+    - ports:
+      - protocol: TCP
+        targetPort: 3306
+        port: 3306
+        nodePort: ''
+      name: galera
+      type: ClusterIP
+      export: true
+    volumes:
+    - storage:
+        limit: 20Gi
+        request: 10Gi
+      source: {}
+      type: Scratch
+      name: data
+    pod:
+      dns: ClusterFirst
+      host:
+        ipc: false
+        network: false
+        pid: false
+      restart: Always
+      termination: 30
+    controller:
+      domain: galera-cluster
+      name: ''
+      replica: 3
+    type: StatefulSet
