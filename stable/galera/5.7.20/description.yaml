@@ -1,0 +1,39 @@
+name: galera
+briefDesc: Galera 是一个基于 Mysql 的多主集群
+desc: Galera 集群是一个基于 Mysql/InnoDB 的多主数据库集群。在一个 Galera 集群中，每个数据库节点都是可以直接读写的。部分节点发生故障不会导致集群不可用，剩余节点仍然能够正常提供数据库服务。
+introduce:
+  brief: |
+    基于 Galera 开源版本（[Repo](https://github.com/codership/galera) [Dockerfile](https://github.com/caicloud/charts/tree/master/images/galera/5.7.20/Dockerfile)）
+  howToUse: |
+    直接从模板部署出一个完整的 Galera 集群，不需要任何外部依赖。
+    **环境变量**
+    - GALERA_CLUSTER_DOMAIN：实例域名。
+    - GALERA_CHECK_DELAY：启动时存活检查等待时间。
+    - GALERA_CLUSTER_NAME：集群名称。
+    - GALERA_USER：数据同步时使用的 Mysql 用户名。
+    - GALERA_PASSWORD：数据同步时使用的 Mysql 密码。
+    - MYSQL_ROOT_PASSWORD：Mysql root 用户密码。
+    - MYSQL_DATABASE：数据库初始化时默认创建的数据库。
+    - MYSQL_USER：数据库初始化时默认创建的用户。
+    - MYSQL_PASSWORD：数据库初始化时默认创建的用户密码。
+    其中 MYSQL_DATABASE，MYSQL_USER，MYSQL_PASSWORD 三项可不填写。不填则默认不创建数据库和新用户。
+    **如何挂载数据**
+    Galera 的所有数据都挂载在 `/var/lib/mysql`. 默认使用的是临时数据卷，如果需要持久化文件数据，请挂载有状态应用专用的数据卷。
+    **配置**
+    Galera 的配置在 `/etc/mysql/conf.d` 目录中，如果需要自定义 Mysql 的配置，请将配置挂载到该目录中。
+    **关于扩容**
+    Galera 支持扩容。可以增加或者减少副本数量。但是请确保你了解副本数量变化的意义。
+    **关于服务名和实例域名**
+    服务名和实例域名都是用于 DNS 解析的域名，因此两者名称不能冲突。用户应该使用服务名访问数据库。
+  version: |
+    基于社区 Galera 3 / Mysql 5.7.20 稳定版本。
+  resources: |
+    每节点配置：
+    最低资源要求：CPU：0.5 Core，内存：512 MiB
+    推荐资源配置：CPU：1 Core，内存：1 GiB
+    Galera 默认启动三个 Mysql 节点，因此会占用 3 倍的资源。
+  service: |
+    默认使用集群内部 IP 暴露服务的 3306 端口。
+    默认服务名为 galera，如果服务名冲突，请修改为其他名称。可通过服务名访问数据库。
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。
+    由于 Galera 是有状态的应用，因此设置了实例域名为 galera-cluster 用于副本之间的数据同步。请不要使用实例域名访问数据库。

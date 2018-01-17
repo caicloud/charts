@@ -1,0 +1,24 @@
+name: influxdb
+briefDesc: InfluxDB 是一个开源的时序数据库
+desc: InfluxDB 是一个开源的时序数据库，专门用于处理高频读写请求。并且主要用于存储大量的时序数据，包括监控信息，应用指标数据，IoT 传感器数据等。
+introduce:
+  brief: |
+    基于 InfluxDB 开源版本（[Repo](https://github.com/influxdata/influxdb) [Dockerfile](https://github.com/influxdata/influxdata-docker/blob/master/influxdb/1.4/Dockerfile)）
+  howToUse: |
+    直接从模板部署出一个完整的 InfluxDB 数据库，不需要任何外部依赖。
+    **如何挂载数据**
+    InfluxDB 的所有数据都挂载在 `/var/lib/influxdb`. 默认使用的是临时数据卷，如果需要持久化文件数据，请挂载其他类型的数据卷。
+    **配置**
+    InfluxDB 的配置路径为 `/etc/influxdb/influxdb.conf`，如果需要自定义 InfluxDB 的配置，请将配置挂载到该位置。
+    InfluxDB 也提供了使用环境变量的方式设置配置，请参考[配置](https://docs.influxdata.com/influxdb/v1.4/administration/config/)。
+    **关于扩容**
+    目前不支持扩容。请不要增加副本数量。
+  version: |
+    基于社区 InfluxDB 1.4.2 稳定版本。
+  resources: |
+    最低资源要求：CPU：0.25 Core，内存：512 MiB
+    推荐资源配置：CPU：1 Core，内存：1 GiB
+  service: |
+    默认使用集群内部 IP 暴露服务的 8086 和 8088 端口。8086 端口提供 HTTP API 服务，8088 端口提供 RPC 服务用于备份和恢复。
+    默认服务名为 influxdb，如果服务名冲突，请修改为其他名称。可通过服务名访问数据库。
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。

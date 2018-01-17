@@ -1,0 +1,27 @@
+name: filemanager
+briefDesc: File Manager 是一个文件管理系统
+desc: File Manager 提供管理指定目录的 Web UI 界面。支持上传，下载，修改，删除，预览，重命名等功能。同时支持多个用户，并且每个用户可以拥有自己的目录。
+introduce:
+  brief: |
+    基于 File Manager 开源版本（[Repo](https://github.com/hacdias/filemanager) [Dockerfile](https://github.com/hacdias/filemanager/blob/master/Dockerfile)）
+  howToUse: |
+    直接从模板部署出一个完整的 File Manager 应用，不需要任何外部依赖。
+    File Manager 拥有 Web UI，可通过 UI 登陆并管理文件。
+    **管理员信息**
+    账号： admin
+    密码： admin
+    请在首次登陆后修改管理员密码。
+    **如何挂载数据**
+    File Manager 的所有数据都挂载在 `/srv`. 默认使用的是临时数据卷，如果需要持久化文件数据，请挂载其他类型的数据卷。
+    **关于扩容**
+    目前不支持扩容。请不要增加副本数量。
+  version: |
+    基于社区 1.4.4 稳定版本。
+  resources: |
+    最低资源要求：CPU：0.25 Core，内存：128 MiB
+    推荐资源配置：CPU：0.25 Core，内存：512 MiB
+    File Manager 对资源要求不高，如果资源紧张，可以适当降低资源配置。
+  service: |
+    默认使用集群内部 IP 暴露服务的 80 端口。
+    默认服务名为 filemanager，如果服务名冲突，请修改为其他名称。可通过服务名访问 File Manager。
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。

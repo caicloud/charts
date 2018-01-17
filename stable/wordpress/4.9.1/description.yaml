@@ -1,0 +1,25 @@
+name: wordpress
+briefDesc: WordPress 是一个开源的博客系统
+desc: Wordress 是一个开源的博客系统，基于 PHP 和 Mysql。Wordpress 拥有大量主题和插件，用于优化 Wordress 的 UI 和功能。
+introduce:
+  brief: |
+    基于 WrodPress 开源版本（[Repo](https://github.com/WordPress/WordPress) [Dockerfile](https://github.com/docker-library/wordpress/blob/master/php7.2/apache/Dockerfile)）
+  howToUse: |
+    WordPress 依赖 Mysql 数据库，因此在部署 WordPress 之前，需要先部署一个 Mysql 数据库。
+    **环境变量**
+    - WORDPRESS_DB_HOST：Mysql 服务名。
+    - WORDPRESS_DB_NAME：数据库名称。
+    - WORDPRESS_DB_USER：数据库用户名。
+    - WORDPRESS_DB_PASSWORD：数据库密码。
+    - WORDPRESS_TABLE_PREFIX：数据库表前缀。
+    **关于扩容**
+    目前不支持扩容。请不要增加副本数量。
+  version: |
+    基于社区 WordPres 4.9.1 稳定版本。
+  resources: |
+    最低资源要求：CPU：0.25 Core，内存：512 MiB
+    推荐资源配置：CPU：0.5 Core，内存：512 MiB
+  service: |
+    默认使用集群内部 IP 暴露服务的 80 端口。
+    默认服务名为 wordpress，如果服务名冲突，请修改为其他名称。可通过服务名访问 WordPress。
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。
