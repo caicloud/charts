@@ -1,0 +1,24 @@
+name: mongo
+briefDesc: MongoDB 是一个开源的 NoSQL 数据库
+desc: MongoDB 是一个开源的面向文档的数据库系统。MongoDB 使用类似 JSON 格式的文档规范，提供了较高的扩展性和灵活性。
+introduce:
+  brief: |
+    基于 MongoDB 开源版本（[Repo](https://github.com/mongodb/mongo) [Dockerfile](https://github.com/docker-library/mongo/blob/master/3.6/Dockerfile)）
+  howToUse: |
+    直接从模板部署出一个完整的 MongoDB 数据库，不需要任何外部依赖。
+    **如何挂载数据**
+    MongoDB 的所有数据都挂载在 `/data`. 默认使用的是临时数据卷，如果需要持久化文件数据，请挂载其他类型的数据卷。
+    **配置**
+    MongoDB 使用默认配置。如果需要自定义配置，可以将配置挂载到 `/etc/mongo/mongod.conf`，然后修改启动参数为 `mongo -f /etc/mongo/mongod.conf`。
+    不要把配置直接挂载到 `/etc/mongod.conf`。
+    **关于扩容**
+    目前不支持扩容。请不要增加副本数量。
+  version: |
+    基于社区 MongoDB 3.6.1 稳定版本。
+  resources: |
+    最低资源要求：CPU：0.25 Core，内存：512 MiB
+    推荐资源配置：CPU：1 Core，内存：1 GiB
+  service: |
+    默认使用集群内部 IP 暴露服务的 27017 端口。
+    默认服务名为 mongo，如果服务名冲突，请修改为其他名称。可通过服务名访问数据库。
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。
