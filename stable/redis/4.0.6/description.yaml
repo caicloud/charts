@@ -1,0 +1,27 @@
+name: Redis
+briefDesc: Redis 是一个开源 key-value 数据库
+desc: |
+  Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。
+  它支持一下数据类型：字符串，哈希表，列表，集合，有序集合，位图，hyperloglog，支持半径查询的地理空间索引。
+  Redis 内置了复制，Lua 脚本，LRU 回收，事务和不同级别持久化存储等功能，通过 Redis Sentinel 来支持高可用，通过 Redis
+  Cluster 来支持自动分区。
+  从2015年6月开始，Redis的开发由Redis Labs赞助，而2013年5月至2015年6月期间，其开发由Pivotal赞助。
+  在2013年5月之前，其开发由VMware赞助。根据月度排行网站DB-Engines.com的数据显示，Redis是最流行的键值对存储数据库。
+introduce:
+  brief: |
+    基于 Redis 社区版本（Repo(https://github.com/docker-library/redis) - [Dockerfile](https://github.com/docker-library/redis/blob/9c63bd5fc7b52cc3d8f3441a660a593028a0ed15/4.0/alpine/Dockerfile)）
+  howToUse: |
+    直接从模板部署出一个完整的 Redis 应用，不需要任何外部依赖。
+    **如何挂载数据**
+    数据挂载在 `/data`
+    配置挂载在 `/usr/local/etc/redis/redis.conf`
+    **配置**
+    更加详细的配置说明请看[自解释的配置](https://raw.githubusercontent.com/antirez/redis/4.0/redis.conf)
+  version: |
+    基于社区 4.0.6 稳定版本。
+  resources: |
+    最低资源要求：CPU：1 Core，内存：2 GiB，1个节点
+    推荐资源配置：CPU：4 Core，内存：4 GiB，2个以上节点
+  service: |
+    默认使用集群内部 IP 暴露服务的 6379 端口
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。
