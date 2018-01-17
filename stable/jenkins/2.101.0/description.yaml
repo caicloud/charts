@@ -1,0 +1,29 @@
+name: Jenkins
+briefDesc: Jekins 是一个开源的持续集成工具
+desc: |
+  Jenkins是一个用Java编写的开源的持续集成工具。Jenkins提供了软件开发的持续集成服务。
+  它运行在Servlet容器中（例如Apache Tomcat）。它支持软件配置管理（SCM）工具（包括AccuRev SCM、CVS、
+  Subversion、Git、Perforce、Clearcase和RTC），可以执行基于Apache Ant和Apache Maven的项目，
+  以及任意的Shell脚本和Windows批处理命令。Jenkins的主要开发者是川口耕介。Jenkins是在MIT许可证下发布的自由软件。
+  可以通过各种手段触发构建。例如提交给版本控制系统时被触发，也可以通过类似Cron的机制调度，
+  也可以在其他的构建已经完成时，还可以通过一个特定的URL进行请求。
+introduce:
+  brief: |
+    基于 Jenkins 社区版本（[Repo](https://github.com/jenkinsci/docker) - [Dockerfile](https://github.com/jenkinsci/docker/blob/master/Dockerfile-alpine)）
+    在上面添加了大量常用的插件，如果pipeline，git, svn, github, gitlab等
+  howToUse: |
+    直接从模板部署出一个完整的 Jenkins 应用，不需要任何外部依赖。
+    跳过了默认输入验证码的步骤，内置了一个管理员账户，用户名：admin，密码：admin
+    **如何挂载数据**
+    Jenkins 的所有数据都挂载在 `/var/jenkins_home`.
+    **配置**
+    Jenkins 的配置全部都是写入 `jenkins_home`, 所以需要将 `jenkins_home` 挂载在一个可持久化的存储上
+  version: |
+    基于社区 2.101.0 稳定版本。
+  resources: |
+    最低资源要求：CPU：1 Core，内存：2 GiB
+    推荐资源配置：CPU：4 Core，内存：4 GiB
+    Jenkins 非常吃资源，资源越大越好。
+  service: |
+    默认使用集群内部 IP 暴露服务的 8080 和 50000 端口
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。
