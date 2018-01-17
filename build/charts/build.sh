@@ -53,6 +53,8 @@ function packChart() {
 function generate() {
   # Copy input to tmp dir.
   mkdir -p $tmp
+  # Clear output dir.
+  rm -rf $OUTPUT_DIR
   mkdir -p $OUTPUT_DIR
   cp -R $INPUT_DIR/* $tmp
   for chartPath in $tmp/*; do
