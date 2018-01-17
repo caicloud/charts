@@ -1,0 +1,27 @@
+name: gitlab-ce
+briefDesc: Gitlab 是一个开源的自托管的Git项目仓库
+desc: |
+  GitLab 是一个利用 Ruby on Rails 开发的开源应用程序，实现一个自托管的 Git 项目仓库，可通过 Web 界面进行访问公开的或者私人项目。
+  它拥有与 GitHub 类似的功能，能够浏览源代码，管理缺陷和注释。可以管理团队对仓库的访问，它非常易于浏览提交过的版本并提供一个文件历史库。
+  团队成员可以利用内置的简单聊天程序（Wall）进行交流。它还提供一个代码片段收集功能可以轻松实现代码复用，便于日后有需要的时候进行查找。
+introduce:
+  brief: |
+    基于 Gitlab 社区版本（[Repo](https://gitlab.com/gitlab-org/omnibus-gitlab) - [Dockerfile](https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/docker/Dockerfile)）
+  howToUse: |
+    直接从模板部署出一个完整的 Gitlab 应用，不需要任何外部依赖。
+    **如何挂载数据**
+    日志挂载在 `/var/log/gitlab`, 
+    数据挂载在 `/var/opt/gitlab`.
+    配置挂载在 `/etc/gitlab/gitlab.rb`
+    **配置**
+    需要确保 Gitlab 配置文件里面配置了external_url，
+    更加完整的配置请查看[官方文档](https://docs.gitlab.com/omnibus/settings/configuration.html)
+    另外，你还可以通过环境变量 `GITLAB_OMNIBUS_CONFIG` 来预先配置 gitlab, 注意 `GITLAB_OMNIBUS_CONFIG` 的值并不会被写入 `gitlab.rb` 配置文件中。
+  version: |
+    基于社区 10.3.3 稳定版本。
+  resources: |
+    最低资源要求：CPU：1 Core，内存：2 GiB。
+    推荐资源配置：CPU：2 Core，内存：4 GiB, 能支持 100-500 个用户使用
+  service: |
+    默认使用集群内部 IP 暴露服务的80，443，22端口,
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。
