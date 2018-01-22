@@ -18,10 +18,10 @@ _config:
       - name: data
         path: "/data"
       resources:
-        limits:
-          cpu: 0.2
-          memory: 200Mi
         requests:
+          cpu: 0.25
+          memory: 256Mi
+        limits:
           cpu: 0.5
           memory: 512Mi
     controller:
