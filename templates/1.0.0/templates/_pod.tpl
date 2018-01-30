@@ -191,7 +191,7 @@ requests:
   "storage": {{ .storage }}
   {{- end }}
   {{- if hasKey . "gpu" }}
-  "alpha.kubernetes.io/nvidia-gpu": {{ .gpu }}
+  "nvidia.com/gpu": {{ .gpu }}
   {{- end }}
 {{- end }}
 {{- with .limits }}
@@ -206,7 +206,7 @@ limits:
   "storage": {{ .storage }}
   {{- end }}
   {{- if hasKey . "gpu" }}
-  "alpha.kubernetes.io/nvidia-gpu": {{ .gpu }}
+  "nvidia.com/gpu": {{ .gpu }}
   {{- end }}
 {{- end }}
 {{- end -}}
