@@ -24,7 +24,7 @@ _config:
       - protocol: HTTP
         targetPort: 11211
         port: 11211
-        nodePort: ''
+        nodePort: 0
       name: memcached
       type: ClusterIP
       export: true

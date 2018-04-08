@@ -34,19 +34,19 @@ _config:
       - protocol: HTTP
         targetPort: 4369
         port: 4369
-        nodePort: ''
+        nodePort: 0
       - protocol: HTTP
         targetPort: 5671
         port: 5671
-        nodePort: ''
+        nodePort: 0
       - protocol: HTTP
         targetPort: 5672
         port: 5672
-        nodePort: ''
+        nodePort: 0
       - protocol: HTTP
         targetPort: 25672
         port: 25672
-        nodePort: ''
+        nodePort: 0
       name: rabbitmq
       type: ClusterIP
       export: true

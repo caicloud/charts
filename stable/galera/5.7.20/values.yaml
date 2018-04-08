@@ -48,7 +48,7 @@ _config:
       - protocol: TCP
         targetPort: 3306
         port: 3306
-        nodePort: ''
+        nodePort: 0
       name: galera
       type: ClusterIP
       export: true

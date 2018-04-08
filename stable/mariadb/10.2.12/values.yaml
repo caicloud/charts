@@ -38,7 +38,7 @@ _config:
       - protocol: HTTP
         targetPort: 3306
         port: 3306
-        nodePort: ''
+        nodePort: 0
       name: mariadb
       type: ClusterIP
       export: true
