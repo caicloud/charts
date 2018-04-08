@@ -32,11 +32,11 @@ _config:
       - protocol: HTTP
         targetPort: 8086
         port: 8086
-        nodePort: ''
+        nodePort: 0
       - protocol: TCP
         targetPort: 8088
         port: 8088
-        nodePort: ''
+        nodePort: 0
       name: influxdb
       type: ClusterIP
       export: true

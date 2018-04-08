@@ -30,7 +30,7 @@ _config:
       - protocol: HTTP
         targetPort: 80
         port: 80
-        nodePort: ''
+        nodePort: 0
       name: filemanager
       type: ClusterIP
       export: true

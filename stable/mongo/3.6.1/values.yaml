@@ -30,7 +30,7 @@ _config:
       - protocol: HTTP
         targetPort: 27017
         port: 27017
-        nodePort: ''
+        nodePort: 0
       name: mongo
       type: ClusterIP
       export: true

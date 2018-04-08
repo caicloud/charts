@@ -38,7 +38,7 @@ _config:
       - protocol: HTTP
         targetPort: 3000
         port: 80
-        nodePort: ''
+        nodePort: 0
       name: redmine
       type: ClusterIP
       export: true

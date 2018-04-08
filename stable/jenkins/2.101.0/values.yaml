@@ -33,11 +33,11 @@ _config:
       - protocol: HTTP
         targetPort: 8080
         port: 8080
-        nodePort: ''
+        nodePort: 0
       - protocol: HTTP
         targetPort: 50000
         port: 50000
-        nodePort: ''
+        nodePort: 0
       name: jenkins
       type: NodePort
       export: true
