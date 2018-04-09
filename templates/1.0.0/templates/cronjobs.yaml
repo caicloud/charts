@@ -35,22 +35,29 @@ spec:
   {{- end }}
   {{- end }}
   jobTemplate:
-    {{- with .controller }}
-    parallelism: {{ .parallelism }}
-    completions: {{ .completions }}
-    activeDeadlineSeconds: {{ .active }}
-    {{- end }}
-    template:
-      metadata:
-        labels:
-          "controller.caicloud.io/release": {{ $g.Release.Name }}
-          "controller.caicloud.io/chart": {{ $g.Chart.Name }}
-          "controller.caicloud.io/name": {{ $controllerName }}
-          {{- include "schelabels" $controller.schedule | indent 10 }}
-        annotations:
-          {{- include "annotations" $controller.pod | indent 10 }}
-      spec:
-      {{- include "podspec" (list $controller $controllerName) | indent 8 }}
+    metadata:
+      labels:
+        "controller.caicloud.io/release": {{ $g.Release.Name }}
+        "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+      annotations:
+        {{- include "annotations" $controller.controller | indent 8 }}
+    spec:
+      {{- with .controller }}
+      parallelism: {{ .parallelism }}
+      completions: {{ .completions }}
+      activeDeadlineSeconds: {{ .active }}
+      {{- end }}
+      template:
+        metadata:
+          labels:
+            "controller.caicloud.io/release": {{ $g.Release.Name }}
+            "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+            "controller.caicloud.io/name": {{ $controllerName }}
+            {{- include "schelabels" $controller.schedule | indent 12 }}
+          annotations:
+            {{- include "annotations" $controller.pod | indent 12 }}
+        spec:
+        {{- include "podspec" (list $controller $controllerName) | indent 10 }}
 {{- end }}
 ---
 
