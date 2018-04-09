@@ -10,12 +10,14 @@
 
 {{- define "schedule" }}
 schedulerName: {{ .scheduler }}
-affinity: {{ .scheduler }}
+affinity:
+  {{- with .affinity }}
+  {{- with .node }}
   nodeAffinity:
-    {{- if eq .affinity.node.type "Required" }}
+    {{- if eq .type "Required" }}
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
-      {{- range .affinity.node.terms }}
+      {{- range .terms }}
       - matchExpressions:
         {{- range .expressions }}
         - key: {{ .key }}
@@ -28,7 +30,7 @@ affinity: {{ .scheduler }}
       {{- end }}
     {{- else }}
     preferredDuringSchedulingIgnoredDuringExecution:
-    {{- range .affinity.node.terms }}
+    {{- range .terms }}
     - weight: {{ .weight }}
       preference:
         matchExpressions:
@@ -42,10 +44,18 @@ affinity: {{ .scheduler }}
         {{- end }}
     {{- end }}
     {{- end }}
+  {{- end }}
+  {{- with .pod }}
   podAffinity:
-  {{- include "podaffinity" .affinity.pod | indent 4 }}
+  {{- include "podaffinity" . | indent 4 }}
+  {{- end }}
+  {{- end }}
+  {{- with .antiaffinity }}
+  {{- with .pod }}
   podAntiAffinity:
-  {{- include "podaffinity" .antiaffinity.pod | indent 4 }}
+  {{- include "podaffinity" . | indent 4 }}
+  {{- end }}
+  {{- end }}
 tolerations:
 {{- range .tolerations }} 
 - key: {{ .key }}
