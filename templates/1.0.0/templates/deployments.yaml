@@ -16,10 +16,10 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ $controllerName }}
+  name: {{ $controllerName | quote }}
   labels:
-    "controller.caicloud.io/release": {{ $g.Release.Name }}
-    "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+    "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+    "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
   annotations:
     {{- include "annotations" $controller.controller | indent 4 }}
 {{- with $controller }}
@@ -38,9 +38,9 @@ spec:
   template:
     metadata:
       labels:
-        "controller.caicloud.io/release": {{ $g.Release.Name }}
-        "controller.caicloud.io/chart": {{ $g.Chart.Name }}
-        "controller.caicloud.io/name": {{ $controllerName }}
+        "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+        "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
+        "controller.caicloud.io/name": {{ $controllerName | quote }}
         {{- include "schelabels" $controller.schedule | indent 8 }}
       annotations:
         {{- include "annotations" $controller.pod | indent 8 }}

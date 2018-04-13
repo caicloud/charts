@@ -3,13 +3,13 @@
 {{/* schelabels generates schedule labels */}}
 {{- define "schelabels" -}}
 {{- range $k, $v := .labels }}
-"schedule.caicloud.io/{{ $k }}": {{ $v | quote}}
+{{ printf "schedule.caicloud.io/%s" $k | quote }}: {{ $v | quote}}
 {{- end }}
 {{- end -}}
 
 
 {{- define "schedule" }}
-schedulerName: {{ .scheduler }}
+schedulerName: {{ .scheduler | quote }}
 affinity:
   {{- with .affinity }}
   {{- with .node }}
@@ -20,7 +20,7 @@ affinity:
       {{- range .terms }}
       - matchExpressions:
         {{- range .expressions }}
-        - key: {{ .key }}
+        - key: {{ .key | quote }}
           operator: {{ .operator | quote }}
           values:
           {{- range .values }}
@@ -35,7 +35,7 @@ affinity:
       preference:
         matchExpressions:
         {{- range .expressions }}
-        - key: {{ .key }}
+        - key: {{ .key | quote }}
           operator: {{ .operator | quote }}
           values:
           {{- range .values }}
@@ -58,10 +58,10 @@ affinity:
   {{- end }}
 tolerations:
 {{- range .tolerations }} 
-- key: {{ .key }}
-  operator: {{ .operator }}
-  value: {{ .value }}
-  effect: {{ .effect }}
+- key: {{ .key | quote }}
+  operator: {{ .operator | quote }}
+  value: {{ .value | quote }}
+  effect: {{ .effect | quote }}
   tolerationSeconds: {{ .tolerationSeconds }}
 {{- end -}}
 {{- end -}}
@@ -76,13 +76,13 @@ requiredDuringSchedulingIgnoredDuringExecution:
     {{- if hasKey .selector "labels" }}
     matchLabels:
     {{- range $k, $v := .selector.labels }}
-      "schedule.caicloud.io/{{ $k }}": {{ $v | quote }}
+      {{ printf "schedule.caicloud.io/%s" $k | quote }}: {{ $v | quote }}
     {{- end }}
     {{- end }}
     {{- if hasKey .selector "expressions" }}
     matchExpressions:
     {{- range .selector.expressions }}
-    - key: "schedule.caicloud.io/{{ .key }}"
+    - key: {{ printf "schedule.caicloud.io/%s" .key | quote }}
       operator: {{ .operator | quote }}
       values:
       {{- range .values }}
@@ -94,7 +94,7 @@ requiredDuringSchedulingIgnoredDuringExecution:
   {{- range .namespaces }}
   - {{ . }}
   {{- end }}
-  topologyKey: {{ .topologyKey | default "kubernetes.io/hostname" }}
+  topologyKey: {{ .topologyKey | default "kubernetes.io/hostname" | quote }}
 {{- end }}
 {{- else }}
 preferredDuringSchedulingIgnoredDuringExecution:
@@ -105,13 +105,13 @@ preferredDuringSchedulingIgnoredDuringExecution:
       {{- if hasKey .selector "labels" }}
       matchLabels:
       {{- range $k, $v := .selector.labels }}
-        "schedule.caicloud.io/{{ $k }}": {{ $v | quote }}
+        {{ printf "schedule.caicloud.io/%s" $k | quote }}: {{ $v | quote }}
       {{- end }}
       {{- end }}
       {{- if hasKey .selector "expressions" }}
       matchExpressions:
       {{- range .selector.expressions }}
-      - key: "schedule.caicloud.io/{{ .key }}"
+      - key: {{ printf "schedule.caicloud.io/%s" .key | quote }}
         operator: {{ .operator | quote }}
         values:
         {{- range .values }}
@@ -121,9 +121,9 @@ preferredDuringSchedulingIgnoredDuringExecution:
       {{- end }}
     namespaces:
     {{- range .namespaces }}
-    - {{ . }}
+    - {{ . | quote }}
     {{- end }}
-    topologyKey: {{ .topologyKey | default "kubernetes.io/hostname" }} 
+    topologyKey: {{ .topologyKey | default "kubernetes.io/hostname" | quote }} 
 {{- end }}
 {{- end }}
 {{- end -}}
