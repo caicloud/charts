@@ -25,7 +25,7 @@ metadata:
 {{- with $controller }}
 spec:
   {{- with .controller }}
-  strategy:
+  updateStrategy:
     type: RollingUpdate
     {{- with .strategy }}
     rollingUpdate:
