@@ -12,20 +12,21 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   {{- if eq $controller.type "StatefulSet" }}
-  name: {{ $controller.controller.name | default $controllerName }}-{{ .name }}
+  {{ $name := $controller.controller.name | default $controllerName -}}
+  name: {{ printf "%s-%s" $name .name | quote }}
   {{- else }}
-  name: {{ $controllerName }}-{{ .name }}
+  name: {{ printf "%s-%s" $controllerName .name | quote }}
   {{- end }}
   labels:
-    "volume.caicloud.io/type" : {{ .type }}
-    "controller.caicloud.io/release": {{ $g.Release.Name }}
-    "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+    "volume.caicloud.io/type" : {{ .type | quote }}
+    "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+    "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
 spec:
   accessModes:
   {{- range .source.modes }}
-  - {{ . }}
+  - {{ . | quote }}
   {{- end }}
-  storageClassName: {{ .source.class }}
+  storageClassName: {{ .source.class | quote }}
   resources:
     requests:
       storage: {{ .storage.request }}

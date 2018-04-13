@@ -6,45 +6,45 @@
 {{- $cname := index . 1 -}}
 {{- range $volumes -}}
 {{- if ne .type "Dedicated" }}
-- name: {{ .name }}
+- name: {{ .name | quote }}
 {{- if eq .type "Dynamic" }}
   persistentVolumeClaim: 
-    claimName: {{ $cname }}-{{ .name }}
+    claimName: {{ printf "%s-%s" $cname .name | quote }}
 {{- end -}}
 {{- if eq .type "Static" }}
   persistentVolumeClaim: 
-    claimName: {{ .source.target }}
+    claimName: {{ .source.target | quote }}
     readOnly: {{ .source.readonly }}
 {{- end -}}
 {{- if eq .type "Temp" }}
   emptyDir:
-    medium: {{ .source.medium }}
+    medium: {{ .source.medium | quote }}
 {{- end -}}
 {{- if eq .type "HostPath" }}
   hostPath:
-    path: {{ .source.path }}
+    path: {{ .source.path | quote }}
 {{- end -}}
 {{- if eq .type "Config" }}
   configMap:
-    name: {{ .source.target }}
+    name: {{ .source.target | quote }}
     defaultMode: {{ .source.default }}
     optional: {{ .source.optional }}
     items:
     {{- range .source.items }}
-    - key: {{ .key }}
-      path: {{ .path }}
+    - key: {{ .key | quote }}
+      path: {{ .path | quote }}
       mode: {{ .mode }}
     {{- end -}}
 {{- end -}}
 {{- if eq .type "Secret" }}
   secret:
-    secretName: {{ .source.target }}
+    secretName: {{ .source.target | quote }}
     defaultMode: {{ .source.default }}
     optional: {{ .source.optional }}
     items:
     {{- range .source.items }}
-    - key: {{ .key }}
-      path: {{ .path }}
+    - key: {{ .key | quote }}
+      path: {{ .path | quote }}
       mode: {{ .mode }}
     {{- end -}}
 {{ end -}}
@@ -61,17 +61,17 @@
 {{- range $volumes -}}
 {{- if eq .type "Dedicated" }}
 - metadata:
-    name: {{ .name }}
+    name: {{ .name | quote }}
     labels:
-      "controller.caicloud.io/release": {{ $g.Release.Name }}
-      "controller.caicloud.io/chart": {{ $g.Chart.Name }}
-      "controller.caicloud.io/name": {{ $name }}
+      "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+      "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
+      "controller.caicloud.io/name": {{ $name | quote }}
   spec:
     accessModes:
     {{- range .source.modes }}
-    - {{ . }}
+    - {{ . | quote }}
     {{- end }}
-    storageClassName: {{ .source.class }}
+    storageClassName: {{ .source.class | quote }}
     resources:
       requests:
         storage: {{ .storage.request }}

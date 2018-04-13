@@ -24,7 +24,7 @@ metadata:
 spec:
   clusterIP: None
   selector:
-    "controller.caicloud.io/name": {{ $name }}
+    "controller.caicloud.io/name": {{ $name | quote }}
   ports:
   {{- range .containers -}}
   {{- range .ports }}
@@ -42,23 +42,23 @@ spec:
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: {{ $name }}
+  name: {{ $name | quote }}
   labels:
-    "controller.caicloud.io/release": {{ $g.Release.Name }}
-    "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+    "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+    "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
   annotations:
     {{- include "annotations" $controller.controller | indent 4 }}
 spec:
-  serviceName: {{ $domain }}
+  serviceName: {{ $domain | quote }}
   replicas: {{ $controller.controller.replica }}
   updateStrategy:
     type: "RollingUpdate"
   template:
     metadata:
       labels:
-        "controller.caicloud.io/release": {{ $g.Release.Name }}
-        "controller.caicloud.io/chart": {{ $g.Chart.Name }}
-        "controller.caicloud.io/name": {{ $name }}
+        "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+        "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
+        "controller.caicloud.io/name": {{ $name | quote }}
         {{- include "schelabels" $controller.schedule | indent 8 }}
       annotations:
         {{- include "annotations" $controller.pod | indent 8 }}

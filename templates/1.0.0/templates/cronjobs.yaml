@@ -16,18 +16,18 @@
 apiVersion: batch/v2alpha1
 kind: CronJob
 metadata:
-  name: {{ $controllerName }}
+  name: {{ $controllerName | quote }}
   labels:
-    "controller.caicloud.io/release": {{ $g.Release.Name }}
-    "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+    "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+    "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
   annotations:
     {{- include "annotations" $controller.controller | indent 4 }}
 {{- with $controller }}
 spec:
   {{- with .controller }}
-  schedule: {{ .rule }}
+  schedule: {{ .rule | quote }}
   startingDeadlineSeconds: {{ .deadline }}
-  concurrencyPolicy: {{ .policy }}
+  concurrencyPolicy: {{ .policy | quote }}
   suspend: {{ .suspend }}
   {{- with .history }}
   successfulJobsHistoryLimit: {{ .success }}
@@ -37,8 +37,8 @@ spec:
   jobTemplate:
     metadata:
       labels:
-        "controller.caicloud.io/release": {{ $g.Release.Name }}
-        "controller.caicloud.io/chart": {{ $g.Chart.Name }}
+        "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+        "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
       annotations:
         {{- include "annotations" $controller.controller | indent 8 }}
     spec:
@@ -50,9 +50,9 @@ spec:
       template:
         metadata:
           labels:
-            "controller.caicloud.io/release": {{ $g.Release.Name }}
-            "controller.caicloud.io/chart": {{ $g.Chart.Name }}
-            "controller.caicloud.io/name": {{ $controllerName }}
+            "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+            "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
+            "controller.caicloud.io/name": {{ $controllerName | quote }}
             {{- include "schelabels" $controller.schedule | indent 12 }}
           annotations:
             {{- include "annotations" $controller.pod | indent 12 }}

@@ -6,12 +6,12 @@
 {{- $name := index . 1 -}}
 
 {{- with $controller.pod }}
-restartPolicy: {{ .restart }}
-dnsPolicy: {{ .dns }}
-hostname: {{ .hostname }}
-subdomain: {{ .subdomain }}
+restartPolicy: {{ .restart | quote }}
+dnsPolicy: {{ .dns | quote }}
+hostname: {{ .hostname | quote }}
+subdomain: {{ .subdomain | quote }}
 terminationGracePeriodSeconds: {{ .termination }}
-serviceAccountName: {{ .serviceAccountName }}
+serviceAccountName: {{ .serviceAccountName | quote }}
 {{- with .host }}
 hostNetwork: {{ .network }}
 hostPID: {{ .pid }}
@@ -45,19 +45,19 @@ containers:
 
 {{- range $index, $container := $containers -}}
 {{- with $container }}
-- name: {{ .name | default (printf "%s%d" $prefix $index) }}
-  image: {{ .image }}
-  imagePullPolicy: {{ .imagePullPolicy }}
+- name: {{ .name | default (printf "%s%d" $prefix $index) | quote }}
+  image: {{ .image | quote }}
+  imagePullPolicy: {{ .imagePullPolicy | quote }}
   tty: {{ .tty }}
   command:
   {{- range .command }}
-  - {{ . }}
+  - {{ . | quote }}
   {{- end }}
   args:
   {{- range .args }}
-  - {{ . }}
+  - {{ . | quote }}
   {{- end }}
-  workingDir: {{ .workingDir }}
+  workingDir: {{ .workingDir | quote }}
   {{- with .securityContext }}
   securityContext:
     privileged: {{ .privileged }}
@@ -65,11 +65,11 @@ containers:
     capabilities:
       add: 
       {{- range .add }}
-      - {{ . }}
+      - {{ . | quote }}
       {{- end }}
       drop: 
       {{- range .drop }}
-      - {{ . }}
+      - {{ . | quote }}
       {{- end }}
     {{- end }}
   {{- end }}
@@ -93,10 +93,10 @@ containers:
   {{- include "resources" .resources | indent 4 }}
   volumeMounts:
   {{- range .mounts}}
-  - name: {{ .name }}
+  - name: {{ .name | quote }}
     readOnly: {{ .readonly }}
-    mountPath: {{ .path }}
-    subPath: {{ .subpath }}
+    mountPath: {{ .path | quote }}
+    subPath: {{ .subpath | quote }}
   {{- end }}
   {{- if .probe }}
   {{- if .probe.liveness }}
@@ -127,21 +127,21 @@ containers:
 
 {{- define "envfile" -}}
 {{- range . }}
-- prefix: {{ .prefix }}
+- prefix: {{ .prefix | quote }}
   {{ if eq .type "Config" -}}
   configMapRef:
   {{- else }}
   secretRef:
   {{- end }}
     optional: {{ .optional }}
-    name: {{ .name }}
+    name: {{ .name | quote }}
 {{- end -}}
 {{- end -}}
 
 
 {{- define "env" -}}
 {{- range . }}
-- name: {{ .name }}
+- name: {{ .name | quote }}
   value: {{ .value | quote }}
   {{- with .from }}
   valueFrom:
@@ -150,8 +150,8 @@ containers:
     {{- else }}
     secretKeyRef:
     {{- end }}
-      name: {{ .name }}
-      key: {{ .key }}
+      name: {{ .name | quote }}
+      key: {{ .key | quote }}
       optional: {{ .optional }}
   {{- end -}}
 {{- end -}}
@@ -159,20 +159,20 @@ containers:
 
 
 {{- define "downwardenv" -}}
-{{- $prefix := . }}
-- name: {{ $prefix }}POD_NAMESPACE
+{{- $prefix := . | default "" }}
+- name: {{ printf "%sPOD_NAMESPACE" $prefix | quote }}
   valueFrom:
     fieldRef:
       fieldPath: metadata.namespace
-- name: {{ $prefix }}POD_NAME
+- name: {{ printf "%sPOD_NAME" $prefix | quote }}
   valueFrom:
     fieldRef:
       fieldPath: metadata.name
-- name: {{ $prefix }}POD_IP
+- name: {{ printf "%sPOD_IP" $prefix | quote }}
   valueFrom:
     fieldRef:
       fieldPath: status.podIP
-- name: {{ $prefix }}NODE_NAME
+- name: {{ printf "%sNODE_NAME" $prefix | quote }}
   valueFrom:
     fieldRef:
       fieldPath: spec.nodeName
@@ -230,19 +230,19 @@ failureThreshold: {{ .threshold.failure }}
 exec: 
   command:
   {{- range .method.command }}
-  - {{ . }}
+  - {{ . | quote }}
   {{- end }}
 {{- end }}
 {{- if eq .type "HTTP" }}
 httpGet:
-  scheme: {{ .method.scheme }}
-  host: {{ .method.host }}
+  scheme: {{ .method.scheme | quote }}
+  host: {{ .method.host | quote }}
   port: {{ .method.port }}
-  path: {{ .method.path }}
+  path: {{ .method.path | quote }}
   httpHeaders:
   {{- range .method.headers }}
-  - name: {{ .name }}
-    value: {{ .value }}
+  - name: {{ .name | quote }}
+    value: {{ .value | quote }}
   {{- end }}
 {{- end }}
 {{- if eq .type "TCP" }}
