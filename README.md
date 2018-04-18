@@ -23,7 +23,10 @@
     - [source：Static](#sourcestatic)
     - [source：Scratch](#sourcescratch)
     - [source：Config，Secret](#sourceconfigsecret)
+    - [source：HostPath](#sourcehostpath)
   - [类型：service](#类型service)
+  - [类型：config](#类型config)
+  - [类型：secret](#类型secret)
 - [一个配置文件的例子](#一个配置文件的例子)
 
 ### 概述
@@ -71,6 +74,10 @@ _config:
     volumes:              # 数据卷描述信息数组，这部分数据卷可以被多个容器共享访问
     - ...
     services:             # 服务信息数组，当前控制器内的容器需要暴露服务时，在这里添加服务。一个控制器可有多个服务
+    - ...
+    configs:              # 配置信息数组
+    - ...
+    secrets:              # 加密配置信息数组
     - ...
 chartX:
   # 子模版 chartX 的配置，其结构与上面的 _config 相同
@@ -248,6 +255,7 @@ dns: string("ClusterFirst")            # DNS 策略，可以为 Default，Cluste
 hostname: string("")                   # 主机名
 subdomain: string("")                  # 子域名
 termination: uint(30)                  # 优雅退出时间
+serviceAccountName: string("")         # ServiceAccount
 host:
   network: bool(false)                 # 与主机共享 network namespace
   pid: bool(false)                     # 与主机共享 pid namespace
@@ -273,8 +281,15 @@ command:                               # 即 Docker EntryPoint
 args:                                  # 即 Docker CMD
 - string
 workingDir: string("")                 # 工作目录
+privileged: bool(false)                # 是否启动特权模式
+capabilities:                          # POISX CAP
+  add:                                 # 添加 POISX CAP
+  - string
+  drop:                                # 移除 POISX CAP
+  - string
 ports:                                 # 容器端口
 - port: pint(80)                       # 端口
+  hostPort: pint(0)                    # 暴露到主机端口
   protocol: string("HTTP")             # 端口协议,可以是 HTTP，HTTPS，TCP，UDP
 envFrom:                               # env from，来自 Config 或 Secret
 - prefix: string("")                   # 所有来自 目标 的 key 都会加这个前缀
@@ -372,7 +387,7 @@ TCP 类型的方法目前还没有实现，不能使用。
 #### 类型：volume
 ```yaml
 name: string                           # 数据卷名称，在容器中被引用
-type: string("Scratch")                # 可选项为 Dedicated，Dynamic，Static，Scratch，Config，Secret。Dedicated 仅在控制器为 StatefulSet 时可用
+type: string("Scratch")                # 可选项为 Dedicated，Dynamic，Static，Scratch，Config，Secret，HostPath。Dedicated 仅在控制器为 StatefulSet 时可用
 source:                                # source 的设置与 type 有关
   ... 
 storage:                               # 存储需求
@@ -416,6 +431,11 @@ Scratch 表示使用临时数据卷 EmptyDir。
 ```
 Config 和 Secret 表示使用 配置 或 秘钥 作为数据卷。能够指定 配置 和 秘钥 的多个 key 作为文件使用。
 
+##### source：HostPath
+```yaml
+    path: string                       # 本地文件路径
+```
+
 #### 类型：service
 ```yaml
 name: string                           # 服务名称
@@ -436,6 +456,49 @@ annotations:                           # 服务附加信息,仅用于保存服�
 
 服务类型为 NodePort 时，才可以设置 ports 中的 nodePort 字段。  
 服务在部署后，服务名称不可变更。
+
+#### 类型：config
+```yaml
+name: string                           # 配置名称
+data:
+- key: string                          # 键
+  value: string                        # 值
+```
+
+#### 类型：secret
+```yaml
+name: string                           # 加密配置名称
+type: string(Opaque)                   # 加密配置类型
+data:
+- key: string                          # 键
+  value: string                        # 值，必须是原始值经过 base64 编码后的字符串
+```
+加密配置的类型包括：
+- Opaque：默认加密配置类型，key 可以是任意有效的字符串
+- kubernetes.io/service-account-token： ServiceAccount，key 包括
+  - kubernetes.io/service-account.name
+  - kubernetes.io/service-account.uid
+  - token
+  - kubernetes.kubeconfig
+  - ca.crt
+  - namespace
+- kubernetes.io/dockercfg： Docker config，key 包括
+  - .dockercfg
+- kubernetes.io/dockerconfigjson： Docker config json，key 包括
+  - .dockerconfigjson
+- kubernetes.io/basic-auth： Basic auth，key 包括
+  - username
+  - password
+- kubernetes.io/ssh-auth： SSH auth，key 包括
+  - ssh-privatekey
+- kubernetes.io/tls： TLS 证书密钥（PEM），key 包括
+  - tls.crt
+  - tls.key
+
+
+
+
+
 
 ### 一个配置文件的例子
 ```yaml
@@ -585,6 +648,9 @@ _config:
       replica: 1
     containers:
     - image: cargo.caicloudprivatetest.com/caicloud/simplelog
+      mounts:
+      - name: cfgvolume
+        path: /etc/simplelog
       resources:
         requests:
           cpu: 100m
@@ -600,6 +666,26 @@ _config:
       - protocol: HTTP
         targetPort: 80
         port: 80
+    volumes:
+      name: cfgvolume
+      type: Config
+      source:
+        target: simplecfg
+        items:
+        - key: "config.yaml"
+          path: "config.yaml"
+    configs:
+    - name: simplecfg
+      data:
+      - key: "config.yaml"
+        value: |
+          sync: "5m"
+          deadline: "3h"
+    secrets:
+    - name: simplesecret
+      data:
+      - key: "encrypted.cfg"
+        value: c3luYzogIjVtIgpkZWFkbGluZTogIjNoIgo=
 subchart:
   _config:
     略

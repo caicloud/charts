@@ -16,7 +16,7 @@
     claimName: {{ .source.target | quote }}
     readOnly: {{ .source.readonly }}
 {{- end -}}
-{{- if eq .type "Temp" }}
+{{- if eq .type "Scratch" }}
   emptyDir:
     medium: {{ .source.medium | quote }}
 {{- end -}}

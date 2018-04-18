@@ -153,6 +153,9 @@ _config:
       replica: 1
     containers:
     - image: cargo.caicloudprivatetest.com/caicloud/simplelog
+      mounts:
+      - name: cfgvolume
+        path: /etc/simplelog
       resources:
         requests:
           cpu: 100m
@@ -168,3 +171,27 @@ _config:
       - protocol: HTTP
         targetPort: 80
         port: 80
+    volumes:
+    - name: test
+      type: Scratch
+      source:
+        medium: "memory"
+    - name: cfgvolume
+      type: Config
+      source:
+        target: simplecfg
+        items:
+        - key: "config.yaml"
+          path: "config.yaml"
+    configs:
+    - name: simplecfg
+      data:
+      - key: "config.yaml"
+        value: |
+          sync: "5m"
+          deadline: "3h"
+    secrets:
+    - name: simplesecret
+      data:
+      - key: "encrypted.cfg"
+        value: c3luYzogIjVtIgpkZWFkbGluZTogIjNoIgo=
