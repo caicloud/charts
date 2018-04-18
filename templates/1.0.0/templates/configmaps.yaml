@@ -1,0 +1,22 @@
+{{/* Generates all configmaps */}}
+
+
+{{- $g := . -}}
+{{- range $index, $controller := .Values._config.controllers -}}
+{{- range $controller.configs }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}
+  labels:
+    "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
+    "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
+data:
+  {{- range .data }}
+  {{ .key | quote }}: {{ .value | quote }}
+  {{- end }}
+---
+{{ end -}}
+{{- end -}}
+
