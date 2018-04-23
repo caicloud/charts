@@ -44,8 +44,7 @@ kind: StatefulSet
 metadata:
   name: {{ $name | quote }}
   labels:
-    "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
-    "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
+    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
   annotations:
     {{- include "annotations" $controller.controller | indent 4 }}
 spec:
@@ -53,12 +52,16 @@ spec:
   replicas: {{ $controller.controller.replica }}
   updateStrategy:
     type: "RollingUpdate"
+  selector:
+    matchLabels:
+      {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
+      {{- include "controllerlabels"  $controllerName | indent 6 }}
+      {{- include "schelabels" $controller.schedule | indent 6 }}
   template:
     metadata:
       labels:
-        "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
-        "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
-        "controller.caicloud.io/name": {{ $name | quote }}
+        {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
+        {{- include "controllerlabels"  $controllerName | indent 8 }}
         {{- include "schelabels" $controller.schedule | indent 8 }}
       annotations:
         {{- include "annotations" $controller.pod | indent 8 }}
