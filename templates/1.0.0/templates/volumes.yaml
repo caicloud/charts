@@ -19,7 +19,7 @@ metadata:
   {{- end }}
   labels:
     "volume.caicloud.io/type" : {{ .type | quote }}
-    {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
+    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
 spec:
   accessModes:
   {{- range .source.modes }}

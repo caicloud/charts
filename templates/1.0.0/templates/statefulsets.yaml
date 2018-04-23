@@ -44,7 +44,7 @@ kind: StatefulSet
 metadata:
   name: {{ $name | quote }}
   labels:
-    {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
+    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
   annotations:
     {{- include "annotations" $controller.controller | indent 4 }}
 spec:
@@ -54,14 +54,14 @@ spec:
     type: "RollingUpdate"
   selector:
     matchLabels:
-      {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
-      {{- include "controllerLabels"  $controllerName | indent 6 }}
+      {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
+      {{- include "controllerlabels"  $controllerName | indent 6 }}
       {{- include "schelabels" $controller.schedule | indent 6 }}
   template:
     metadata:
       labels:
-        {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
-        {{- include "controllerLabels"  $controllerName | indent 8 }}
+        {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
+        {{- include "controllerlabels"  $controllerName | indent 8 }}
         {{- include "schelabels" $controller.schedule | indent 8 }}
       annotations:
         {{- include "annotations" $controller.pod | indent 8 }}

@@ -17,7 +17,7 @@ metadata:
   name: {{ .name | quote }}
   labels:
     "service.caicloud.io/export" : {{ .export | quote }}
-    {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
+    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
   annotations:
     {{- include "annotations" . | indent 4 }}
 spec:

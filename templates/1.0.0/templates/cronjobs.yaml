@@ -18,7 +18,7 @@ kind: CronJob
 metadata:
   name: {{ $controllerName | quote }}
   labels:
-    {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
+    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
   annotations:
     {{- include "annotations" $controller.controller | indent 4 }}
 {{- with $controller }}
@@ -36,7 +36,7 @@ spec:
   jobTemplate:
     metadata:
       labels:
-        {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
+        {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
       annotations:
         {{- include "annotations" $controller.controller | indent 8 }}
     spec:
@@ -47,14 +47,14 @@ spec:
       {{- end }}
       selector:
         matchLabels:
-          {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 10 }}
-          {{- include "controllerLabels"  $controllerName | indent 10 }}
+          {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 10 }}
+          {{- include "controllerlabels"  $controllerName | indent 10 }}
           {{- include "schelabels" $controller.schedule | indent 10 }}
       template:
         metadata:
           labels:
-          {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 12 }}
-          {{- include "controllerLabels"  $controllerName | indent 12 }}
+          {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 12 }}
+          {{- include "controllerlabels"  $controllerName | indent 12 }}
           {{- include "schelabels" $controller.schedule | indent 12 }}
           annotations:
             {{- include "annotations" $controller.pod | indent 12 }}

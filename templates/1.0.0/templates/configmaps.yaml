@@ -10,7 +10,7 @@ kind: ConfigMap
 metadata:
   name: {{ .name }}
   labels:
-    {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
+    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
 data:
   {{- range .data }}
   {{ .key | quote }}: {{ .value | quote }}
