@@ -72,14 +72,12 @@ lint:
 test:
 	@echo 'no test'
 
-build-local: build-linux
-
-build-linux: 
+test-linux: 
 	@for target in $(TARGETS); do                                                      \
 	  $(CMD_DIR)/$${target}/test.sh;                                                  \
 	done
 
-container: build-linux
+container: test-linux
 	@for target in $(TARGETS); do                                                      \
 	  for registry in $(REGISTRIES); do                                                \
 	    image=$(IMAGE_PREFIX)$${target}$(IMAGE_SUFFIX);                                \
