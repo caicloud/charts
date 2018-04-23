@@ -26,13 +26,13 @@
 #
 
 # Current version of the project.
-VERSION ?= v1.1.0
+VERSION ?= v1.2.4
 
 # This repo's root import path (under GOPATH).
 ROOT := github.com/caicloud/charts
 
 # Target binaries. You can build multiple binaries for a single project.
-TARGETS := charts
+TARGETS := charts templates
 
 # Container image prefix and suffix added to targets.
 # The final built images are:
@@ -50,14 +50,6 @@ REGISTRIES ?= cargo.caicloudprivatetest.com/caicloud
 
 # Project main package location (can be multiple ones).
 CMD_DIR := ./build
-
-# Project output directory.
-OUTPUT_DIR := ./bin
-INPUT_DIR := ./stable
-TEMPLATES_DIR := ./templates
-TEMPLATE_VERSION := "1.0.0"
-IMAGE_DOMAIN ?= cargo.caicloudprivatetest.com
-FORCE_UPDATE ?= true
 
 # Build direcotory.
 BUILD_DIR := ./build
@@ -84,13 +76,7 @@ build-local: build-linux
 
 build-linux: 
 	@for target in $(TARGETS); do                                                      \
-	  OUTPUT_DIR=$(OUTPUT_DIR)                                                         \
-	  INPUT_DIR=$(INPUT_DIR)                                                           \
-	  TEMPLATES_DIR=$(TEMPLATES_DIR)                                                   \
-	  TEMPLATE_VERSION=$(TEMPLATE_VERSION)                                             \
-	  IMAGE_DOMAIN=$(IMAGE_DOMAIN)                                                     \
-	  FORCE_UPDATE=$(FORCE_UPDATE)                                                     \
-	  $(CMD_DIR)/$${target}/build.sh;                                                  \
+	  $(CMD_DIR)/$${target}/test.sh;                                                  \
 	done
 
 container: build-linux
