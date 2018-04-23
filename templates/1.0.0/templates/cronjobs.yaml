@@ -18,8 +18,7 @@ kind: CronJob
 metadata:
   name: {{ $controllerName | quote }}
   labels:
-    "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
-    "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
+    {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
   annotations:
     {{- include "annotations" $controller.controller | indent 4 }}
 {{- with $controller }}
@@ -37,8 +36,7 @@ spec:
   jobTemplate:
     metadata:
       labels:
-        "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
-        "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
+        {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
       annotations:
         {{- include "annotations" $controller.controller | indent 8 }}
     spec:
@@ -47,13 +45,17 @@ spec:
       completions: {{ .completions }}
       activeDeadlineSeconds: {{ .active }}
       {{- end }}
+      selector:
+        matchLabels:
+          {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 10 }}
+          {{- include "controllerLabels"  $controllerName | indent 10 }}
+          {{- include "schelabels" $controller.schedule | indent 10 }}
       template:
         metadata:
           labels:
-            "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
-            "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
-            "controller.caicloud.io/name": {{ $controllerName | quote }}
-            {{- include "schelabels" $controller.schedule | indent 12 }}
+          {{- include "releaseLabels" (list $g.Release.Name $g.Chart.Name) | indent 12 }}
+          {{- include "controllerLabels"  $controllerName | indent 12 }}
+          {{- include "schelabels" $controller.schedule | indent 12 }}
           annotations:
             {{- include "annotations" $controller.pod | indent 12 }}
         spec:
