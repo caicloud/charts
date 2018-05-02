@@ -281,12 +281,13 @@ command:                               # 即 Docker EntryPoint
 args:                                  # 即 Docker CMD
 - string
 workingDir: string("")                 # 工作目录
-privileged: bool(false)                # 是否启动特权模式
-capabilities:                          # POISX CAP
-  add:                                 # 添加 POISX CAP
-  - string
-  drop:                                # 移除 POISX CAP
-  - string
+securityContext:
+  privileged: bool(false)              # 是否启动特权模式
+  capabilities:                        # POISX CAP
+    add:                               # 添加 POISX CAP
+    - string
+    drop:                              # 移除 POISX CAP
+    - string
 ports:                                 # 容器端口
 - port: pint(80)                       # 端口
   hostPort: pint(0)                    # 暴露到主机端口
