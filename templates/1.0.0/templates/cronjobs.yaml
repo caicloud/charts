@@ -45,11 +45,6 @@ spec:
       completions: {{ .completions }}
       activeDeadlineSeconds: {{ .active }}
       {{- end }}
-      selector:
-        matchLabels:
-          {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 10 }}
-          {{- include "controllerlabels"  $controllerName | indent 10 }}
-          {{- include "schelabels" $controller.schedule | indent 10 }}
       template:
         metadata:
           labels:
