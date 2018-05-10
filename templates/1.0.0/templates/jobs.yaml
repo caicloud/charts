@@ -28,11 +28,6 @@ spec:
   completions: {{ .completions }}
   activeDeadlineSeconds: {{ .active }}
   {{- end }}
-  selector:
-    matchLabels:
-      {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
-      {{- include "controllerlabels"  $controllerName | indent 6 }}
-      {{- include "schelabels" $controller.schedule | indent 6 }}
   template:
     metadata:
       labels:
