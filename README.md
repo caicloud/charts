@@ -370,19 +370,19 @@ command:                               # 执行命令
 ###### method：HTTP
 ```yaml
 scheme: string(HTTP)                   # HTTP 或 HTTPS
-host: string("")                       # 请求头中的 Host 字段值
+host: string("")                       # Host 字段，默认是 pod ip, 如果只是想使用域名，请填在 header 里面
 port: pint                             # 容器端口
 path: string                           # HTTP Path
 header:                                # 请求头
 - name: string                         # Header 名称
   value: string                        # Header 值
 ```
+对于 `host` 这个字段，在 kubernetes 官网的[解释](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)里面说明，大部分情况下是用不上的，有一种情况是，如果你的 container 监听了 `127.0.0.1` 并且 pod 使用了 hostNetwork，则这个 `host` 需要修改成 `127.0.0.1` 。在其他通用的使用场景中，你的 container 里面提供了多个虚拟域名（如 nginx 反向代理)，那么你应该在 `header` 里面设置 `Host` 的值，而不是使用 `host` 。 
 
 ###### method：TCP
 ```yaml
 port: pint                             # TCP 端口
 ```
-TCP 类型的方法目前还没有实现，不能使用。
 
 
 #### 类型：volume
