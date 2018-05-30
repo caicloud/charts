@@ -205,7 +205,7 @@ affinity:                                              # 亲和性设置
         expressions:                                   # 通过表达式查找标签
         - key: string                                
           operator: string                             # 操作符 In，NotIn，Exists，DoesNotExist
-          value:                                       # 标签值列表
+          values:                                      # 标签值列表
           - string                                   
   node:                                              
     type: string("Required")                           # 类型可以为 Required 或 Prefered
@@ -214,7 +214,7 @@ affinity:                                              # 亲和性设置
       expressions:                                     # 通过表达式查找标签，表达式为 AND 表达式
       - key: string                                    # 这里的 key 不会自动加上前缀
         operator: string                               # 操作符 In，NotIn，Exists，DoesNotExist，Gt，Lt
-        value:                                       
+        values:
         - string                                     
 antiaffinity:                                        
   pod:                                                 # 反亲和性设置与亲和性设置相同
