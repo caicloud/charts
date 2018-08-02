@@ -8,7 +8,7 @@ _config:
   - containers:
     - env: []
       mounts:
-      - path: "/data"
+      - path: "/data/db"
         name: data
       command: []
       args: []

@@ -7,7 +7,7 @@ introduce:
   howToUse: |
     直接从模板部署出一个完整的 MongoDB 数据库，不需要任何外部依赖。
     **如何挂载数据**
-    MongoDB 的所有数据都挂载在 `/data`. 默认使用的是临时数据卷，如果需要持久化文件数据，请挂载其他类型的数据卷。
+    MongoDB 的所有数据都挂载在 `/data/db`. 默认使用的是临时数据卷，如果需要持久化文件数据，请挂载其他类型的数据卷。
     **配置**
     MongoDB 使用默认配置。如果需要自定义配置，可以将配置挂载到 `/etc/mongo/mongod.conf`，然后修改启动参数为 `mongo -f /etc/mongo/mongod.conf`。
     不要把配置直接挂载到 `/etc/mongod.conf`。
