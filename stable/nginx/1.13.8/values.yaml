@@ -15,10 +15,6 @@ _config:
         targetPort: 80
         port: 80
         nodePort: 0
-      - protocol: HTTP
-        targetPort: 443
-        port: 443
-        nodePort: 0
     containers:
     - imagePullPolicy: Always
       image: cargo.caicloudprivatetest.com/library/nginx:1.13.8-alpine
@@ -34,6 +30,4 @@ _config:
       ports:
       - protocol: HTTP
         port: 80
-      - protocol: HTTP
-        port: 443
     volumes: []
