@@ -322,6 +322,7 @@ mounts:                                # 挂载数据卷位置
   readonly: bool(false)                # 是否只读
   path: string                         # 挂载路径
   subpath: string("")                  # 挂载的数据卷子路径
+  propagation: string("None")          # 挂载传播类型，可选项为 None，HostToContainer，Bidirectional
 probe:                                 # 健康检查
   liveness:                            # 存活检查（参考 probe 设置）
     ...
@@ -619,6 +620,7 @@ _config:
         - ReadWriteOnce
       storage:
         request: 5Gi
+      propagation: None
     - name: shared-volume
       type: Dynamic
       source:
