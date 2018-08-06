@@ -97,6 +97,7 @@ containers:
     readOnly: {{ .readonly }}
     mountPath: {{ .path | quote }}
     subPath: {{ .subpath | quote }}
+    mountPropagation: {{ .propagation | quote }}
   {{- end }}
   {{- if .probe }}
   {{- if .probe.liveness }}
