@@ -48,6 +48,12 @@
       mode: {{ .mode }}
     {{- end -}}
 {{ end -}}
+{{- if eq .type "Glusterfs" }}
+  glusterfs:
+    endpoints: {{ .source.endpoints | quote }}
+    path: {{ .source.path | quote }}
+    readOnly: {{ .source.readonly }}
+{{ end -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
