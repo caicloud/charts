@@ -44,6 +44,7 @@
 ### 基础结构描述
 配置文件使用 yaml 格式，并且在实际使用中转换为 json 格式。  
 标准配置文件结构如下：
+
 ```yaml
 # 顶级配置 key ，固定为 _config
 _config: 
@@ -58,8 +59,13 @@ _config:
       version: semvar     # Chart 模板版本号
   # 配置控制器组，配置控制器组可以包含多个配置控制器
   # 此处的配置控制器与上面所描述的 Pod Controller 不同，此处的配置控制器具有如下等价关系：
-  # 配置控制器 = 1个 Pod Controller 配置 + 1个 调度 配置 + 1个 容器组 配置 + 0个或多个 初始化容器 配置 + 
-  #              1个或多个 基本容器 配置 + 0个或多个 数据卷 配置 + 0个或多个 服务 配置
+  # 配置控制器 = 1个 Pod Controller 配置 +
+  #             1个 调度 配置 +
+  #             1个 容器组 配置 +
+  #             0个或多个 初始化容器 配置 +
+  #             1个或多个 基本容器 配置 +
+  #             0个或多个 数据卷 配置 +
+  #             0个或多个 服务 配置
   controllers:
   - type: string          # 指定控制器的类型，可以是 Deployment，StatefulSet，DaemonSet，Job，CronJob
     controller:           # 控制器信息，对应特定 type 的控制器信息
@@ -92,6 +98,7 @@ chartX:
 ### 配置控制器定义
 
 字段类型定义：
+
 ```
 int:     整数
 uint:    自然数
@@ -101,6 +108,7 @@ string:  字符串
 bool:    布尔值，只能是 true 或 false
 ```
 默认值声明方式：
+
 ```
 类型(默认值)
 int(-1)
@@ -115,12 +123,14 @@ bool(true)
 #### 类型：controller
 
 所有类型的 controller 共有字段如下：
+
 ```yaml
 annotations:                           # 控制器附加信息,仅用于保存控制器额外信息
   - key: string                        # 键
     value: string                      # 值
 ```
 key 必须符合如下要求：
+
 ```
 1. `前缀/键`或者`键`，比如 `caicloud.io/apple`和`apple`
 2. 前缀是域名形式，必须符合 DNS_SUBDOMAIN，即`(([A-Za-z0-9][-A-Za-z0-9]*)?[A-Za-z0-9]\.)*([A-Za-z0-9][-A-Za-z0-9]*)?[A-Za-z0-9]`
@@ -143,6 +153,11 @@ ready: uint(0)                         # 实例从 Available 到 Ready 的最短
 replica: uint(1)                       # 实例数量
 name: string("")                       # 实例前缀名
 domain: string("")                     # 实例域名
+strategy:                              # 实例滚动更新策略
+  type: string("RollingUpdate)         # 更新策略，只能为 RollingUpdate(滚动更新) 或者 OnDelete(删除时更新)
+  rollingUpdate:                       # 滚动更新配置，只有当 RollingUpdate 时才可以此选项
+    partition: uint(0)                 # 分段更新序号
+managePolicy: string("OrderedReady")   # Pod 管理策略, 只能为 OrderedReady 或 Parallel
 ```
 指定 name 和 domain 后，可通过 name-序号.domain 的形式访问每个实例。
 比如 replica = 2, name = "web", domain = "cluster", 那么同一个分区内可使用 web-0.cluster，web-1.cluster 访问两个实例，同时能够直接使用 cluster 访问任意一个实例（RoundRobin）。  
@@ -153,8 +168,8 @@ domain: string("")                     # 实例域名
 strategy:                              # 实例滚动更新策略，两个选项不能同时为0
   unavailable: pint(1)                 # 最大不可用数量
 ready: uint(0)                         # 实例从 Available 到 Ready 的最短时间
-```                                
-                                   
+```
+
 ##### controller：Job
 ```yaml                            
 parallelism: pint(1)                   # 最大并行实例数量
@@ -228,17 +243,17 @@ tolerations:                                           # 节点容忍设置
   tolerationSeconds: uint                              # 容忍时间 仅在 effect 为 NoExecute 时有效
 ```
 topologyKey 具有如下值:
+
 ```
 kubernetes.io/hostname
 failure-domain.beta.kubernetes.io/zone
 failure-domain.beta.kubernetes.io/region
 ```
+
 拓补域用于定义一个节点集合。目前常用的拓补域的 key 有如上三种。拓补域与 Pod 的 亲和性/反亲和性 相关。  
 一个拓补域至少有一个节点，所有的 亲和性/反亲和性 的权重计算都是在一个域中进行。  
 比如有多个域，当一个 Pod 在调度时，调度器会根据 亲和性/反亲和性 的设置，在多个域中寻找一个权重最高的域，然后将 Pod 调度到该域中的一个节点上。  
 `kubernetes.io/hostname`与其他两个稍有不同。这个 key 在每个节点上都有不同的值，也就是说，集群里的每个节点都构成了只有一个节点的域。  
-
-
 
 容忍策略 NoExecute 尚未实现。
 
@@ -261,9 +276,16 @@ host:
   network: bool(false)                 # 与主机共享 network namespace
   pid: bool(false)                     # 与主机共享 pid namespace
   ipc: bool(false)                     # 与主机共享 ipc namespace
+hostAliases:                           # 向容器组的 /etc/hosts 文件添加条目
+  - ip: string                         # IP 地址
+    hostnames:                         # 主机名列表
+    - string
+securityContext:
+  runAsNonRoot: bool(false)            # 是否以非 root 用户运行
 annotations:                           # 容器组附加信息,仅用于保存容器组额外信息
   - key: string                        # 键
     value: string                      # 值
+
 ```
 在 controller 类型为 Deployment 时，restart 只能为 Always。  
 主机名和子域名构成 Pod 的访问域名：hostname.subdomain.namespace.svc.clusterdomain。  
@@ -338,10 +360,12 @@ lifecycle:                             # 生命周期（参考 handler 设置）
 initContainer 不支持 readiness probe 和 lifecycle，因此在 initContainer 中不能设置这几项。  
 initContainer 是串行执行的，一个成功后才能执行下一个。 
 默认的环境变量包括：
+
 - `POD_NAMESPACE`
 - `POD_NAME`
 - `POD_IP`
 - `NODE_NAME`
+
 可以通过 downwardPrefix 为上述环境变量增加前缀。比如 downwardPrefix 为 `ENV_` 时：`POD_NAMESPACE` 变为 `ENV_POD_NAMESPACE`。  
 
 ##### probe：liveness，readiness
@@ -483,7 +507,9 @@ data:
 - key: string                          # 键
   value: string                        # 值，必须是原始值经过 base64 编码后的字符串
 ```
+
 加密配置的类型包括：
+
 - Opaque：默认加密配置类型，key 可以是任意有效的字符串
 - kubernetes.io/service-account-token： ServiceAccount，key 包括
   - kubernetes.io/service-account.name
@@ -504,10 +530,6 @@ data:
 - kubernetes.io/tls： TLS 证书密钥（PEM），key 包括
   - tls.crt
   - tls.key
-
-
-
-
 
 
 ### 一个配置文件的例子
