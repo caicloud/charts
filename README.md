@@ -24,6 +24,7 @@
     - [source：Scratch](#sourcescratch)
     - [source：Config，Secret](#sourceconfigsecret)
     - [source：HostPath](#sourcehostpath)
+    - [source：Glusterfs](#sourceglusterfs)
   - [类型：service](#类型service)
   - [类型：config](#类型config)
   - [类型：secret](#类型secret)
@@ -436,6 +437,13 @@ Config 和 Secret 表示使用 配置 或 秘钥 作为数据卷。能够指定 
 ##### source：HostPath
 ```yaml
     path: string                       # 本地文件路径
+```
+
+##### source：Glusterfs
+```yaml
+    endpoints: string                  # glusterfs endpoints
+    path: string                       # glusterfs volume path
+    readonly: bool(false)              # 是否以只读形式挂载
 ```
 
 #### 类型：service
