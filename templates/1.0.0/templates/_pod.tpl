@@ -17,6 +17,16 @@ hostNetwork: {{ .network }}
 hostPID: {{ .pid }}
 hostIPC: {{ .ipc }}
 {{- end }}
+{{- with .hostAliases }}
+hostAliases:
+{{- range . }}
+- ip: {{ .ip | quote }}
+  hostnames:
+  {{- range .hostnames }}
+  - {{ . | quote }}
+  {{- end }}
+{{- end }}
+{{- end }}
 {{- end }}
 {{- with $controller.schedule }}
 {{- template "schedule" $controller.schedule }}
