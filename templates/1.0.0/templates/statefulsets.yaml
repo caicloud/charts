@@ -50,8 +50,15 @@ metadata:
 spec:
   serviceName: {{ $domain | quote }}
   replicas: {{ $controller.controller.replica }}
+  {{- with $controller.controller.strategy }}
   updateStrategy:
-    type: "RollingUpdate"
+    type: {{ $controller.controller.strategy.type }}
+    {{- with $controller.controller.strategy.rollingUpdate }}
+    rollingUpdate:
+      partition: {{ $controller.controller.strategy.rollingUpdate.partition }}
+    {{- end }}
+  {{- end }}
+  managePolicy: {{ $controller.controller.managePolicy }}
   selector:
     matchLabels:
       {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
