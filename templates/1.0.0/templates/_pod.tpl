@@ -27,6 +27,10 @@ hostAliases:
   {{- end }}
 {{- end }}
 {{- end }}
+{{- with .securityContext }}
+securityContext:
+  runAsNonRoot: {{ .runAsNonRoot }}
+{{- end }}
 {{- end }}
 {{- with $controller.schedule }}
 {{- template "schedule" $controller.schedule }}
