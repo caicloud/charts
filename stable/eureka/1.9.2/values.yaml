@@ -1,0 +1,64 @@
+_config:
+  _metadata:
+    name: eureka
+    version: 1.9.2
+    description: |
+      Eureka is a REST (Representational State Transfer) based service that is primarily used in the AWS cloud for locating services for the purpose of load balancing and failover of middle-tier servers.
+  controllers:
+  - type: Deployment
+    controller:
+      replica: '1'
+      ready: 0
+      strategy:
+        type: RollingUpdate
+        unavailable: 0
+        surge: 1
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      hostAliases: []
+      host:
+        network: false
+        pid: false
+        ipc: false
+      annotations: []
+    containers:
+    - env: []
+      envFrom: []
+      mounts:
+      - name: data
+        path: "/app"
+      command: []
+      lifecycle: {}
+      image: cargo.caicloudprivatetest.com/release/eureka:1.9.2
+      imagePullPolicy: Always
+      probe: {}
+      resources:
+        limits:
+          cpu: '2'
+          memory: 2Gi
+        requests:
+          cpu: '0.5'
+          memory: 1Gi
+    volumes:
+    - storage:
+        limit: 1Gi
+        request: 1Gi
+      type: Scratch
+      name: data
+    services:
+    # - type: NodePort
+    #   name: eureka-server
+    #   ports:
+    #   - protocol: HTTP
+    #     targetPort: 8761
+    #     port: 8761
+    #     nodePort: 0
+    - type: ClusterIP
+      name: eureka
+      ports:
+      - protocol: HTTP
+        targetPort: 8761
+        port: 8761
+        nodePort: 0
