@@ -1,0 +1,4 @@
+name: hystrix-dashboard
+version: 1.5.12
+description: |
+  The Hystrix Dashboard allows you to monitor Hystrix metrics in real time.
