@@ -25,6 +25,12 @@ spec:
   clusterIP: None
   selector:
     "controller.caicloud.io/name": {{ $name | quote }}
+{{- if $controller.controller.domain }}
+  ports:
+  - protocol: "TCP"
+    port: 80
+    targetPort: 80
+{{- else }}
   ports:
   {{- range .containers -}}
   {{- range .ports }}
@@ -38,6 +44,8 @@ spec:
     targetPort: {{ .port }}
   {{- end -}}
   {{- end }}
+{{- end }}
+
 ---
 apiVersion: apps/v1
 kind: StatefulSet
