@@ -63,5 +63,4 @@ _config:
     controller:
       replica: 1
       strategy:
-        unavailable: 0
-        surge: 1
+        type: "RollingUpdate"
