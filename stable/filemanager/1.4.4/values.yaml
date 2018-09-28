@@ -13,7 +13,7 @@ _config:
       command: []
       args: []
       imagePullPolicy: Always
-      image: cargo.caicloudprivatetest.com/library/filemanager:1.4.4
+      image: cargo.caicloudprivatetest.com/release/filemanager:1.4.4
       resources:
         limits:
           cpu: '0.25'
