@@ -150,14 +150,14 @@ ready: uint(0)                         # 实例从 Available 到 Ready 的最短
 
 ##### controller：StatefulSet
 ```yaml
-replica: uint(1)                       # 实例数量
-name: string("")                       # 实例前缀名
-domain: string("")                     # 实例域名
-strategy:                              # 实例滚动更新策略
-  type: string("RollingUpdate)         # 更新策略，只能为 RollingUpdate(滚动更新) 或者 OnDelete(删除时更新)
-  rollingUpdate:                       # 滚动更新配置，只有当 RollingUpdate 时才可以此选项
-    partition: uint(0)                 # 分段更新序号
-managePolicy: string("OrderedReady")   # Pod 管理策略, 只能为 OrderedReady 或 Parallel
+replica: uint(1)                              # 实例数量
+name: string("")                              # 实例前缀名
+domain: string("")                            # 实例域名
+strategy:                                     # 实例滚动更新策略
+  type: string("RollingUpdate)                # 更新策略，只能为 RollingUpdate(滚动更新) 或者 OnDelete(删除时更新)
+  rollingUpdate:                              # 滚动更新配置，只有当 RollingUpdate 时才可以此选项
+    partition: uint(0)                        # 分段更新序号
+podManagementPolicy: string("OrderedReady")   # Pod 管理策略, 只能为 OrderedReady 或 Parallel
 ```
 指定 name 和 domain 后，可通过 name-序号.domain 的形式访问每个实例。
 比如 replica = 2, name = "web", domain = "cluster", 那么同一个分区内可使用 web-0.cluster，web-1.cluster 访问两个实例，同时能够直接使用 cluster 访问任意一个实例（RoundRobin）。  
