@@ -10,8 +10,8 @@ introduce:
   version: |
     基于官方 1.5.12 提供定制化版本。
   resources: |
-    最低资源要求：CPU：0.25 Core，内存：0.5G
-    推荐资源配置：CPU：1 Core，内存：1G
+    最低资源要求：CPU：1 Core，内存：1G
+    推荐资源配置：CPU：2 Core，内存：4G
   service: |
     默认使用集群内部IP 暴露服务的 30008 端口。
     默认服务名为 hystrix-dashboard，如果服务名冲突，请修改为其他名称。可通过服务名+端口访问 hystrix-dashboard/hystrix 。

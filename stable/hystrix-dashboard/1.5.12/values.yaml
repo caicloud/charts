@@ -32,22 +32,29 @@ _config:
         path: "/app"
       command: []
       lifecycle: {}
-      image: cargo.caicloudprivatetest.com/release/hystrix-dashboard:2.0.0
+      image: cargo.caicloudprivatetest.com/release/hystrix-dashboard:1.5.12
       imagePullPolicy: Always
       probe: {}
       resources:
         limits:
-          cpu: '2.5'
-          memory: 2.5Gi
+          cpu: '2'
+          memory: 4Gi
         requests:
-          cpu: '0.25'
-          memory: 512Mi
+          cpu: '1'
+          memory: 1Gi
       securityContext:
         privileged: false
     volumes:
     - name: data
       type: Scratch
     services:
+    - type: ClusterIP
+      name: hystrix-dashboard
+      ports:
+      - protocol: HTTP
+        targetPort: 30008
+        port: 30008
+        nodePort: 0
     # - type: NodePort
     #   name: hystrix-dashboard
     #   ports:
