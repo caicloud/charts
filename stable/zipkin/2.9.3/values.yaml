@@ -37,11 +37,11 @@ _config:
       probe: {}
       resources:
         limits:
-          cpu: '2.5'
-          memory: 2.5Gi
+          cpu: '2'
+          memory: 4Gi
         requests:
-          cpu: '0.25'
-          memory: 512Mi
+          cpu: '1'
+          memory: 1Gi
       securityContext:
         privileged: false
     volumes:
@@ -52,13 +52,13 @@ _config:
       name: zipkin
       ports:
       - protocol: HTTP
-        targetPort: 9441
-        port: 9441
+        targetPort: 9411
+        port: 9411
         nodePort: 0
     # - type: NodePort
     #   name: zipkin-server
     #   ports:
     #   - protocol: HTTP
-    #     targetPort: 9441
-    #     port: 9441
+    #     targetPort: 9411
+    #     port: 9411
     #     nodePort: 0
