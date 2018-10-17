@@ -14,8 +14,8 @@ introduce:
   version: |
     基于 1.9.2 稳定版。
   resources: |
-    最低资源要求：CPU: 0.5 Core，内存：1G。
-    推荐资源配置：CPU: 2 Core，内存：2G。
+    最低资源要求：CPU: 1 Core，内存：1G。
+    推荐资源配置：CPU: 2 Core，内存：4G。
     Eureka 对资源较高，如果资源分配不足，可能导致启动失败。
   service: |
     默认使用集群内部 IP 暴露服务的 8761 端口。
