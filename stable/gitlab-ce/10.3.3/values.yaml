@@ -75,7 +75,6 @@ _config:
         nodePort: 0
       name: gitlab
       type: ClusterIP
-      export: true
     volumes:
     - storage:
         limit: 20Gi

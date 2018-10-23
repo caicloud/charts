@@ -41,7 +41,6 @@ _config:
         nodePort: 0
       name: redmine
       type: ClusterIP
-      export: true
     volumes: []
     pod:
       restart: Always
