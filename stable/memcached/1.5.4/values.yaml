@@ -27,7 +27,6 @@ _config:
         nodePort: 0
       name: memcached
       type: ClusterIP
-      export: true
     volumes: []
     pod:
       restart: Always

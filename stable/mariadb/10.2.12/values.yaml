@@ -41,7 +41,6 @@ _config:
         nodePort: 0
       name: mariadb
       type: ClusterIP
-      export: true
     volumes:
     - storage:
         limit: 20Gi

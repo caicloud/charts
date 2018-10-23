@@ -9,7 +9,6 @@ _config:
     services:
     - name: nginx
       type: ClusterIP
-      export: true
       ports:
       - protocol: HTTP
         targetPort: 80

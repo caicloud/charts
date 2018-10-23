@@ -33,7 +33,6 @@ _config:
         nodePort: 0
       name: filemanager
       type: ClusterIP
-      export: true
     volumes:
     - storage:
         limit: 20Gi
