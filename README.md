@@ -474,7 +474,6 @@ Config 和 Secret 表示使用 配置 或 秘钥 作为数据卷。能够指定 
 ```yaml
 name: string                           # 服务名称
 type: string(ClusterIP)                # 服务类型，可以是 ClusterIP，NodePort
-export: bool(true)                     # 标记服务是否导出（在 Kubernetes 层面无效）
 ports:
 - protocol: string(HTTP)               # 端口协议，可以是 HTTP，HTTPS，TCP，UDP
   targetPort: pint                     # 容器端口
@@ -663,14 +662,12 @@ _config:
     services:
     - name: mysql1
       type: ClusterIP
-      export: true
       ports:
       - protocol: HTTP
         targetPort: 80
         port: 80
     - name: mysql2
       type: NodePort
-      export: false
       ports:
       - protocol: HTTPS
         targetPort: 443
@@ -694,7 +691,6 @@ _config:
     services:
     - name: log1
       type: ClusterIP
-      export: true
       ports:
       - protocol: HTTP
         targetPort: 80
