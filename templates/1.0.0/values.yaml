@@ -135,14 +135,12 @@ _config:
     services:
     - name: mysql1
       type: ClusterIP
-      export: true
       ports:
       - protocol: HTTP
         targetPort: 80
         port: 80
     - name: mysql2
       type: NodePort
-      export: false
       ports:
       - protocol: HTTPS
         targetPort: 443
@@ -166,7 +164,6 @@ _config:
     services:
     - name: log1
       type: ClusterIP
-      export: true
       ports:
       - protocol: HTTP
         targetPort: 80
