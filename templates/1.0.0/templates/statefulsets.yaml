@@ -14,11 +14,6 @@ kind: Service
 metadata:
   name: {{ $domain | quote }}
   labels:
-    {{- if $controller.controller.domain }}
-    "service.caicloud.io/export" : "true"
-    {{- else }}
-    "service.caicloud.io/export" : "false"
-    {{- end }}
     "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
     "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
 spec:
