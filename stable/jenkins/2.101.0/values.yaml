@@ -40,7 +40,6 @@ _config:
         nodePort: 0
       name: jenkins
       type: NodePort
-      export: true
     volumes:
     - storage:
         limit: 20Gi
