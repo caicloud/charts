@@ -41,8 +41,8 @@ _config:
           cpu: 1
           memory: 1Gi
         requests:
-          cpu: 1
-          memory: 1Gi
+          cpu: 0.5
+          memory: 512Mi
     services:
     - ports:
       - protocol: TCP
@@ -70,4 +70,6 @@ _config:
       domain: galera-cluster
       name: ''
       replica: 3
+      strategy:
+        type: RollingUpdate
     type: StatefulSet
