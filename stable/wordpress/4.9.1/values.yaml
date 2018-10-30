@@ -24,7 +24,7 @@ _config:
       image: cargo.caicloudprivatetest.com/library/wordpress:4.9.1
       resources:
         limits:
-          cpu: '0.25'
+          cpu: '0.5'
           memory: 512Mi
         requests:
           cpu: '0.25'

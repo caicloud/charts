@@ -17,10 +17,10 @@ _config:
       image: cargo.caicloudprivatetest.com/library/jenkins:2.101-alpine-enhanced
       resources:
         limits:
-          cpu: '3'
-          memory: 3Gi
+          cpu: '4'
+          memory: 4Gi
         requests:
-          cpu: '2'
+          cpu: '1'
           memory: 2Gi
       ports:
       - protocol: HTTP

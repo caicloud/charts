@@ -20,10 +20,10 @@ _config:
       imagePullPolicy: Always
       resources:
         limits:
-          cpu: '4'
+          cpu: '2'
           memory: 4Gi
         requests:
-          cpu: '2'
+          cpu: '1'
           memory: 2Gi
       ports:
       - protocol: HTTP

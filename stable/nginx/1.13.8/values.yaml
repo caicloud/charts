@@ -6,6 +6,10 @@ _config:
       Nginx [engine x] is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP/UDP proxy server.
   controllers:
   - type: Deployment
+    controller:
+      replica: 1
+      strategy:
+        type: "RollingUpdate"
     services:
     - name: nginx
       type: ClusterIP

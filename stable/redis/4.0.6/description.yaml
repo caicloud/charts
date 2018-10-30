@@ -2,7 +2,7 @@ name: Redis
 briefDesc: Redis 是一个开源 key-value 数据库
 desc: |
   Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库。
-  它支持一下数据类型：字符串，哈希表，列表，集合，有序集合，位图，hyperloglog，支持半径查询的地理空间索引。
+  它支持以下数据类型：字符串，哈希表，列表，集合，有序集合，位图，hyperloglog，支持半径查询的地理空间索引。
   Redis 内置了复制，Lua 脚本，LRU 回收，事务和不同级别持久化存储等功能，通过 Redis Sentinel 来支持高可用，通过 Redis
   Cluster 来支持自动分区。
   从2015年6月开始，Redis的开发由Redis Labs赞助，而2013年5月至2015年6月期间，其开发由Pivotal赞助。
