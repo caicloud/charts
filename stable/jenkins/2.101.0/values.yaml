@@ -42,7 +42,7 @@ _config:
       type: NodePort
     volumes:
     - storage:
-        limit: 20Gi
+        limit: 10Gi
         request: 10Gi
       source: {}
       type: Scratch

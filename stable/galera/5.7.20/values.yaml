@@ -53,10 +53,10 @@ _config:
       type: ClusterIP
     volumes:
     - storage:
-        limit: 20Gi
+        limit: 10Gi
         request: 10Gi
       source: {}
-      type: Scratch
+      type: Dedicated
       name: data
     pod:
       dns: ClusterFirst
