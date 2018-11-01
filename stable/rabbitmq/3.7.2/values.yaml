@@ -19,14 +19,17 @@ _config:
         requests:
           cpu: '0.25'
           memory: 512Mi
+      mounts:
+      - path: "/var/lib/rabbitmq"
+        name: data
       ports:
-      - protocol: HTTP
+      - protocol: TCP
         port: 4369
-      - protocol: HTTP
+      - protocol: TCP
         port: 5671
-      - protocol: HTTP
+      - protocol: TCP
         port: 5672
-      - protocol: HTTP
+      - protocol: TCP
         port: 25672
       probe: {}
     services:
@@ -49,7 +52,13 @@ _config:
         nodePort: 0
       name: rabbitmq
       type: ClusterIP
-    volumes: []
+    volumes:
+    - storage:
+        limit: 10Gi
+        request: 10Gi
+      source: {}
+      type: Dedicated
+      name: data
     pod:
       restart: Always
       dns: ClusterFirst

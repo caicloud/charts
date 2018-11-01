@@ -18,7 +18,7 @@ introduce:
     - MYSQL_PASSWORD：数据库初始化时默认创建的用户密码。
     其中 MYSQL_DATABASE，MYSQL_USER，MYSQL_PASSWORD 三项可不填写。不填则默认不创建数据库和新用户。
     **如何挂载数据**
-    Galera 的所有数据都挂载在 `/var/lib/mysql`. 默认使用的是临时数据卷，如果需要持久化文件数据，请挂载有状态应用专用的数据卷。
+    Galera 的所有数据都挂载在 `/var/lib/mysql`， 默认使用应用专用的数据卷。
     **配置**
     Galera 的配置在 `/etc/mysql/conf.d` 目录中，如果需要自定义 Mysql 的配置，请将配置挂载到该目录中。
     **关于扩容**
