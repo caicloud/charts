@@ -77,12 +77,12 @@ _config:
       type: ClusterIP
     volumes:
     - storage:
-        limit: 20Gi
+        limit: 10Gi
         request: 10Gi
       type: Scratch
       name: log
     - storage:
-        limit: 20Gi
+        limit: 10Gi
         request: 10Gi
       type: Scratch
       name: data

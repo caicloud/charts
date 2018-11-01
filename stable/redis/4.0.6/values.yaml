@@ -2,7 +2,7 @@ _config:
   _metadata:
     name: redis
     version: 4.0.6
-    description: | 
+    description: |
       Redis is an open source (BSD licensed), in-memory data structure store, 
       used as a database, cache and message broker. 
       It supports data structures such as strings, hashes, lists, sets, 
@@ -47,10 +47,8 @@ _config:
     type: Deployment
     volumes:
     - name: data
-      source:
-        modes:
-        - ReadWriteMany
+      source: {}
       storage:
+        limit: 10Gi
         request: 10Gi
-        limit: 20Gi
       type: Scratch

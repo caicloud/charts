@@ -10,7 +10,7 @@ introduce:
   howToUse: |
     直接从模板部署出一个完整的 RabbitMQ 应用，不需要任何外部依赖。
     RabbitMQ 使用节点名（hostname）来存储数据，我们在应用内部使用了 `StatefulSet` 来启动多个副本，
-    保证每次启动的 RabbitMQ hostname 都是固定的
+    保证每次启动的 RabbitMQ hostname 都是固定的。
     **如何挂载数据**
     数据挂载在 `/var/lib/rabbitmq`
     database 路径 `/var/lib/rabbitmq/mnesia/rabbit@hostname`
