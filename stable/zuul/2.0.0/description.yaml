@@ -1,0 +1,25 @@
+name: zuul
+briefDesc: zuul 是一个开源的服务发现框架。
+desc: |
+  Zuul 是开源的微服务网关，可与 Eureka、Ribbon、Hystrix 等组件配合使用，具备服务路由、均衡负载、权限控制等功能，使得服务集群主体能够具备更高的可复用性和可测试性，并且为微服务架构提供了前置的保护和控制能力。
+introduce:
+  brief: |
+    通过与Eureka整合，将自身注册到服务中心，可以获到所有其他微服务实例信息。
+    Zuul默认通过以服务名作为ContextPath来创建路由映射，可以满足大多数情况需要，
+    如访问http://localhost:8080/user-service/getUser会自动路由到service-id为user-service的微服务实例中。特殊路由可以通过配置来实现。
+  howToUse: |
+    直接从模版部署出一个完整的 zuul 应用。
+    **环境变量**
+    - ZUUL_NAME：应用的名称。
+    - ZUUL_PORT：容器内端口。
+    - EUREKA_URL：eureka server地址。
+  version: |
+    基于 2.0.0 RELEASE。
+  resources: |
+    最低资源要求：CPU: 1 Core，内存：1G。
+    推荐资源配置：CPU: 2 Core，内存：4G。
+    zuul 对资源较高，如果资源分配不足，可能导致启动失败。
+  service: |
+    默认使用集群内部 IP 暴露服务的 8080 端口。
+    默认服务名为 zuul ，如果服务名冲突，请修改为其他名称。可通过服务名 + 端口访问 zuul。
+    如果要提供对外服务, 可以使用对接负载均衡来暴露服务。
