@@ -1,6 +1,6 @@
 _config:
   _metadata:
-    name: eureka
+    name: zuul
     version: 2.0.0
     description: |
       Zuul is the front door for all requests from devices and web sites to the backend of the Netflix streaming application. As an edge service application, Zuul is built to enable dynamic routing, monitoring, resiliency and security. It also has the ability to route requests to multiple Amazon Auto Scaling Groups as appropriate.
@@ -47,15 +47,8 @@ _config:
           memory: 1Gi
     volumes: []
     services:
-    # - type: NodePort
-    #   name: eureka-server
-    #   ports:
-    #   - protocol: HTTP
-    #     targetPort: 8761
-    #     port: 8761
-    #     nodePort: 0
     - type: ClusterIP
-      name: eureka
+      name: zuul
       ports:
       - protocol: HTTP
         targetPort: 8080
