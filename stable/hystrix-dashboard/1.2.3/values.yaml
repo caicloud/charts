@@ -1,0 +1,66 @@
+_config:
+  _metadata:
+    name: hystrix-dashboard
+    version: 1.2.3
+    description: |
+      The Hystrix Dashboard allows you to monitor Hystrix metrics in real time.
+  controllers:
+  - type: Deployment
+    controller:
+      replica: '1'
+      ready: 0
+      strategy:
+        type: RollingUpdate
+        unavailable: 0
+        surge: 1
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      isPrivilege: false
+      hostAliases: []
+      host:
+        network: false
+        pid: false
+        ipc: false
+      annotations: []
+    containers:
+    - env: 
+      - name: HYSTRIX_DASHBOARD_PORT
+        value: 30008
+      envFrom: []
+      mounts:
+      - name: data
+        path: "/app"
+      command: []
+      lifecycle: {}
+      image: cargo.caicloudprivatetest.com/release/hystrix-dashboard:1.2.3.RELEASE
+      imagePullPolicy: Always
+      probe: {}
+      resources:
+        limits:
+          cpu: '2'
+          memory: 4Gi
+        requests:
+          cpu: '1'
+          memory: 1Gi
+      securityContext:
+        privileged: false
+    volumes:
+    - name: data
+      type: Scratch
+    services:
+    - type: ClusterIP
+      name: hystrix-dashboard
+      ports:
+      - protocol: HTTP
+        targetPort: 30008
+        port: 30008
+        nodePort: 0
+    # - type: NodePort
+    #   name: hystrix-dashboard
+    #   ports:
+    #   - protocol: HTTP
+    #     targetPort: 30008
+    #     port: 30008
+    #     nodePort: 0
