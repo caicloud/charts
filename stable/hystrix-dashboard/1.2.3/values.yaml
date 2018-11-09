@@ -51,7 +51,7 @@ _config:
       type: Scratch
     services:
     - type: ClusterIP
-      name: hystrix-dashboard
+      name: hystrix-dashboard-server
       ports:
       - protocol: HTTP
         targetPort: 30008

@@ -30,7 +30,7 @@ _config:
       - name: ZUUL_PORT
         value: 8080
       - name: EUREKA_URL
-        value: http://eureka:8761/eureka
+        value: http://eureka-server:8761/eureka
       envFrom: []
       mounts: []
       command: []
@@ -48,9 +48,9 @@ _config:
     volumes: []
     services:
     - type: ClusterIP
-      name: zuul
+      name: zuul-server
       ports:
       - protocol: HTTP
         targetPort: 8080
-        port: 880
+        port: 8080
         nodePort: 0

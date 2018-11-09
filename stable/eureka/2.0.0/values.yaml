@@ -53,7 +53,7 @@ _config:
     #     port: 8761
     #     nodePort: 0
     - type: ClusterIP
-      name: eureka
+      name: eureka-server
       ports:
       - protocol: HTTP
         targetPort: 8761
