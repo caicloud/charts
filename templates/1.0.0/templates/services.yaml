@@ -27,6 +27,9 @@ spec:
     {{- else }}
     "controller.caicloud.io/name": {{ $controllerName | quote }}
     {{- end }}
+    {{- range .labels }}
+    {{ .key | quote }}: {{ .value | quote }}
+    {{- end }}
   ports:
   {{- $s := . -}}
   {{- range .ports }}
