@@ -1,0 +1,66 @@
+_config:
+  _metadata:
+    name: zipkin
+    version: 2.11.8
+    description: |
+      Zipkin is a distributed tracing system. It helps gather timing data needed to troubleshoot latency problems in microservice architectures. It manages both the collection and lookup of this data. Zipkin’s design is based on the Google Dapper paper.
+  controllers:
+  - type: Deployment
+    controller:
+      replica: 1
+      ready: 0
+      strategy:
+        type: RollingUpdate
+        unavailable: 0
+        surge: 1
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      isPrivilege: false
+      hostAliases: []
+      host:
+        network: false
+        pid: false
+        ipc: false
+      annotations: []
+    containers:
+    - env: 
+      - name: ZIPKIN_NAME
+        value: zipkin-server
+      - name: ZIPKIN_PORT
+        value: 9411
+      - name: ENABLE_EUREKA
+        value: true
+      - name: EUREKA_URL
+        value: http://eureka-server:8761/eureka
+      envFrom: []
+      command: []
+      lifecycle: {}
+      image: cargo.caicloudprivatetest.com/library/zipkin:2.11.8.RELEASE
+      imagePullPolicy: Always
+      probe: {}
+      resources:
+        limits:
+          cpu: '2'
+          memory: 4Gi
+        requests:
+          cpu: '1'
+          memory: 1Gi
+      securityContext:
+        privileged: false
+    services:
+    - type: ClusterIP
+      name: zipkin-server
+      ports:
+      - protocol: HTTP
+        targetPort: 9411
+        port: 9411
+        nodePort: 0
+    # - type: NodePort
+    #   name: zipkin-server
+    #   ports:
+    #   - protocol: HTTP
+    #     targetPort: 9411
+    #     port: 9411
+    #     nodePort: 0
