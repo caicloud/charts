@@ -29,9 +29,6 @@ _config:
       - name: HYSTRIX_DASHBOARD_PORT
         value: 30008
       envFrom: []
-      mounts:
-      - name: data
-        path: "/app"
       command: []
       lifecycle: {}
       image: cargo.caicloudprivatetest.com/release/hystrix-dashboard:1.2.3.RELEASE
@@ -46,9 +43,6 @@ _config:
           memory: 1Gi
       securityContext:
         privileged: false
-    volumes:
-    - name: data
-      type: Scratch
     services:
     - type: ClusterIP
       name: hystrix-dashboard-server
