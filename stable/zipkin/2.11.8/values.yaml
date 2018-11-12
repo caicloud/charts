@@ -37,7 +37,7 @@ _config:
       envFrom: []
       command: []
       lifecycle: {}
-      image: cargo.caicloudprivatetest.com/library/zipkin:2.11.8.RELEASE
+      image: cargo.caicloudprivatetest.com/release/zipkin:2.11.8.RELEASE
       imagePullPolicy: Always
       probe: {}
       resources:
