@@ -1,0 +1,62 @@
+_config:
+  _metadata:
+    name: turbine
+    version: 2.0.0
+    description: |
+  controllers:
+  - type: Deployment
+    controller:
+      replica: '1'
+      ready: 0
+      strategy:
+        type: RollingUpdate
+        unavailable: 0
+        surge: 1
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      hostAliases: []
+      host:
+        network: false
+        pid: false
+        ipc: false
+      annotations: []
+    containers:
+    - env: 
+      - name: TURBINE_PORT
+        value: 8989
+      - name: TURBINE_NAME
+        value: turbine
+      - name: EUREKA_URL
+        value: http://eureka-server:8761/eureka
+      envFrom: []
+      mounts: []
+      command: []
+      lifecycle: {}
+      image: cargo.caicloudprivatetest.com/release/turbine:2.0.0.RELEASE
+      imagePullPolicy: Always
+      probe: {}
+      resources:
+        limits:
+          cpu: '2'
+          memory: 4Gi
+        requests:
+          cpu: '1'
+          memory: 1Gi
+    volumes: []
+    services:
+    # - type: NodePort
+    #   name: turbine-server
+    #   ports:
+    #   - protocol: HTTP
+    #     targetPort: 8761
+    #     port: 8761
+    #     nodePort: 0
+    - type: ClusterIP
+      name: turbine-server
+      ports:
+      - protocol: HTTP
+        targetPort: 8989
+        port: 8989
+        nodePort: 0

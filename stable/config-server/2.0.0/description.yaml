@@ -1,0 +1,26 @@
+name: config-server
+briefDesc: 
+introduce:
+  brief: |
+    
+  howToUse: |
+    直接从模版部署出一个完整的 config-server 应用，不需要任何外部依赖。
+    **环境变量**
+    - CONFIG_SERVER_PORT：容器内端口。
+    - CONFIG_SERVER_NAME：主机名称。
+    - ENABLE_EUREKA：开启eureka客户端。
+    - EUREKA_URL：eureka服务地址。
+    - GIT_URL：配置仓库地址。
+    - SEARCH_PATH：搜索路径。
+    - USERNAME：用户名。
+    - PASSWORD：密码。
+  version: |
+    基于 2.0.0 稳定版。
+  resources: |
+    最低资源要求：CPU: 1 Core，内存：1G。
+    推荐资源配置：CPU: 2 Core，内存：4G。
+    config-server 对资源较高，如果资源分配不足，可能导致启动失败。
+  service: |
+    默认使用集群内部 IP 暴露服务的 8888 端口。
+    默认服务名为 caicloud-config-server ，如果服务名冲突，请修改为其他名称。可通过服务名 + 端口访问 config-server。
+    如果要提供对外服务, 可以使用对接负载均衡来暴露服务。

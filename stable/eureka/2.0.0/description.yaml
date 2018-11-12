@@ -15,7 +15,7 @@ introduce:
     - EUREKA_PORT：容器内端口。
     - EUREKA_HOST_NAME：主机名称。
   version: |
-    基于 1.9.2 稳定版。
+    基于 2.0.0 稳定版。
   resources: |
     最低资源要求：CPU: 1 Core，内存：1G。
     推荐资源配置：CPU: 2 Core，内存：4G。

@@ -1,0 +1,24 @@
+name: turbine
+briefDesc: 
+desc: |
+introduce:
+  brief: |
+  howToUse: |
+    直接从模版部署出一个完整的 turbine 应用，需要eureka服务。
+    **环境变量**
+    - TURBINE_PORT：容器内端口。
+    - TURBINE_NAME：主机名称。
+    - EUREKA_URL：eureka地址。
+    - CLUSTER_CONFIG：指定聚合哪些集群
+    - APP_CONFIG：指定了被收集的app名称
+    - CLUSTER_NAME：指定集群名称
+  version: |
+    基于 2.0.0 稳定版。
+  resources: |
+    最低资源要求：CPU: 1 Core，内存：1G。
+    推荐资源配置：CPU: 2 Core，内存：4G。
+    turbine 对资源较高，如果资源分配不足，可能导致启动失败。
+  service: |
+    默认使用集群内部 IP 暴露服务的 8761 端口。
+    默认服务名为 turbine-server ，如果服务名冲突，请修改为其他名称。可通过服务名 + 端口访问 turbine-server。
+    如果要提供对外服务, 可以使用对接负载均衡来暴露服务。
