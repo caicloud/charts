@@ -37,7 +37,7 @@ _config:
       mounts: []
       command: []
       lifecycle: {}
-      image: cargo.caicloudprivatetest.com/release/config-server:2.0.0.RELEASE
+      image: cargo.caicloudprivatetest.com/release/config-server:2.0.0
       imagePullPolicy: Always
       probe: {}
       resources:
