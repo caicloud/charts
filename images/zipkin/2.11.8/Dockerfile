@@ -10,6 +10,4 @@ ENV EUREKA_URL=http://eureka-server:8761/eureka
 RUN wget -q https://github.com/stonesfour/caicloud-spring/raw/master/caicloud-zipkin-server/zipkin-server-0.0.1-SNAPSHOT.jar \
     -O app.jar
 
-# COPY ./caicloud-zipkin-server/target/zipkin-server-0.0.1-SNAPSHOT.jar  /app.jar
-
 ENTRYPOINT [ "sh","-c","java -jar $PARAM /app.jar"]
