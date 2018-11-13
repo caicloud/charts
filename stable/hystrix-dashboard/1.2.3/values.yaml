@@ -31,7 +31,7 @@ _config:
       envFrom: []
       command: []
       lifecycle: {}
-      image: cargo.caicloudprivatetest.com/release/hystrix-dashboard:1.2.3.RELEASE
+      image: cargo.caicloudprivatetest.com/release/hystrix-dashboard:1.2.3
       imagePullPolicy: Always
       probe: {}
       resources:
