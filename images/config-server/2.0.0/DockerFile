@@ -10,6 +10,4 @@ ENV CONFIG_SERVER_NAME=config-server
 RUN wget -q https://github.com/stonesfour/caicloud-spring/raw/master/caicloud-config-server/caicloud-config-server-0.0.1-SNAPSHOT.jar \
     -O app.jar
 
-# COPY ./caicloud-config-server/target/caicloud-config-server-0.0.1-SNAPSHOT.jar  /app.jar
-
 ENTRYPOINT [ "sh","-c","java -jar $PARAM /app.jar"]
