@@ -1,9 +1,9 @@
 _config:
   _metadata:
-    name: hystrix-dashboard
-    version: 1.5.12
+    name: turbine
+    version: 2.0.0
     description: |
-      The Hystrix Dashboard allows you to monitor Hystrix metrics in real time.
+      Turbine is a tool for aggregating streams of Server-Sent Event (SSE) JSON data into a single stream. The targeted use case is metrics streams from instances in an SOA being aggregated for dashboards.
   controllers:
   - type: Deployment
     controller:
@@ -17,7 +17,6 @@ _config:
       restart: Always
       dns: ClusterFirst
       termination: 30
-      isPrivilege: false
       hostAliases: []
       host:
         network: false
@@ -25,14 +24,18 @@ _config:
         ipc: false
       annotations: []
     containers:
-    - env: []
+    - env: 
+      - name: TURBINE_PORT
+        value: 8989
+      - name: TURBINE_NAME
+        value: turbine
+      - name: EUREKA_URL
+        value: http://eureka-server:8761/eureka
       envFrom: []
-      mounts:
-      - name: data
-        path: "/app"
+      mounts: []
       command: []
       lifecycle: {}
-      image: cargo.caicloudprivatetest.com/release/hystrix-dashboard:1.5.12
+      image: cargo.caicloudprivatetest.com/release/turbine:2.0.0
       imagePullPolicy: Always
       probe: {}
       resources:
@@ -42,23 +45,19 @@ _config:
         requests:
           cpu: '1'
           memory: 1Gi
-      securityContext:
-        privileged: false
-    volumes:
-    - name: data
-      type: Scratch
+    volumes: []
     services:
-    - type: ClusterIP
-      name: hystrix-dashboard
-      ports:
-      - protocol: HTTP
-        targetPort: 30008
-        port: 30008
-        nodePort: 0
     # - type: NodePort
-    #   name: hystrix-dashboard
+    #   name: turbine-server
     #   ports:
     #   - protocol: HTTP
-    #     targetPort: 30008
-    #     port: 30008
+    #     targetPort: 8761
+    #     port: 8761
     #     nodePort: 0
+    - type: ClusterIP
+      name: turbine-server
+      ports:
+      - protocol: HTTP
+        targetPort: 8989
+        port: 8989
+        nodePort: 0
