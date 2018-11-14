@@ -4,11 +4,13 @@ desc: |
   Spring Cloud 除了整合 Hystrix，也完美地整合了它的仪表盘组件 Hystrix Dashboard。Hystrix Dashboard 是作为断路器状态的一个组件，它主要用来实时监控Hystrix的各项指标信息，并且它为我们提供了友好的图形化界面。通过 Hystrix Dashboard 反馈的实时信息，可以帮助我们快速发现系统存在的问题，从而及时地采取应对措施。
 introduce:
   brief: |
-    基于官方 1.5.12 稳定版本。
+    基于官方 1.2.3 稳定版本。
   howToUse: |
     直接从模版部署出一个完整的 htstrix-dashboard 应用，不需要任何外部依赖。
+    **环境变量**
+    - HYSTRIX_DASHBOARD_PORT：容器内端口。
   version: |
-    基于官方 1.5.12 提供定制化版本。
+    基于官方 1.2.3 提供定制化版本。
   resources: |
     最低资源要求：CPU：1 Core，内存：1G
     推荐资源配置：CPU：2 Core，内存：4G
