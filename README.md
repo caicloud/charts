@@ -482,6 +482,9 @@ ports:
 annotations:                           # 服务附加信息,仅用于保存服务额外信息
   - key: string                        # 键
     value: string                      # 值
+labels:                                # 服务会将流量路由到标签匹配的 Pod
+  - key: string                        # 键
+    value: string                      # 值
 ```
 服务可以以两种形式暴露给外部：
 - ClusterIP：使用该形式暴露的服务，其它应用可以通过服务名访问当前服务
