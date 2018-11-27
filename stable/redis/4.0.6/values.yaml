@@ -41,7 +41,7 @@ _config:
     - name: redis
       type: ClusterIP
       ports:
-      - protocol: HTTP
+      - protocol: TCP
         targetPort: 6379
         port: 6379
     type: Deployment
