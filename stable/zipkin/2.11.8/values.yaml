@@ -50,17 +50,17 @@ _config:
       securityContext:
         privileged: false
     services:
-    - type: ClusterIP
-      name: zipkin-server
-      ports:
-      - protocol: HTTP
-        targetPort: 9411
-        port: 9411
-        nodePort: 0
-    # - type: NodePort
+    # - type: ClusterIP
     #   name: zipkin-server
     #   ports:
     #   - protocol: HTTP
     #     targetPort: 9411
     #     port: 9411
     #     nodePort: 0
+    - type: NodePort
+      name: zipkin-server
+      ports:
+      - protocol: HTTP
+        targetPort: 9411
+        port: 9411
+        nodePort: 0

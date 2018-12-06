@@ -47,17 +47,17 @@ _config:
           memory: 1Gi
     volumes: []
     services:
-    # - type: NodePort
-    #   name: turbine-server
-    #   ports:
-    #   - protocol: HTTP
-    #     targetPort: 8761
-    #     port: 8761
-    #     nodePort: 0
-    - type: ClusterIP
+    - type: NodePort
       name: turbine-server
       ports:
       - protocol: HTTP
         targetPort: 8989
         port: 8989
         nodePort: 0
+    # - type: ClusterIP
+    #   name: turbine-server
+    #   ports:
+    #   - protocol: HTTP
+    #     targetPort: 8989
+    #     port: 8989
+    #     nodePort: 0
