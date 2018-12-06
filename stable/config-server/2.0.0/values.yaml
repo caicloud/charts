@@ -49,17 +49,17 @@ _config:
           memory: 1Gi
     volumes: []
     services:
-    # - type: NodePort
-    #   name: caicloud-config-server
-    #   ports:
-    #   - protocol: HTTP
-    #     targetPort: 8761
-    #     port: 8761
-    #     nodePort: 0
-    - type: ClusterIP
+    - type: NodePort
       name: caicloud-config-server
       ports:
       - protocol: HTTP
         targetPort: 8888
         port: 8888
         nodePort: 0
+    # - type: ClusterIP
+    #   name: caicloud-config-server
+    #   ports:
+    #   - protocol: HTTP
+    #     targetPort: 8888
+    #     port: 8888
+    #     nodePort: 0
