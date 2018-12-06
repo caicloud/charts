@@ -44,17 +44,17 @@ _config:
       securityContext:
         privileged: false
     services:
-    - type: ClusterIP
+    # - type: ClusterIP
+    #   name: hystrix-dashboard-server
+    #   ports:
+    #   - protocol: HTTP
+    #     targetPort: 30008
+    #     port: 30008
+    #     nodePort: 0
+    - type: NodePort
       name: hystrix-dashboard-server
       ports:
       - protocol: HTTP
         targetPort: 30008
         port: 30008
         nodePort: 0
-    # - type: NodePort
-    #   name: hystrix-dashboard
-    #   ports:
-    #   - protocol: HTTP
-    #     targetPort: 30008
-    #     port: 30008
-    #     nodePort: 0
