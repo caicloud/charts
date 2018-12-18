@@ -25,13 +25,17 @@ metadata:
 spec:
   {{- with .controller }}
   replicas: {{ .replica }}
+  {{- with .strategy }}
   strategy:
+    {{- if eq .type "Recreate" }}
+    type: Recreate
+    {{- else }}
     type: RollingUpdate
-    {{- with .strategy }}
     rollingUpdate:
       maxUnavailable: {{ .unavailable }}
       maxSurge: {{ .surge }}
     {{- end }}
+  {{- end }}
   minReadySeconds: {{ .ready }}
   {{- end }}
   selector:

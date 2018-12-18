@@ -141,6 +141,7 @@ key 必须符合如下要求：
 ```yaml
 replica: uint(1)                       # 实例数量
 strategy:                              # 实例滚动更新策略，两个选项不能同时为0
+  type: string("RollingUpdate")        # 更新策略，只能为 RollingUpdate(滚动更新) 或者 Recreate(重新创建)
   unavailable: uint(0)                 # 最大不可用数量
   surge: uint(1)                       # 最大超量
 ready: uint(0)                         # 实例从 Available 到 Ready 的最短时间
@@ -154,7 +155,7 @@ replica: uint(1)                              # 实例数量
 name: string("")                              # 实例前缀名
 domain: string("")                            # 实例域名
 strategy:                                     # 实例滚动更新策略
-  type: string("RollingUpdate)                # 更新策略，只能为 RollingUpdate(滚动更新) 或者 OnDelete(删除时更新)
+  type: string("RollingUpdate")               # 更新策略，只能为 RollingUpdate(滚动更新) 或者 OnDelete(删除时更新)
   rollingUpdate:                              # 滚动更新配置，只有当 RollingUpdate 时才可以此选项
     partition: uint(0)                        # 分段更新序号
 podManagementPolicy: string("OrderedReady")   # Pod 管理策略, 只能为 OrderedReady 或 Parallel
