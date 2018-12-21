@@ -27,7 +27,8 @@ spec:
   replicas: {{ .replica }}
   {{- with .strategy }}
   strategy:
-    {{- if eq .type "Recreate" }}
+    {{- $strategyType :=  .type | default "RollingUpdate" -}}
+    {{- if eq $strategyType "Recreate" }}
     type: Recreate
     {{- else }}
     type: RollingUpdate
