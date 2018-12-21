@@ -27,13 +27,15 @@ spec:
   replicas: {{ .replica }}
   {{- with .strategy }}
   strategy:
-    {{- if eq .type "Recreate" }}
+    {{- $type := .type | default "RollingUpdate" }}
+    {{- if eq $type "Recreate" }}
     type: Recreate
     {{- else }}
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: {{ .unavailable }}
       maxSurge: {{ .surge }}
+    {{- end }}    
     {{- end }}
   {{- end }}
   minReadySeconds: {{ .ready }}
