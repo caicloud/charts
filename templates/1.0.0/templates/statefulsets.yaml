@@ -19,7 +19,7 @@ metadata:
 spec:
   clusterIP: None
   selector:
-    "controller.caicloud.io/name": {{ $name | quote }}
+    {{- include "controllerlabels" $name | indent 4 }}
   ports:
   {{- range .containers -}}
   {{- range .ports }}
@@ -57,13 +57,13 @@ spec:
   selector:
     matchLabels:
       {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
-      {{- include "controllerlabels"  $controllerName | indent 6 }}
+      {{- include "controllerlabels" $name | indent 6 }}
       {{- include "schelabels" $controller.schedule | indent 6 }}
   template:
     metadata:
       labels:
         {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
-        {{- include "controllerlabels"  $controllerName | indent 8 }}
+        {{- include "controllerlabels" $name | indent 8 }}
         {{- include "schelabels" $controller.schedule | indent 8 }}
       annotations:
         {{- include "annotations" $controller.pod | indent 8 }}
