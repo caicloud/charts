@@ -51,4 +51,4 @@ _config:
       storage:
         limit: 10Gi
         request: 10Gi
-      type: Scratch
+      type: Static

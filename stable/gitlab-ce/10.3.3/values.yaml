@@ -79,12 +79,12 @@ _config:
     - storage:
         limit: 10Gi
         request: 10Gi
-      type: Scratch
+      type: Static
       name: log
     - storage:
         limit: 10Gi
         request: 10Gi
-      type: Scratch
+      type: Static
       name: data
     pod:
       restart: Always
