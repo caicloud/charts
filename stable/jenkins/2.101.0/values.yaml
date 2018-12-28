@@ -45,7 +45,7 @@ _config:
         limit: 10Gi
         request: 10Gi
       source: {}
-      type: Scratch
+      type: Static
       name: home
     pod:
       restart: Always
