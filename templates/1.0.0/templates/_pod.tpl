@@ -134,6 +134,12 @@ containers:
     {{- include "handler" .lifecycle.preStop | indent 6}}
     {{- end }}
   {{- end }}
+  {{ if .extendedResourceClaims }}
+  extendedResourceClaims:
+  {{- range .extendedResourceClaims }}
+  - {{ . | quote }}
+  {{- end }}
+  {{- end }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
