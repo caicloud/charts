@@ -340,6 +340,8 @@ resources:                             # 资源限制
     memory: string("100Mi")            # 内存资源
     storage: string("")                # 存储资源
     gpu: string("")                    # GPU 资源
+extendResourceClaims:                  # 引用的 extendResourceClaims 资源 (上科大订制需求)
+- string                               # 若数组元素不为空，那么该 controller 的 schedule.scheduler 字段必须为 extended-resource-scheduler
 mounts:                                # 挂载数据卷位置
 - name: string                         # 数据卷名称
   readonly: bool(false)                # 是否只读
