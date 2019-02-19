@@ -207,7 +207,7 @@ active: uint(0)                        # 单个实例执行的最长时间，0�
 ```yaml
 scheduler: string("")                                  # 调度器名称，可选项为 空字符串，为空表示使用默认调度器
 labels:                                                # 控制器及 容器组 标签
-  string: string                                       # 这里的 key 在模板中自动加上前缀 `schedule.caicloud.io/`
+  string: string
 affinity:                                              # 亲和性设置
   pod:
     type: string("Required")                           # 类型可以为 Required 或 Prefered
@@ -218,7 +218,7 @@ affinity:                                              # 亲和性设置
       - string                                       
       selector:                                        # 选择器，用于设置匹配的标签
         labels:                                        # 直接指定标签值
-          string: string                               # 这里的 key 在模板中自动加上前缀 `schedule.caicloud.io/`
+          string: string
         expressions:                                   # 通过表达式查找标签
         - key: string                                
           operator: string                             # 操作符 In，NotIn，Exists，DoesNotExist
