@@ -196,33 +196,23 @@ containers:
 {{- define "resources" -}}
 {{- with .requests }}
 requests:
-  {{- if hasKey . "cpu" }}
-  "cpu": {{ .cpu }}
-  {{- end }}
-  {{- if hasKey . "memory" }}
-  "memory": {{ .memory }}
-  {{- end }}
-  {{- if hasKey . "storage" }}
-  "storage": {{ .storage }}
-  {{- end }}
-  {{- if hasKey . "gpu" }}
-  "nvidia.com/gpu": {{ .gpu }}
-  {{- end }}
+  {{- range $k, $v := . }}
+  {{- if eq $k "gpu" }}
+  "nvidia.com/gpu": {{ $v | quote }}
+  {{- else }}
+  {{ $k | quote }}: {{ $v | quote }}
+  {{- end}}
+  {{- end}}
 {{- end }}
 {{- with .limits }}
 limits:
-  {{- if hasKey . "cpu" }}
-  "cpu": {{ .cpu }}
-  {{- end }}
-  {{- if hasKey . "memory" }}
-  "memory": {{ .memory }}
-  {{- end }}
-  {{- if hasKey . "storage" }}
-  "storage": {{ .storage }}
-  {{- end }}
-  {{- if hasKey . "gpu" }}
-  "nvidia.com/gpu": {{ .gpu }}
-  {{- end }}
+  {{- range $k, $v := . }}
+  {{- if eq $k "gpu" }}
+  "nvidia.com/gpu": {{ $v | quote }}
+  {{- else }}
+  {{ $k | quote }}: {{ $v | quote }}
+  {{- end}}
+  {{- end}}
 {{- end }}
 {{- end -}}
 
