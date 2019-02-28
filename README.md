@@ -335,14 +335,14 @@ resources:                             # 资源限制
     storage: string("")                # 存储资源
     gpu: string("")                    # GPU 资源，Deprecated。建议使用 nvidia.com/gpu
     nvidia.com/gpu: string("")         # NVIDIA GPU 资源
-    caicloud.io/localstorage: "0"      # 本地存储资源，只是作为标记、影响调度，并无实际意义
+    caicloud.io/local-storage: "0"     # 本地存储资源，只是作为标记、影响调度，并无实际意义
   limits:                              # 请求的资源上限
     cpu: string("100m")                # CPU 资源
     memory: string("100Mi")            # 内存资源
     storage: string("")                # 存储资源
     gpu: string("")                    # GPU 资源，Deprecated。建议使用 nvidia.com/gpu
     nvidia.com/gpu: string("")         # NVIDIA GPU 资源
-    caicloud.io/localstorage: "0"      # 本地存储资源，只是作为标记、影响调度，并无实际意义
+    caicloud.io/local-storage: "0"     # 本地存储资源，只是作为标记、影响调度，并无实际意义
 mounts:                                # 挂载数据卷位置
 - name: string                         # 数据卷名称
   readonly: bool(false)                # 是否只读
