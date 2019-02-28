@@ -8,7 +8,7 @@
 
 {{- range $index, $controller := .Values._config.controllers -}}
 {{- if eq $controller.type "DaemonSet" -}}
-{{- $controllerName := include "fullname" (list $g $index) -}}
+{{- $controllerName := $controller.controller.name | default (include "fullname" (list $g $index)) -}}
 
 
 
