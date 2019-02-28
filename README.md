@@ -262,12 +262,6 @@ failure-domain.beta.kubernetes.io/region
 
 容忍策略 NoExecute 尚未实现。
 
-关于 Pod 和 Node 的 Label 前缀问题的说明：
-1. Pod 在这里有默认前缀 `schedule.caicloud.io/`。也就是说在设置 Pod 的 标签 和 亲和性/反亲和性 的时候，都不需要在 key 中加上前缀。
-2. Node 在这里都没有默认前缀，并且 Node 的 亲和性/容忍 设置中的 key 都不会自动加上某个特定的前缀。
-出现这种设置的原因是 Pod 的 亲和性/反亲和性 设置都是在应用中可以定义的，因此在应用中可以规定这个统一前缀。  
-而 Node 不归应用管理，因此不能确定 Node 中是否会使用前缀或使用多少个前缀。所以不对 Node 相关的 调度 设置设定统一的 key 前缀。
-
 
 #### 类型：pod
 ```yaml
@@ -342,12 +336,16 @@ resources:                             # 资源限制
     cpu: string("100m")                # CPU 资源
     memory: string("100Mi")            # 内存资源
     storage: string("")                # 存储资源
-    gpu: string("")                    # GPU 资源
+    gpu: string("")                    # GPU 资源，Deprecated。建议使用 nvidia.com/gpu
+    nvidia.com/gpu: string("")         # NVIDIA GPU 资源
+    caicloud.io/localstorage: "0"      # 本地存储资源，只是作为标记、影响调度，并无实际意义
   limits:                              # 请求的资源上限
     cpu: string("100m")                # CPU 资源
     memory: string("100Mi")            # 内存资源
     storage: string("")                # 存储资源
-    gpu: string("")                    # GPU 资源
+    gpu: string("")                    # GPU 资源，Deprecated。建议使用 nvidia.com/gpu
+    nvidia.com/gpu: string("")         # NVIDIA GPU 资源
+    caicloud.io/localstorage: "0"      # 本地存储资源，只是作为标记、影响调度，并无实际意义
 mounts:                                # 挂载数据卷位置
 - name: string                         # 数据卷名称
   readonly: bool(false)                # 是否只读
