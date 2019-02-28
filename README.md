@@ -428,9 +428,9 @@ storage:                               # 存储需求
 
 ##### source：Dynamic，Dedicated
 ```yaml
-    class: string                      # 存储方案名称
-    modes:
-    - string("ReadWriteOnce")          # 数据卷读写模式，可以为 ReadWriteOnce，ReadOnlyMany，ReadWriteMany
+class: string                          # 存储方案名称
+modes:
+- string("ReadWriteOnce")              # 数据卷读写模式，可以为 ReadWriteOnce，ReadOnlyMany，ReadWriteMany
 ```
 Dynamic 和 Dedicated 两种类型的数据卷实际上都是使用存储方案来实现，即通过创建 PVC 并关联 storage class。  
 但是 Dynamic 只用于创建单一的 PVC，如果多个容器引用同一个 Dynamic，那么实际上多个副本是共享数据卷的（多副本时 mode 不能为 ReadWriteOnce）。  
@@ -439,39 +439,39 @@ Dedicated 类型仅用于 StatefulSet 类型的控制器。StatefulSet 会根据
 
 ##### source：Static
 ```yaml
-    target: string                     # 已创建的数据卷名称
-    readonly: bool(false)              # 是否以只读形式挂载
+target: string                         # 已创建的数据卷名称
+readonly: bool(false)                  # 是否以只读形式挂载
 ```
 Static 类型的数据卷只能用于使用已经创建好数据卷（PVC）。
 
 ##### source：Scratch
 ```yaml
-    medium: string("")                 # 存储介质，可以为 空字符串 或 Memory
+medium: string("")                     # 存储介质，可以为 空字符串 或 Memory
 ```
 Scratch 表示使用临时数据卷 EmptyDir。
 
 ##### source：Config，Secret
 ```yaml
-    target: string                     # 已创建的 Config 或 Secret
-    items:
-    - key: string                      # 配置文件 data 中的 key
-      path: string                     # 设置 key 对应的值在数据卷中的绝对路径
-      mode: string("0644")             # 文件读写模式，如果这里为空则使用默认文件读写模式
-    default: string("0644")            # 默认文件读写模式
-    optional: bool(false)              # 是否允许指定的 Config 或 Secret 不存在
+target: string                         # 已创建的 Config 或 Secret
+items:
+- key: string                          # 配置文件 data 中的 key
+  path: string                         # 设置 key 对应的值在数据卷中的绝对路径
+  mode: string("0644")                 # 文件读写模式，如果这里为空则使用默认文件读写模式
+default: string("0644")                # 默认文件读写模式
+optional: bool(false)                  # 是否允许指定的 Config 或 Secret 不存在
 ```
 Config 和 Secret 表示使用 配置 或 秘钥 作为数据卷。能够指定 配置 和 秘钥 的多个 key 作为文件使用。
 
 ##### source：HostPath
 ```yaml
-    path: string                       # 本地文件路径
+path: string                           # 本地文件路径
 ```
 
 ##### source：Glusterfs
 ```yaml
-    endpoints: string                  # glusterfs endpoints
-    path: string                       # glusterfs volume path
-    readonly: bool(false)              # 是否以只读形式挂载
+endpoints: string                      # glusterfs endpoints
+path: string                           # glusterfs volume path
+readonly: bool(false)                  # 是否以只读形式挂载
 ```
 
 #### 类型：service
@@ -484,11 +484,10 @@ ports:
   port: pint                           # 服务端口
   nodePort: uint(0)                    # 节点端口，[30000,32767]
 annotations:                           # 服务附加信息,仅用于保存服务额外信息
-  - key: string                        # 键
-    value: string                      # 值
-labels:                                # 服务会将流量路由到标签匹配的 Pod
-  - key: string                        # 键
-    value: string                      # 值
+- key: string                          # 键
+  value: string                        # 值
+selector:                              # 服务会将流量路由到标签匹配的 Pod
+- string: string                       # 直接指定标签值
 ```
 服务可以以两种形式暴露给外部：
 - ClusterIP：使用该形式暴露的服务，其它应用可以通过服务名访问当前服务
