@@ -5,8 +5,7 @@
 
 {{- range $index, $controller := .Values._config.controllers -}}
 {{- if eq $controller.type "StatefulSet" -}}
-{{- $controllerName := include "fullname" (list $g $index) -}}
-{{- $name := $controller.controller.name | default $controllerName -}}
+{{- $controllerName := $controller.controller.name | default (include "fullname" (list $g $index)) -}}
 {{- $domain := $controller.controller.domain | default $controllerName }}
 ---
 apiVersion: v1
@@ -19,7 +18,7 @@ metadata:
 spec:
   clusterIP: None
   selector:
-    {{- include "controllerlabels" $name | indent 4 }}
+    {{- include "controllerlabels" $controllerName | indent 4 }}
   ports:
   {{- range .containers -}}
   {{- range .ports }}
@@ -37,7 +36,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ $name | quote }}
+  name: {{ $controllerName | quote }}
   labels:
     {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
   annotations:
@@ -57,20 +56,20 @@ spec:
   selector:
     matchLabels:
       {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
-      {{- include "controllerlabels" $name | indent 6 }}
+      {{- include "controllerlabels" $controllerName | indent 6 }}
       {{- include "schelabels" $controller.schedule | indent 6 }}
   template:
     metadata:
       labels:
         {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
-        {{- include "controllerlabels" $name | indent 8 }}
+        {{- include "controllerlabels" $controllerName | indent 8 }}
         {{- include "schelabels" $controller.schedule | indent 8 }}
       annotations:
         {{- include "annotations" $controller.pod | indent 8 }}
     spec:
-    {{- include "podspec" (list $controller $name) | indent 6 }}
+    {{- include "podspec" (list $controller $controllerName) | indent 6 }}
   volumeClaimTemplates:
-  {{- include "dedicated" (list $g $name $controller.volumes) | indent 2 }}
+  {{- include "dedicated" (list $g $controllerName $controller.volumes) | indent 2 }}
 ---
 {{ end -}}
 {{- end -}}

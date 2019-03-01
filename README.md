@@ -139,6 +139,7 @@ key 必须符合如下要求：
 
 ##### controller：Deployment
 ```yaml
+name: string("")                       # 实例前缀名，控制器名称
 replica: uint(1)                       # 实例数量
 strategy:                              # 实例滚动更新策略，两个选项不能同时为0
   type: string("RollingUpdate")        # 更新策略，只能为 RollingUpdate(滚动更新) 或者 Recreate(重新创建)
@@ -152,7 +153,7 @@ ready: uint(0)                         # 实例从 Available 到 Ready 的最短
 ##### controller：StatefulSet
 ```yaml
 replica: uint(1)                              # 实例数量
-name: string("")                              # 实例前缀名
+name: string("")                              # 实例前缀名，控制器名称
 domain: string("")                            # 实例域名
 strategy:                                     # 实例滚动更新策略
   type: string("RollingUpdate")               # 更新策略，只能为 RollingUpdate(滚动更新) 或者 OnDelete(删除时更新)
@@ -166,13 +167,15 @@ podManagementPolicy: string("OrderedReady")   # Pod 管理策略, 只能为 Orde
 
 ##### controller：DaemonSet
 ```yaml
+name: string("")                       # 实例前缀名，控制器名称
 strategy:                              # 实例滚动更新策略，两个选项不能同时为0
   unavailable: pint(1)                 # 最大不可用数量
 ready: uint(0)                         # 实例从 Available 到 Ready 的最短时间
 ```
 
 ##### controller：Job
-```yaml                            
+```yaml 
+name: string("")                       # 实例前缀名，控制器名称                           
 parallelism: pint(1)                   # 最大并行实例数量
 completions: pint(1)                   # 总共需要完成的实例数量
 active: uint(0)                        # 单个实例执行的最长时间，0表示不限制
@@ -184,6 +187,7 @@ active: uint(0)                        # 单个实例执行的最长时间，0�
 
 ##### controller：CronJob
 ```yaml
+name: string("")                       # 实例前缀名，控制器名称
 rule: string                           # 定时规则，比如 "*/1 * * * *"
 deadline: uint(0)                      # 任务启动超时时间
 policy: string("Allow")                # 任务并发策略，Allow，Forbid，Replace
@@ -552,8 +556,8 @@ _config:
   - type: StatefulSet
     controller:
       replica: 3
-      name: "asda2222"
-      domain: "asdas"
+      name: "mysqlcluster"
+      domain: "mysql"
     schedule:
       labels:
         cpu: heavy
@@ -680,6 +684,7 @@ _config:
   - type: Deployment
     controller:
       replica: 1
+      name: simplelog
     containers:
     - image: cargo.caicloudprivatetest.com/caicloud/simplelog
       mounts:
