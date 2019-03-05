@@ -5,7 +5,7 @@
 
 {{- range $index, $controller := .Values._config.controllers -}}
 {{- if eq $controller.type "StatefulSet" -}}
-{{- $controllerName := $controller.controller.name | default (include "fullname" (list $g $index)) -}}
+{{- $controllerName := include "onlyname" (list $g $index) | default (include "fullname" (list $g $index)) -}}
 {{- $domain := $controller.controller.domain | default $controllerName }}
 ---
 apiVersion: v1
