@@ -4,7 +4,7 @@
 {{/* Creates pvc for storage class */}}
 {{- $g := . -}}
 {{- range $index, $controller := .Values._config.controllers -}}
-{{- $controllerName := include "fullname" (list $g $index) -}}
+{{- $controllerName := include "onlyname" (list $g $index) | default (include "fullname" (list $g $index)) -}}
 {{- range $controller.volumes -}}
 {{- if eq .type "Dynamic" }}
 ---
