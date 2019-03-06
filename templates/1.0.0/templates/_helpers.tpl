@@ -15,6 +15,17 @@
   {{- end -}}
 {{- end -}}
 
+{{/* onlyname returns the controller's name */}}
+{{- define "onlyname" -}}
+  {{- $global := index . 0 -}}
+  {{- $index := index . 1 -}}
+  {{- $controller := index $global.Values._config.controllers $index -}}
+  {{- with $controller.controller -}}
+    {{- with .name -}}
+      {{- printf "%s" . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 
 {{/* cid gets unique chart id in a release */}}
 {{/* All charts in a release should have different name */}}
