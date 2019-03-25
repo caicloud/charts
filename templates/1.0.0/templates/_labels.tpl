@@ -12,3 +12,10 @@
 "controller.caicloud.io/name": {{ . | quote }}
 {{- end -}}
 {{- end -}}
+
+{{- define "appLabels" -}}
+{{- $app := index . 0 -}}
+{{- $version := index . 1 | default "v1"}}
+"app": {{ $app | quote }}
+"version": {{ $version | quote }}
+{{- end -}}

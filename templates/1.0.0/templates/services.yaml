@@ -4,6 +4,7 @@
 
 {{ template "required" list .Values ".Values" "_config.controllers" "list"}}
 
+{{- $metadata := $g.Values._config._metadata -}}
 {{- range $index, $controller := .Values._config.controllers -}}
 {{- template "required" list $controller ".Values._config.controllers" "type" "string" -}}
 {{- $controllerName := include "onlyname" (list $g $index) | default (include "fullname" (list $g $index)) -}}
@@ -16,13 +17,15 @@ kind: Service
 metadata:
   name: {{ .name | quote }}
   labels:
+    {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 4 }}
     {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
   annotations:
     {{- include "annotations" . | indent 4 }}
 spec:
   type: {{ .type | quote }}
   selector:
-    "controller.caicloud.io/name": {{ $controllerName | quote }}
+    {{/* we do not add appLabels in selector to let service select all versions */}}
+    {{- include "controllerlabels" $controllerName | indent 4 }}
     {{- range $k, $v := .selector }}
     {{ $k | quote }}: {{ $v | quote }}
     {{- end }}
