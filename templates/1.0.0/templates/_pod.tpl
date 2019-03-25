@@ -12,6 +12,9 @@ hostname: {{ .hostname | quote }}
 subdomain: {{ .subdomain | quote }}
 terminationGracePeriodSeconds: {{ .termination }}
 serviceAccountName: {{ .serviceAccountName | quote }}
+{{- with .priorityClassName }}
+priorityClassName: {{ . | quote }}
+{{- end }}
 {{- with .host }}
 hostNetwork: {{ .network }}
 hostPID: {{ .pid }}
