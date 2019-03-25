@@ -8,11 +8,8 @@
   {{- $metadata := $global.Values._config._metadata -}}
   {{- $release := $global.Release.Name | trunc 30 | trimSuffix "-" | lower -}}
   {{- $chart := $global.Chart.Name | trunc 20 | trimSuffix "-" | lower -}}
-  {{- if and $metadata (hasKey $metadata "revision") -}}
-    {{- printf "%s-%s-v%.0f-%d" $release $chart $metadata.revision $index -}}
-  {{- else -}}
-    {{- printf "%s-%s-v1-%d" $release $chart $index -}}
-  {{- end -}}
+  {{- $appVersion := $metadata.appVersion | default "v1" | lower -}}
+  {{- printf "%s-%s-%s-%d" $release $chart $appVersion $index -}}
 {{- end -}}
 
 {{/* onlyname returns the controller's name */}}
