@@ -271,6 +271,7 @@ hostname: string("")                   # 主机名
 subdomain: string("")                  # 子域名
 termination: uint(30)                  # 优雅退出时间
 serviceAccountName: string("")         # ServiceAccount
+priorityClassName: string("")          # PriorityClassName
 host:
   network: bool(false)                 # 与主机共享 network namespace
   pid: bool(false)                     # 与主机共享 pid namespace
