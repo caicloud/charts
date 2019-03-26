@@ -274,6 +274,7 @@ serviceAccountName: string("")         # ServiceAccount
 nameservers:                           # poddns 配置
 - 114.114.114.114
 - 8.8.8.8
+priorityClassName: string("")          # PriorityClassName
 host:
   network: bool(false)                 # 与主机共享 network namespace
   pid: bool(false)                     # 与主机共享 pid namespace
