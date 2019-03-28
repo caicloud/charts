@@ -58,6 +58,10 @@ _config:
       annotations:
       - key: "pod.caicloud.io/feature-1.0.0"
         value: "{'test':'pod'}"
+      hostAliases:
+      - ip: 192.168.19.0
+        hostnames:
+        - www.baidu.com
     initContainers:
     - image: mysql-init:v1.0.0
       mounts:
