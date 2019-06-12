@@ -163,14 +163,20 @@ containers:
   value: {{ .value | quote }}
   {{- with .from }}
   valueFrom:
-    {{ if eq .type  "Config" -}}
-    configMapKeyRef:
-    {{- else }}
+    {{ if eq .type  "ResourceFieldRef" -}}
+    resourceFieldRef:
+      resource: {{ .resource | quote }}
+    {{- else if eq .type "Secret" -}}
     secretKeyRef:
-    {{- end }}
       name: {{ .name | quote }}
       key: {{ .key | quote }}
       optional: {{ .optional }}
+    {{- else -}}
+    configMapKeyRef:
+      name: {{ .name | quote }}
+      key: {{ .key | quote }}
+      optional: {{ .optional }}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 {{- end -}}
