@@ -1,0 +1,22 @@
+name: Elasticsearch
+briefDesc: Elasticsearch 是一个分布式、RESTful 风格的搜索和数据分析引擎，能够解决不断涌现出的各种用例。作为 Elastic Stack 的核心，它集中存储您的数据，帮助您发现意料之中以及意料之外的情况。
+desc: |
+  Elasticsearch 是一个分布式、RESTful 风格的搜索和数据分析引擎，能够解决不断涌现出的各种用例。作为 Elastic Stack 的核心，它集中存储您的数据，帮助您发现意料之中以及意料之外的情况。
+introduce:
+  brief: |
+    基于 Elasticsearch 社区版本（Repo(https://github.com/elastic/elasticsearch-docker) - Dockerfile）
+  howToUse: |
+    直接从模板部署出一个完整的 Elasticsearch 服务，不需要任何外部依赖。
+    如何挂载数据
+    数据挂载在 /usr/share/elasticsearch/data
+    配置挂载在 /usr/share/elasticsearch/config/elasticsearch.yml
+    配置
+    更加详细的配置说明请看[自解释的配置](https://hub.helm.sh/charts/stable/elasticsearch/1.15.4)
+  version: |
+    基于社区 6.5.4 稳定版本。
+  resources: |
+    最低资源要求：CPU：0.25 Core，内存：0.5 GiB，1个节点
+    推荐资源配置：CPU：1 Core，内存：2 GiB，2个以上节点
+  service: |
+    默认使用集群内部 IP 暴露服务的 9200，9300 端口
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。
