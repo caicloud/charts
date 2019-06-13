@@ -17,11 +17,36 @@
 set -e
 
 echo "Start to build charts into $OUTPUT_DIR from $INPUT_DIR"
+echo "Start to build charts into $APPLICATION_OUTPUT_DIR from $APPLICATION_INPUT_DIR"
 echo "Template: $TEMPLATES_DIR/$TEMPLATE_VERSION"
 echo "Image domain: $IMAGE_DOMAIN"
 echo "Force update: $FORCE_UPDATE"
 tmp=/tmp/charts/
 templates=$TEMPLATES_DIR/$TEMPLATE_VERSION/templates
+
+function packChartApp() {
+  chartPath=$1
+  chart=$(basename $chartPath)
+  for versionPath in $chartPath/*; do
+    version=$(basename $versionPath)
+    output=$APPLICATION_OUTPUT_DIR/$chart/$version
+    if [[ ! -d $output || $FORCE_UPDATE == "true" ]]; then
+      echo "Packing $chart/$version"
+
+      if [[ $IMAGE_DOMAIN != "" ]]; then
+        sed -i -E "s|IMAGE_REPOSITORY|$IMAGE_DOMAIN|g" $versionPath/config.json
+      fi
+
+      mkdir -p $output
+      cp -R $versionPath/config.json $output/config.json
+      echo -n "SUCCESS" >$output/.status
+
+      echo "Packed $chart-$version"
+    else
+      echo "Ignore $chart/$version"
+    fi
+  done
+}
 
 function packChart() {
   chartPath=$1
@@ -63,4 +88,18 @@ function generate() {
   rm -rf $tmp
 }
 
+function generateApplication() {
+  # Copy input to tmp dir.
+  mkdir -p $tmp
+  # Clear output dir.
+  rm -rf $APPLICATION_OUTPUT_DIR
+  mkdir -p $APPLICATION_OUTPUT_DIR
+  cp -R $APPLICATION_INPUT_DIR/* $tmp
+  for chartPath in $tmp/*; do
+    packChartApp $chartPath
+  done
+  rm -rf $tmp
+}
+
 generate
+generateApplication
