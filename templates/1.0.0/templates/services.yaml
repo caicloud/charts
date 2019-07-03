@@ -31,7 +31,7 @@ spec:
       {{- end }}
     {{- end }}
     {{- range $k, $v := .selector }}
-    {{ printf "schedule.caicloud.io/%s" $k | quote }}: {{ $v | quote }}
+    {{ $k | quote }}: {{ $v | quote }}
     {{- end }}
 
   ports:
