@@ -23,8 +23,10 @@ set -o pipefail
 
 echo ">>>> Testing build charts"
 
-export OUTPUT_DIR=./bin
-export INPUT_DIR=./stable
+export OUTPUT_DIR=./bin/release
+export INPUT_DIR=./stable/release
+export APPLICATION_OUTPUT_DIR=./bin/application
+export APPLICATION_INPUT_DIR=./stable/application
 export TEMPLATES_DIR=./templates
 export TEMPLATE_VERSION="1.0.0"
 export IMAGE_DOMAIN=cargo.caicloudprivatetest.com
