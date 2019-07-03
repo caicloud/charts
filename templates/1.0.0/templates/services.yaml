@@ -22,14 +22,18 @@ metadata:
 spec:
   type: {{ .type | quote }}
   selector:
-    {{- if eq $controller.type "StatefulSet" }}
+    {{- $custom := .custom | default false -}}
+    {{- if eq $custom false}}
+      {{- if eq $controller.type "StatefulSet" }}
     "controller.caicloud.io/name": {{ $controller.controller.name | default $controllerName | quote }}
-    {{- else }}
+      {{- else }}
     "controller.caicloud.io/name": {{ $controllerName | quote }}
+      {{- end }}
     {{- end }}
-    {{- range .labels }}
-    {{ .key | quote }}: {{ .value | quote }}
+    {{- range $k, $v := .selector }}
+    {{ printf "schedule.caicloud.io/%s" $k | quote }}: {{ $v | quote }}
     {{- end }}
+
   ports:
   {{- $s := . -}}
   {{- range .ports }}
