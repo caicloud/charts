@@ -1,0 +1,98 @@
+_config:
+  _metadata:
+    name: elasticsearch
+    version: 6.5.4
+    description: |
+      Flexible and powerful open source, distributed real-time search and analytics engine.
+  controllers:
+  - type: StatefulSet
+    controller:
+      replica: 3
+      domain: elasticsearch
+      strategy:
+        type: "OnDelete"
+      name: elasticsearch
+    pod:
+      securityContext:
+        fsGroup: 1000
+    schedule:
+      antiaffinity:
+        pod:
+          type: Prefered
+          terms:
+          - weight: 1
+            topologyKey: kubernetes.io/hostname
+            selector:
+              expressions:
+              - key: controller.caicloud.io/release
+                operator: In
+                values:
+                - "elasticsearch"
+    initContainers:
+    - image: cargo.caicloudprivatetest.com/caicloud/elasticsearch-oss:6.5.4-dev
+      name: chown
+      imagePullPolicy: Always
+      command:
+      - /usr/local/bin/pre-start.sh
+      mounts:
+      - name: data
+        path: /usr/share/elasticsearch/data
+    containers:
+    - imagePullPolicy: Always
+      name: elasticsearch
+      image: cargo.caicloudprivatetest.com/caicloud/elasticsearch-oss:6.5.4-dev
+      env:
+      - name: DISCOVERY_SERVICE
+        value: elasticsearch-discovery
+      - name: PROCESSORS
+        from:
+          type: ResourceFieldRef
+          resource: limits.cpu
+      - name: ES_JAVA_OPTS
+        value: "-Djava.net.preferIPv4Stack=true -Xms512m -Xmx512m "
+      - name: MINIMUM_MASTER_NODES
+        value: 2
+      resources:
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+        limits:
+          cpu: '1'
+          memory: 2Gi
+      resources:
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+        limits:
+          cpu: '1'
+          memory: 2Gi
+      ports:
+      - protocol: TCP
+        port: 9300
+        name: transport
+      - protocol: TCP
+        port: 9200
+        name: http
+      probe:
+        readiness:
+          handler:
+            type: HTTP
+            method:
+              path: /_cluster/health?local=true
+              port: 9200
+          delay: 5
+      mounts:
+      - name: data
+        path: /usr/share/elasticsearch/data
+    volumes: 
+    - name: data
+      type: Scratch
+      source:
+        medium: ""
+    services:
+    - name: elasticsearch-discovery
+      type: ClusterIP
+      ports:
+      - protocol: HTTP
+        targetPort: 9300
+        port: 9300
