@@ -5,7 +5,7 @@
 FROM cargo.caicloudprivatetest.com/caicloud/debian:jessie
 
 RUN apt-get update && \
-    apt-get install -y ruby && \
+    apt-get install -y ruby --force-yes&& \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 LABEL maintainer="Wei Guo <guowei@caicloud.io>"
