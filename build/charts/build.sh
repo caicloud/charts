@@ -58,9 +58,8 @@ function packChart() {
       echo "Packing $chart/$version"
 
       if [[ $IMAGE_DOMAIN != "" ]]; then
-        sed -i -E 's|cargo.caicloudprivatetest.com|$IMAGE_DOMAIN|g' $versionPath/values.yaml
+        sed -i -E "s|(image:.*)cargo.caicloudprivatetest.com(.*)|\1$IMAGE_DOMAIN\2|g" $versionPath/values.yaml
       fi
-
       mkdir -p $output
       cp -R $templates $versionPath/templates
       tar -czf $output/chart.tgz -C $versionPath .
