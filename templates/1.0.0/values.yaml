@@ -53,6 +53,9 @@ _config:
                 - heavy
                 - midium
     pod:
+      nameservers:
+      - 114.114.114.114
+      - 8.8.8.8
       host:
         network: true
       annotations:

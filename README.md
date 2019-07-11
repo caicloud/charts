@@ -273,6 +273,9 @@ hostname: string("")                   # 主机名
 subdomain: string("")                  # 子域名
 termination: uint(30)                  # 优雅退出时间
 serviceAccountName: string("")         # ServiceAccount
+nameservers:                           # poddns 配置
+- 114.114.114.114
+- 8.8.8.8
 host:
   network: bool(false)                 # 与主机共享 network namespace
   pid: bool(false)                     # 与主机共享 pid namespace
@@ -588,6 +591,9 @@ _config:
                 - heavy
                 - midium
     pod:
+      nameservers:
+      - 114.114.114.114
+      - 8.8.8.8
       host:
         network: true
     initContainers:
