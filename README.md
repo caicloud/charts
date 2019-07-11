@@ -489,6 +489,8 @@ annotations:                           # 服务附加信息,仅用于保存服�
   value: string                        # 值
 selector:                              # 服务会将流量路由到标签匹配的 Pod
   string: string                       # 直接指定标签值
+sessionAffinity: ClientIP              # 会话保持类型 仅支持 ClientIP 和 None
+affinityTimeout: 10800                 # 会话保持超时时间 单位秒 默认 10800 范围是 (0, 86400]
 ```
 服务可以以两种形式暴露给外部：
 - ClusterIP：使用该形式暴露的服务，其它应用可以通过服务名访问当前服务
@@ -673,6 +675,8 @@ _config:
       - protocol: HTTP
         targetPort: 80
         port: 80
+      sessionAffinity: ClientIP
+      affinityTimeout: 10800
     - name: mysql2
       type: NodePort
       ports:

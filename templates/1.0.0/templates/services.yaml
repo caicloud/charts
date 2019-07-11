@@ -23,6 +23,10 @@ metadata:
     {{- include "annotations" . | indent 4 }}
 spec:
   type: {{ .type | quote }}
+  sessionAffinity: {{ .sessionAffinity | default "None" | quote }}
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: {{ .affinityTimeout | default 10800 }}
   selector:
     {{/* we do not add appLabels in selector to let service select all versions */}}
     {{- include "controllerlabels" $controllerName | indent 4 }}
