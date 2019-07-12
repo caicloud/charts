@@ -26,8 +26,8 @@ metadata:
 spec:
   {{- with .controller }}
   updateStrategy:
-    type: RollingUpdate
     {{- with .strategy }}
+    type: {{ .type }}
     rollingUpdate:
       maxUnavailable: {{ .unavailable }}
     {{- end }}
