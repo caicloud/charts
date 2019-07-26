@@ -21,7 +21,7 @@ _config:
         nodePort: 0
     containers:
     - imagePullPolicy: Always
-      image: cargo.caicloudprivatetest.com/library/kibana-oss:6.5.4
+      image: cargo.caicloudprivatetest.com/library/kibana:6.5.4
       mounts: []
       env:
       - name: ELASTICSEARCH_URL
