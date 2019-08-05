@@ -86,9 +86,7 @@ _config:
         path: /usr/share/elasticsearch/data
     volumes: 
     - name: data
-      type: Scratch
-      source:
-        medium: ""
+      type: Dedicated
     services:
     - name: elasticsearch-discovery
       type: ClusterIP
