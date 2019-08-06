@@ -57,6 +57,7 @@ _config:
     template:             # Chart 模板信息，为模板自动升级提供信息
       type: string        # Chart 模板类型
       version: semvar     # Chart 模板版本号
+    appVersion: string    # Chart 创建 workload 时的版本号，会添加到 pod 的 label 中，目前多用于灰度发布。
   # 配置控制器组，配置控制器组可以包含多个配置控制器
   # 此处的配置控制器与上面所描述的 Pod Controller 不同，此处的配置控制器具有如下等价关系：
   # 配置控制器 = 1个 Pod Controller 配置 +
