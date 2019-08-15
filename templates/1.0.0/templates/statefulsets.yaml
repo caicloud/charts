@@ -3,23 +3,25 @@
 {{- $g := . -}}
 
 
+{{- $metadata := $g.Values._config._metadata -}}
 {{- range $index, $controller := .Values._config.controllers -}}
 {{- if eq $controller.type "StatefulSet" -}}
-{{- $controllerName := include "fullname" (list $g $index) -}}
-{{- $name := $controller.controller.name | default $controllerName -}}
+{{- $controllerName := include "onlyname" (list $g $index) | default (include "fullname" (list $g $index)) -}}
 {{- $domain := $controller.controller.domain | default $controllerName }}
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ $domain | quote }}
   labels:
-    "controller.caicloud.io/release": {{ $g.Release.Name | quote }}
-    "controller.caicloud.io/chart": {{ $g.Chart.Name | quote }}
+    {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 4 }}
+    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
 spec:
   clusterIP: None
   selector:
-    {{- include "controllerlabels" $name | indent 4 }}
+    {{/* we do not add appLabels in selector to let service select all versions */}}
+    {{- include "controllerlabels" $controllerName | indent 4 }}
   ports:
   {{- range .containers -}}
   {{- range .ports }}
@@ -37,8 +39,9 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ $name | quote }}
+  name: {{ $controllerName | quote }}
   labels:
+    {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 4 }}
     {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
   annotations:
     {{- include "annotations" $controller.controller | indent 4 }}
@@ -56,21 +59,23 @@ spec:
   podManagementPolicy: {{ $controller.controller.podManagementPolicy }}
   selector:
     matchLabels:
+      {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 6 }}
       {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
-      {{- include "controllerlabels" $name | indent 6 }}
+      {{- include "controllerlabels" $controllerName | indent 6 }}
       {{- include "schelabels" $controller.schedule | indent 6 }}
   template:
     metadata:
       labels:
+        {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 8 }}
         {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
-        {{- include "controllerlabels" $name | indent 8 }}
+        {{- include "controllerlabels" $controllerName | indent 8 }}
         {{- include "schelabels" $controller.schedule | indent 8 }}
       annotations:
         {{- include "annotations" $controller.pod | indent 8 }}
     spec:
-    {{- include "podspec" (list $controller $name) | indent 6 }}
+    {{- include "podspec" (list $controller $controllerName) | indent 6 }}
   volumeClaimTemplates:
-  {{- include "dedicated" (list $g $name $controller.volumes) | indent 2 }}
+  {{- include "dedicated" (list $g $controllerName $controller.volumes) | indent 2 }}
 ---
 {{ end -}}
 {{- end -}}

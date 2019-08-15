@@ -3,7 +3,7 @@
 {{/* schelabels generates schedule labels */}}
 {{- define "schelabels" -}}
 {{- range $k, $v := .labels }}
-{{ printf "schedule.caicloud.io/%s" $k | quote }}: {{ $v | quote}}
+{{ $k | quote }}: {{ $v | quote}}
 {{- end }}
 {{- end -}}
 
@@ -76,13 +76,13 @@ requiredDuringSchedulingIgnoredDuringExecution:
     {{- if hasKey .selector "labels" }}
     matchLabels:
     {{- range $k, $v := .selector.labels }}
-      {{ printf "schedule.caicloud.io/%s" $k | quote }}: {{ $v | quote }}
+      {{ $k | quote }}: {{ $v | quote }}
     {{- end }}
     {{- end }}
     {{- if hasKey .selector "expressions" }}
     matchExpressions:
     {{- range .selector.expressions }}
-    - key: {{ printf "schedule.caicloud.io/%s" .key | quote }}
+    - key: {{ .key | quote }}
       operator: {{ .operator | quote }}
       values:
       {{- range .values }}
@@ -105,13 +105,13 @@ preferredDuringSchedulingIgnoredDuringExecution:
       {{- if hasKey .selector "labels" }}
       matchLabels:
       {{- range $k, $v := .selector.labels }}
-        {{ printf "schedule.caicloud.io/%s" $k | quote }}: {{ $v | quote }}
+        {{ $k | quote }}: {{ $v | quote }}
       {{- end }}
       {{- end }}
       {{- if hasKey .selector "expressions" }}
       matchExpressions:
       {{- range .selector.expressions }}
-      - key: {{ printf "schedule.caicloud.io/%s" .key | quote }}
+      - key: {{ .key | quote }}
         operator: {{ .operator | quote }}
         values:
         {{- range .values }}

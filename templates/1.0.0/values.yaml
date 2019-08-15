@@ -6,6 +6,7 @@ _config:
     creationTime: "2017-07-14 12:00:00"
     source: "/library/template/1.0.0"
     revision: 1
+    appVersion: v1
     class: Default
     template:
       type: "template.caicloud.io/application"
@@ -61,6 +62,10 @@ _config:
       annotations:
       - key: "pod.caicloud.io/feature-1.0.0"
         value: "{'test':'pod'}"
+      hostAliases:
+      - ip: 192.168.19.0
+        hostnames:
+        - www.baidu.com
     initContainers:
     - image: mysql-init:v1.0.0
       mounts:

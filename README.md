@@ -139,6 +139,7 @@ key 必须符合如下要求：
 
 ##### controller：Deployment
 ```yaml
+name: string("")                       # 实例前缀名，控制器名称
 replica: uint(1)                       # 实例数量
 strategy:                              # 实例滚动更新策略，两个选项不能同时为0
   type: string("RollingUpdate")        # 更新策略，只能为 RollingUpdate(滚动更新) 或者 Recreate(重新创建)
@@ -152,7 +153,7 @@ ready: uint(0)                         # 实例从 Available 到 Ready 的最短
 ##### controller：StatefulSet
 ```yaml
 replica: uint(1)                              # 实例数量
-name: string("")                              # 实例前缀名
+name: string("")                              # 实例前缀名，控制器名称
 domain: string("")                            # 实例域名
 strategy:                                     # 实例滚动更新策略
   type: string("RollingUpdate")               # 更新策略，只能为 RollingUpdate(滚动更新) 或者 OnDelete(删除时更新)
@@ -166,13 +167,15 @@ podManagementPolicy: string("OrderedReady")   # Pod 管理策略, 只能为 Orde
 
 ##### controller：DaemonSet
 ```yaml
+name: string("")                       # 实例前缀名，控制器名称
 strategy:                              # 实例滚动更新策略，两个选项不能同时为0
   unavailable: pint(1)                 # 最大不可用数量
 ready: uint(0)                         # 实例从 Available 到 Ready 的最短时间
 ```
 
 ##### controller：Job
-```yaml                            
+```yaml
+name: string("")                       # 实例前缀名，控制器名称
 parallelism: pint(1)                   # 最大并行实例数量
 completions: pint(1)                   # 总共需要完成的实例数量
 active: uint(0)                        # 单个实例执行的最长时间，0表示不限制
@@ -184,6 +187,7 @@ active: uint(0)                        # 单个实例执行的最长时间，0�
 
 ##### controller：CronJob
 ```yaml
+name: string("")                       # 实例前缀名，控制器名称
 rule: string                           # 定时规则，比如 "*/1 * * * *"
 deadline: uint(0)                      # 任务启动超时时间
 policy: string("Allow")                # 任务并发策略，Allow，Forbid，Replace
@@ -207,7 +211,7 @@ active: uint(0)                        # 单个实例执行的最长时间，0�
 ```yaml
 scheduler: string("")                                  # 调度器名称，可选项为 空字符串，为空表示使用默认调度器
 labels:                                                # 控制器及 容器组 标签
-  string: string                                       # 这里的 key 在模板中自动加上前缀 `schedule.caicloud.io/`
+  string: string
 affinity:                                              # 亲和性设置
   pod:
     type: string("Required")                           # 类型可以为 Required 或 Prefered
@@ -218,7 +222,7 @@ affinity:                                              # 亲和性设置
       - string                                       
       selector:                                        # 选择器，用于设置匹配的标签
         labels:                                        # 直接指定标签值
-          string: string                               # 这里的 key 在模板中自动加上前缀 `schedule.caicloud.io/`
+          string: string
         expressions:                                   # 通过表达式查找标签
         - key: string                                
           operator: string                             # 操作符 In，NotIn，Exists，DoesNotExist
@@ -258,12 +262,6 @@ failure-domain.beta.kubernetes.io/region
 
 容忍策略 NoExecute 尚未实现。
 
-关于 Pod 和 Node 的 Label 前缀问题的说明：
-1. Pod 在这里有默认前缀 `schedule.caicloud.io/`。也就是说在设置 Pod 的 标签 和 亲和性/反亲和性 的时候，都不需要在 key 中加上前缀。
-2. Node 在这里都没有默认前缀，并且 Node 的 亲和性/容忍 设置中的 key 都不会自动加上某个特定的前缀。
-出现这种设置的原因是 Pod 的 亲和性/反亲和性 设置都是在应用中可以定义的，因此在应用中可以规定这个统一前缀。  
-而 Node 不归应用管理，因此不能确定 Node 中是否会使用前缀或使用多少个前缀。所以不对 Node 相关的 调度 设置设定统一的 key 前缀。
-
 
 #### 类型：pod
 ```yaml
@@ -276,6 +274,7 @@ serviceAccountName: string("")         # ServiceAccount
 nameservers:                           # poddns 配置
 - 114.114.114.114
 - 8.8.8.8
+priorityClassName: string("")          # PriorityClassName
 host:
   network: bool(false)                 # 与主机共享 network namespace
   pid: bool(false)                     # 与主机共享 pid namespace
@@ -338,12 +337,16 @@ resources:                             # 资源限制
     cpu: string("100m")                # CPU 资源
     memory: string("100Mi")            # 内存资源
     storage: string("")                # 存储资源
-    gpu: string("")                    # GPU 资源
+    gpu: string("")                    # GPU 资源，Deprecated。建议使用 nvidia.com/gpu
+    nvidia.com/gpu: string("")         # NVIDIA GPU 资源
+    caicloud.io/local-storage: "0"     # 本地存储资源，只是作为标记、影响调度，并无实际意义
   limits:                              # 请求的资源上限
     cpu: string("100m")                # CPU 资源
     memory: string("100Mi")            # 内存资源
     storage: string("")                # 存储资源
-    gpu: string("")                    # GPU 资源
+    gpu: string("")                    # GPU 资源，Deprecated。建议使用 nvidia.com/gpu
+    nvidia.com/gpu: string("")         # NVIDIA GPU 资源
+    caicloud.io/local-storage: "0"     # 本地存储资源，只是作为标记、影响调度，并无实际意义
 mounts:                                # 挂载数据卷位置
 - name: string                         # 数据卷名称
   readonly: bool(false)                # 是否只读
@@ -428,9 +431,9 @@ storage:                               # 存储需求
 
 ##### source：Dynamic，Dedicated
 ```yaml
-    class: string                      # 存储方案名称
-    modes:
-    - string("ReadWriteOnce")          # 数据卷读写模式，可以为 ReadWriteOnce，ReadOnlyMany，ReadWriteMany
+class: string                          # 存储方案名称
+modes:
+- string("ReadWriteOnce")              # 数据卷读写模式，可以为 ReadWriteOnce，ReadOnlyMany，ReadWriteMany
 ```
 Dynamic 和 Dedicated 两种类型的数据卷实际上都是使用存储方案来实现，即通过创建 PVC 并关联 storage class。  
 但是 Dynamic 只用于创建单一的 PVC，如果多个容器引用同一个 Dynamic，那么实际上多个副本是共享数据卷的（多副本时 mode 不能为 ReadWriteOnce）。  
@@ -439,39 +442,39 @@ Dedicated 类型仅用于 StatefulSet 类型的控制器。StatefulSet 会根据
 
 ##### source：Static
 ```yaml
-    target: string                     # 已创建的数据卷名称
-    readonly: bool(false)              # 是否以只读形式挂载
+target: string                         # 已创建的数据卷名称
+readonly: bool(false)                  # 是否以只读形式挂载
 ```
 Static 类型的数据卷只能用于使用已经创建好数据卷（PVC）。
 
 ##### source：Scratch
 ```yaml
-    medium: string("")                 # 存储介质，可以为 空字符串 或 Memory
+medium: string("")                     # 存储介质，可以为 空字符串 或 Memory
 ```
 Scratch 表示使用临时数据卷 EmptyDir。
 
 ##### source：Config，Secret
 ```yaml
-    target: string                     # 已创建的 Config 或 Secret
-    items:
-    - key: string                      # 配置文件 data 中的 key
-      path: string                     # 设置 key 对应的值在数据卷中的绝对路径
-      mode: string("0644")             # 文件读写模式，如果这里为空则使用默认文件读写模式
-    default: string("0644")            # 默认文件读写模式
-    optional: bool(false)              # 是否允许指定的 Config 或 Secret 不存在
+target: string                         # 已创建的 Config 或 Secret
+items:
+- key: string                          # 配置文件 data 中的 key
+  path: string                         # 设置 key 对应的值在数据卷中的绝对路径
+  mode: string("0644")                 # 文件读写模式，如果这里为空则使用默认文件读写模式
+default: string("0644")                # 默认文件读写模式
+optional: bool(false)                  # 是否允许指定的 Config 或 Secret 不存在
 ```
 Config 和 Secret 表示使用 配置 或 秘钥 作为数据卷。能够指定 配置 和 秘钥 的多个 key 作为文件使用。
 
 ##### source：HostPath
 ```yaml
-    path: string                       # 本地文件路径
+path: string                           # 本地文件路径
 ```
 
 ##### source：Glusterfs
 ```yaml
-    endpoints: string                  # glusterfs endpoints
-    path: string                       # glusterfs volume path
-    readonly: bool(false)              # 是否以只读形式挂载
+endpoints: string                      # glusterfs endpoints
+path: string                           # glusterfs volume path
+readonly: bool(false)                  # 是否以只读形式挂载
 ```
 
 #### 类型：service
@@ -484,11 +487,10 @@ ports:
   port: pint                           # 服务端口
   nodePort: uint(0)                    # 节点端口，[30000,32767]
 annotations:                           # 服务附加信息,仅用于保存服务额外信息
-  - key: string                        # 键
-    value: string                      # 值
-labels:                                # 服务会将流量路由到标签匹配的 Pod
-  - key: string                        # 键
-    value: string                      # 值
+- key: string                          # 键
+  value: string                        # 值
+selector:                              # 服务会将流量路由到标签匹配的 Pod
+  string: string                       # 直接指定标签值
 ```
 服务可以以两种形式暴露给外部：
 - ClusterIP：使用该形式暴露的服务，其它应用可以通过服务名访问当前服务
@@ -555,8 +557,8 @@ _config:
   - type: StatefulSet
     controller:
       replica: 3
-      name: "asda2222"
-      domain: "asdas"
+      name: "mysqlcluster"
+      domain: "mysql"
     schedule:
       labels:
         cpu: heavy
@@ -686,6 +688,7 @@ _config:
   - type: Deployment
     controller:
       replica: 1
+      name: simplelog
     containers:
     - image: cargo.caicloudprivatetest.com/caicloud/simplelog
       mounts:
