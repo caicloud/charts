@@ -24,8 +24,14 @@ metadata:
 spec:
   type: {{ .type | quote }}
   selector:
-    {{/* we do not add appLabels in selector to let service select all versions */}}
-    {{- include "controllerlabels" $controllerName | indent 4 }}
+    {{- $custom := .custom | default false -}}
+    {{- if eq $custom false}}
+      {{- if eq $controller.type "StatefulSet" }}
+    "controller.caicloud.io/name": {{ $controller.controller.name | default $controllerName | quote }}
+      {{- else }}
+    "controller.caicloud.io/name": {{ $controllerName | quote }}
+      {{- end }}
+    {{- end }}
     {{- range $k, $v := .selector }}
     {{ $k | quote }}: {{ $v | quote }}
     {{- end }}
