@@ -26,7 +26,7 @@
 #
 
 # Current version of the project.
-VERSION ?= v1.3.3-rc.1
+VERSION ?= v1.3.3-rc.2
 
 # This repo's root import path (under GOPATH).
 ROOT := github.com/caicloud/charts

@@ -26,11 +26,7 @@ spec:
   selector:
     {{- $custom := .custom | default false -}}
     {{- if eq $custom false}}
-      {{- if eq $controller.type "StatefulSet" }}
-    "controller.caicloud.io/name": {{ $controller.controller.name | default $controllerName | quote }}
-      {{- else }}
-    "controller.caicloud.io/name": {{ $controllerName | quote }}
-      {{- end }}
+    {{- include "controllerlabels" $controllerName | indent 4 }}
     {{- end }}
     {{- range $k, $v := .selector }}
     {{ $k | quote }}: {{ $v | quote }}
