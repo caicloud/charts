@@ -241,12 +241,13 @@ affinity:                                              # 亲和性设置
 antiaffinity:                                        
   pod:                                                 # 反亲和性设置与亲和性设置相同
     ...                                              
-tolerations:                                           # 节点容忍设置
-- key: string                                          # 容忍的 Key
-  operator: string                                     # 操作符 Exists，Equal
-  value: string                                        # 值
-  effect: string                                       # 容忍策略 NoScheduler，PreferNoScheduler，NoExecute
-  tolerationSeconds: uint                              # 容忍时间 仅在 effect 为 NoExecute 时有效
+
+tolerations:                                            # 节点容忍设置
+- key: string("key")                                    # key 值
+  operator: string("Equal")                             # 与 taint value 值的关系，可以为 Equal，Exists 默认为 Equal
+  value: string("value")                                # value 值
+  effect: string("NoSchedule")                          # 与 taint value 不匹配的之后的调度策略，可以为 NoSchedule PreferNoSchedule NoExecute
+  tolerationSeconds: uint(60)                           # 在 effect 为 NoExecute 时，如果不能忍受 taint, pod 在被驱逐之前可以继续在这个节点运行的时间。
 ```
 topologyKey 具有如下值:
 

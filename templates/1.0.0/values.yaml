@@ -53,6 +53,22 @@ _config:
                 values:
                 - heavy
                 - midium
+      tolerations:
+      - key: tolerations_key
+        operator: Equal
+        value: tolerations_value
+        effect: NoSchedule(PreferNoSchedule、NoExecute)
+        tolerationSeconds: 60
+      - key: tolerations_key1
+        operator: Exists
+        value: tolerations_value1
+        effect: PreferNoSchedule
+        tolerationSeconds: 60
+      - key: tolerations_key2
+        operator: Equal
+        value: tolerations_value2
+        effect: NoExecute
+        tolerationSeconds: 60
     pod:
       host:
         network: true
