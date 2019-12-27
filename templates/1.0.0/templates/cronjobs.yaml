@@ -45,6 +45,7 @@ spec:
       {{- with .controller }}
       parallelism: {{ .parallelism }}
       completions: {{ .completions }}
+      backoffLimit: {{ .backoffLimit | default 6 }}
       activeDeadlineSeconds: {{ .active }}
       {{- end }}
       template:
