@@ -3,7 +3,6 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Chart 模版配置规范定义（v1.0.0）](#chart-%E6%A8%A1%E7%89%88%E9%85%8D%E7%BD%AE%E8%A7%84%E8%8C%83%E5%AE%9A%E4%B9%89v100)
-    - [目录](#%E7%9B%AE%E5%BD%95)
     - [概述](#%E6%A6%82%E8%BF%B0)
     - [基础结构描述](#%E5%9F%BA%E7%A1%80%E7%BB%93%E6%9E%84%E6%8F%8F%E8%BF%B0)
     - [配置控制器定义](#%E9%85%8D%E7%BD%AE%E6%8E%A7%E5%88%B6%E5%99%A8%E5%AE%9A%E4%B9%89)
@@ -36,38 +35,6 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Chart 模版配置规范定义（v1.0.0）
-
-### 目录
-- [Chart 模版配置规范定义（v1.0.0）](#chart-%e6%a8%a1%e7%89%88%e9%85%8d%e7%bd%ae%e8%a7%84%e8%8c%83%e5%ae%9a%e4%b9%89v100)
-    - [目录](#%e7%9b%ae%e5%bd%95)
-    - [概述](#%e6%a6%82%e8%bf%b0)
-    - [基础结构描述](#%e5%9f%ba%e7%a1%80%e7%bb%93%e6%9e%84%e6%8f%8f%e8%bf%b0)
-    - [配置控制器定义](#%e9%85%8d%e7%bd%ae%e6%8e%a7%e5%88%b6%e5%99%a8%e5%ae%9a%e4%b9%89)
-      - [类型：controller](#%e7%b1%bb%e5%9e%8bcontroller)
-        - [controller：Deployment](#controllerdeployment)
-        - [controller：StatefulSet](#controllerstatefulset)
-        - [controller：DaemonSet](#controllerdaemonset)
-        - [controller：Job](#controllerjob)
-        - [controller：CronJob](#controllercronjob)
-      - [类型：schedule](#%e7%b1%bb%e5%9e%8bschedule)
-      - [类型：pod](#%e7%b1%bb%e5%9e%8bpod)
-      - [类型：initContainer，container](#%e7%b1%bb%e5%9e%8binitcontainercontainer)
-        - [probe：liveness，readiness](#probelivenessreadiness)
-        - [handler：liveness，readiness，postStart，preStop](#handlerlivenessreadinesspoststartprestop)
-          - [method：EXEC](#methodexec)
-          - [method：HTTP](#methodhttp)
-          - [method：TCP](#methodtcp)
-      - [类型：volume](#%e7%b1%bb%e5%9e%8bvolume)
-        - [source：Dynamic，Dedicated](#sourcedynamicdedicated)
-        - [source：Static](#sourcestatic)
-        - [source：Scratch](#sourcescratch)
-        - [source：Config，Secret](#sourceconfigsecret)
-        - [source：HostPath](#sourcehostpath)
-        - [source：Glusterfs](#sourceglusterfs)
-      - [类型：service](#%e7%b1%bb%e5%9e%8bservice)
-      - [类型：config](#%e7%b1%bb%e5%9e%8bconfig)
-      - [类型：secret](#%e7%b1%bb%e5%9e%8bsecret)
-    - [一个配置文件的例子](#%e4%b8%80%e4%b8%aa%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e7%9a%84%e4%be%8b%e5%ad%90)
 
 ### 概述
 规范主要用于定义 Chart 配置文件 values.yaml 的逻辑结构和类型。  
