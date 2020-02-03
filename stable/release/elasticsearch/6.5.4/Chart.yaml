@@ -1,0 +1,4 @@
+name: elasticsearch
+version: 6.5.4
+description: |
+  Flexible and powerful open source, distributed real-time search and analytics engine.
