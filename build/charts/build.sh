@@ -58,7 +58,7 @@ function packChart() {
       echo "Packing $chart/$version"
 
       if [[ $IMAGE_DOMAIN != "" ]]; then
-        sed -i -E "s|(image:.*)cargo.caicloudprivatetest.com(.*)|\1$IMAGE_DOMAIN\2|g" $versionPath/values.yaml
+        sed -i -E 's|cargo.caicloudprivatetest.com|$IMAGE_DOMAIN|g' $versionPath/values.yaml
       fi
 
       mkdir -p $output
@@ -77,12 +77,12 @@ function packChart() {
 
 function generate() {
   # Copy input to tmp dir.
-  mkdir -p $tmp
+  mkdir -p $tmp/release
   # Clear output dir.
   rm -rf $OUTPUT_DIR
   mkdir -p $OUTPUT_DIR
-  cp -R $INPUT_DIR/* $tmp
-  for chartPath in $tmp/*; do
+  cp -R $INPUT_DIR/* $tmp/release
+  for chartPath in $tmp/release/*; do
     packChart $chartPath
   done
   rm -rf $tmp
@@ -90,12 +90,12 @@ function generate() {
 
 function generateApplication() {
   # Copy input to tmp dir.
-  mkdir -p $tmp
+  mkdir -p $tmp/application
   # Clear output dir.
   rm -rf $APPLICATION_OUTPUT_DIR
   mkdir -p $APPLICATION_OUTPUT_DIR
-  cp -R $APPLICATION_INPUT_DIR/* $tmp
-  for chartPath in $tmp/*; do
+  cp -R $APPLICATION_INPUT_DIR/* $tmp/application
+  for chartPath in $tmp/application/*; do
     packChartApp $chartPath
   done
   rm -rf $tmp
