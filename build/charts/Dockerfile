@@ -2,7 +2,7 @@
 # Copyright 2018 The Caicloud Authors.
 #
 
-FROM cargo.caicloudprivatetest.com/caicloud/debian:jessie
+FROM cargo.caicloud.xyz/library/debian:stretch
 
 RUN apt-get update && \
     apt-get install -y ruby --force-yes&& \
@@ -19,7 +19,7 @@ ENV INPUT_DIR /stable/release
 ENV APPLICATION_OUTPUT_DIR /data/library/application
 ENV APPLICATION_INPUT_DIR /stable/application
 ENV TEMPLATES_DIR /templates
-ENV IMAGE_DOMAIN cargo.caicloudprivatetest.com
+ENV IMAGE_DOMAIN cargo.dev.caicloud.xyz
 ENV FORCE_UPDATE false
 ENV TEMPLATE_VERSION 1.0.0
 
