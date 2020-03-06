@@ -1,32 +1,29 @@
-# Copyright 2017 The Caicloud Authors.
+# Copyright 2019 The Caicloud Authors.
 #
 # The old school Makefile, following are required targets. The Makefile is written
 # to allow building multiple binaries. You are free to add more targets or change
 # existing implementations, as long as the semantics are preserved.
 #
-#   make        - default to 'build' target
-#   make lint   - code analysis
-#   make test   - run unit test (or plus integration test)
+#   make              - default to 'build' target
+#   make lint         - code analysis
+#   make test         - run unit test (or plus integration test)
 #   make build        - alias to build-local target
 #   make build-local  - build local binary targets
 #   make build-linux  - build linux binary targets
 #   make container    - build containers
-#   make push    - push containers
-#   make clean   - clean up targets
+#   $ docker login registry -u username -p xxxxx
+#   make push         - push containers
+#   make clean        - clean up targets
 #
 # Not included but recommended targets:
 #   make e2e-test
 #
 # The makefile is also responsible to populate project version information.
 #
-# TODO: implement 'make push'
 
 #
 # Tweak the variables based on your project.
 #
-
-# Current version of the project.
-VERSION ?= v1.4.3
 
 # This repo's root import path (under GOPATH).
 ROOT := github.com/caicloud/charts
@@ -41,8 +38,17 @@ TARGETS := charts templates
 IMAGE_PREFIX ?= $(strip )
 IMAGE_SUFFIX ?= $(strip )
 
-# Container registries.
-REGISTRIES ?= cargo.dev.caicloud.xyz/release
+# Go build GOARCH, you can choose to build amd64 or arm64
+ARCH ?= amd64
+
+# Change Dockerfile name and registry project name for arm64
+ifeq ($(ARCH),arm64)
+DOCKERFILE := Dockerfile.arm64
+REGISTRY ?= cargo.dev.caicloud.xyz/arm64v8
+else
+DOCKERFILE := Dockerfile
+REGISTRY ?= cargo.dev.caicloud.xyz/release
+endif
 
 #
 # These variables should not need tweaking.
@@ -54,8 +60,8 @@ CMD_DIR := ./build
 # Build direcotory.
 BUILD_DIR := ./build
 
-# Git commit sha.
-COMMIT := $(shell git rev-parse --short HEAD)
+# Current version of the project.
+VERSION ?= v1.4.3
 
 #
 # Define all targets. At least the following commands are required:
@@ -79,21 +85,17 @@ test-linux:
 
 container: test-linux
 	@for target in $(TARGETS); do                                                      \
-	  for registry in $(REGISTRIES); do                                                \
-	    image=$(IMAGE_PREFIX)$${target}$(IMAGE_SUFFIX);                                \
-	    docker build -t $${registry}/$${image}:$(VERSION)                              \
-	      -f $(BUILD_DIR)/$${target}/Dockerfile .;                                     \
-	  done                                                                             \
+	  image=$(IMAGE_PREFIX)$${target}$(IMAGE_SUFFIX);                                  \
+	  docker build -t $(REGISTRY)/$${image}:$(VERSION)                                 \
+	    -f $(BUILD_DIR)/$${target}/$(DOCKERFILE) .;                                    \
 	done
 
 push: container
 	@for target in $(TARGETS); do                                                      \
-	  for registry in $(REGISTRIES); do                                                \
-	    image=$(IMAGE_PREFIX)$${target}$(IMAGE_SUFFIX);                                \
-	    docker push $${registry}/$${image}:$(VERSION);                                 \
-	  done                                                                             \
+	  image=$(IMAGE_PREFIX)$${target}$(IMAGE_SUFFIX);                                  \
+	  docker push $(REGISTRY)/$${image}:$(VERSION);                                    \
 	done
 
 .PHONY: clean
 clean:
-	-rm -vrf ${OUTPUT_DIR}
+	@-rm -vrf ${OUTPUT_DIR}

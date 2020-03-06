@@ -1,7 +1,3 @@
-#
-# Copyright 2018 The Caicloud Authors.
-#
-
 FROM cargo.caicloud.xyz/library/debian:stretch
 
 RUN apt-get update && \
