@@ -1,4 +1,4 @@
-FROM cargo.caicloud.xyz/library/debian:stretch
+FROM cargo.caicloud.xyz/arm64v8/debian:stretch
 
 RUN apt-get update && \
     apt-get install -y ruby --force-yes&& \
