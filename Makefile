@@ -61,7 +61,7 @@ CMD_DIR := ./build
 BUILD_DIR := ./build
 
 # Current version of the project.
-VERSION ?= v1.4.3
+VERSION      ?= $(shell git describe --tags --always --dirty)
 
 #
 # Define all targets. At least the following commands are required:
