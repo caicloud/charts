@@ -25,7 +25,7 @@ spec:
   type: {{ .type | quote }}
   selector:
     {{/* we do not add appLabels in selector to let service select all versions */}}
-    {{- include "controllerlabels" $controllerName | indent 4 }}
+{{/*    {{- include "controllerlabels" $controllerName | indent 4 }}*/}}
     {{- range $k, $v := .selector }}
     {{ $k | quote }}: {{ $v | quote }}
     {{- end }}
