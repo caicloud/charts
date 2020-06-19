@@ -42,7 +42,7 @@ IMAGE_PREFIX ?= $(strip )
 IMAGE_SUFFIX ?= $(strip )
 
 # Container registries.
-REGISTRIES ?= cargo.caicloudprivatetest.com/caicloud
+REGISTRIES ?= cargo.dev.caicloud.xyz/release
 
 #
 # These variables should not need tweaking.
