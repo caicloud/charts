@@ -26,7 +26,7 @@
 #
 
 # Current version of the project.
-VERSION ?= v1.4.3
+VERSION      ?= $(shell git describe --tags --always --dirty)
 
 # This repo's root import path (under GOPATH).
 ROOT := github.com/caicloud/charts
