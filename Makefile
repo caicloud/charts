@@ -80,7 +80,7 @@ test:
 
 test-linux: 
 	@for target in $(TARGETS); do                                                      \
-	  $(CMD_DIR)/$${target}/test.sh;                                                  \
+	  $(CMD_DIR)/$${target}/test.sh;                                                   \
 	done
 
 container: test-linux

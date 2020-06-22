@@ -1,10 +1,4 @@
-FROM cargo.caicloud.xyz/library/debian:stretch
-
-RUN apt-get update && \
-    apt-get install -y ruby --force-yes&& \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-LABEL maintainer="Wei Guo <guowei@caicloud.io>"
+FROM cargo.caicloud.xyz/library/debian:stretch-ruby
 
 COPY build/charts/build.sh /build.sh
 COPY stable /stable
