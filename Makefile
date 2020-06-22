@@ -26,7 +26,7 @@
 #
 
 # Current version of the project.
-VERSION ?= v1.4.3
+VERSION      ?= $(shell git describe --tags --always --dirty)
 
 # This repo's root import path (under GOPATH).
 ROOT := github.com/caicloud/charts
@@ -42,7 +42,7 @@ IMAGE_PREFIX ?= $(strip )
 IMAGE_SUFFIX ?= $(strip )
 
 # Container registries.
-REGISTRIES ?= cargo.caicloudprivatetest.com/caicloud
+REGISTRIES ?= cargo.dev.caicloud.xyz/release
 
 #
 # These variables should not need tweaking.
