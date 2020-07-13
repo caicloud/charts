@@ -37,24 +37,24 @@
 # Chart 模版配置规范定义（v1.0.0）
 
 ### 概述
-规范主要用于定义 Chart 配置文件 values.yaml 的逻辑结构和类型。  
+规范主要用于定义 Chart 配置文件 values.yaml 的逻辑结构和类型。
 我们将一个 Chart 包含的内容定义为一个应用，一个应用通常包含 Pod Controller，Service，Config，Volume 四块主要内容：
 - Pod Controller：Deployment，StatefulSet，DaemonSet，Job，CronJob
 - Service：Service
 - Config：ConfigMap，Secret
 - Volume：PVC，ConfigMap，Secret，EmptyDir
 
-上述的对应关系并没有包含所有的 Kubernetes 资源，即我们认为其他资源是与应用是弱/无耦合的。  
+上述的对应关系并没有包含所有的 Kubernetes 资源，即我们认为其他资源是与应用是弱/无耦合的。
 并且其中 ConfigMap，Secret 也不是由 Chart 主动创建的，而是应当在应用创建之前就应该在集群中存在，并由应用引用，产生单向依赖。
 
 ### 基础结构描述
-配置文件使用 yaml 格式，并且在实际使用中转换为 json 格式。  
+配置文件使用 yaml 格式，并且在实际使用中转换为 json 格式。
 标准配置文件结构如下：
 
 ```yaml
 # 顶级配置 key ，固定为 _config
-_config: 
-  # 在配置文件中，所有以 _ 开头的字段用于存储特殊信息。  
+_config:
+  # 在配置文件中，所有以 _ 开头的字段用于存储特殊信息。
   # 模板元数据，表示当前配置所属的 Chart 信息，此处数据用于存储模版最原始的信息
   _metadata:
     name: string          # Chart 创建时的名称，不随 Chart 更新而更新
@@ -153,8 +153,8 @@ strategy:                              # 实例滚动更新策略，两个选项
   surge: uint(1)                       # 最大超量
 ready: uint(0)                         # 实例从 Available 到 Ready 的最短时间
 ```
-一个实例在运行时等价于一个容器组，可以通过 replica 指定需要的实例数量，即可在集群中同时跑多个实例。  
-当实例的配置需要更新时，根据更新策略决定如何重启实例。unavailable 表明当前控制器可以先关闭多少个运行中的实例。surge 表示当前控制器可以在 replica 的基础上多创建多少个新的实例。即在滚动更新过程中，实例的数量可能在[max(replica-unavailable,0),replica+surge]区间。  
+一个实例在运行时等价于一个容器组，可以通过 replica 指定需要的实例数量，即可在集群中同时跑多个实例。
+当实例的配置需要更新时，根据更新策略决定如何重启实例。unavailable 表明当前控制器可以先关闭多少个运行中的实例。surge 表示当前控制器可以在 replica 的基础上多创建多少个新的实例。即在滚动更新过程中，实例的数量可能在[max(replica-unavailable,0),replica+surge]区间。
 
 ##### controller：StatefulSet
 ```yaml
@@ -168,7 +168,7 @@ strategy:                                     # 实例滚动更新策略
 podManagementPolicy: string("OrderedReady")   # Pod 管理策略, 只能为 OrderedReady 或 Parallel
 ```
 指定 name 和 domain 后，可通过 name-序号.domain 的形式访问每个实例。
-比如 replica = 2, name = "web", domain = "cluster", 那么同一个分区内可使用 web-0.cluster，web-1.cluster 访问两个实例，同时能够直接使用 cluster 访问任意一个实例（RoundRobin）。  
+比如 replica = 2, name = "web", domain = "cluster", 那么同一个分区内可使用 web-0.cluster，web-1.cluster 访问两个实例，同时能够直接使用 cluster 访问任意一个实例（RoundRobin）。
 由于前缀名称和域名具有分区范围内的唯一性，因此同一个分区内的应用不能具有相同的 name 和 domain。同时由于 domain 能够被用于访问任意一个实例，因此也不能与同一分区下的 services 冲突。
 
 ##### controller：DaemonSet
@@ -187,7 +187,7 @@ backoffLimit: pint(1)                  # 失败重试次数
 completions: pint(1)                   # 总共需要完成的实例数量
 active: uint(0)                        # 单个实例执行的最长时间，0表示不限制
 ```
-一个任务可以同时执行多个实例，通过 parallelism 和 completions 可以控制任务是串行执行还是并行执行或是控制并行执行。  
+一个任务可以同时执行多个实例，通过 parallelism 和 completions 可以控制任务是串行执行还是并行执行或是控制并行执行。
 - 串行：completions = n, parallelism = 1  即可让 n 个实例串行执行，只有前一个完成后下一个才会执行
 - 并行：completions = n, parallelism >= n  即可让 n 个实例同时并行执行
 - 控制并行：completions = n, parallelism = k, k < n 即可让 n 个实例同时只有 k 个在执行。其中一个实例完成才能让下一个实例开始执行
@@ -207,9 +207,9 @@ backoffLimit: pint(1)                  # 失败重试次数
 completions: pint(1)                   # 总共需要完成的实例数量
 active: uint(0)                        # 单个实例执行的最长时间，0表示不限制
 ```
-定时任务规则格式参考：https://en.wikipedia.org/wiki/Cron  
+定时任务规则格式参考：https://en.wikipedia.org/wiki/Cron
 定时任务启动超时时间：
-举个例子，定时任务设置在每天 8:00:00 执行一次，然后这个字段设置为 10 秒，那么在 8:00:00 - 8:00:10 这个期间内，如果发生了某个特殊的事情，比如 kubernetes 的 定时器 在 7:59:59 - 8:00:11 这个时间段内一直是崩溃的，那么这个定时任务的这一次触发就会被错过，然后就会在定时任务的失败任务数量上加1。  
+举个例子，定时任务设置在每天 8:00:00 执行一次，然后这个字段设置为 10 秒，那么在 8:00:00 - 8:00:10 这个期间内，如果发生了某个特殊的事情，比如 kubernetes 的 定时器 在 7:59:59 - 8:00:11 这个时间段内一直是崩溃的，那么这个定时任务的这一次触发就会被错过，然后就会在定时任务的失败任务数量上加1。
 定时任务使用一个 rule 来控制任务的执行。当一个任务未尚未完成，定时器又触发的时候通过 policy 来控制任务的执行方式：
 - Allow：上次触发的任务和本次触发的任务一起执行
 - Forbid：如果上次的任务尚未完成，那么跳过本次任务的执行
@@ -227,16 +227,16 @@ affinity:                                              # 亲和性设置
     - weight: pint                                     # 权重，只有类型为 Prefered 时可以设置该字段，[1-100]
       topologyKey: string("kubernetes.io/hostname")    # 拓补域
       namespaces:                                      # 指定分区，不指定表示仅在当前分区
-      - string                                       
+      - string
       selector:                                        # 选择器，用于设置匹配的标签
         labels:                                        # 直接指定标签值
           string: string
         expressions:                                   # 通过表达式查找标签
-        - key: string                                
+        - key: string
           operator: string                             # 操作符 In，NotIn，Exists，DoesNotExist
           values:                                      # 标签值列表
-          - string                                   
-  node:                                              
+          - string
+  node:
     type: string("Required")                           # 类型可以为 Required 或 Prefered
     terms:
     - weight: 10                                       # 权重，只有类型为 Prefered 时可以设置该字段，[1-100]
@@ -244,10 +244,10 @@ affinity:                                              # 亲和性设置
       - key: string                                    # 这里的 key 不会自动加上前缀
         operator: string                               # 操作符 In，NotIn，Exists，DoesNotExist，Gt，Lt
         values:
-        - string                                     
-antiaffinity:                                        
+        - string
+antiaffinity:
   pod:                                                 # 反亲和性设置与亲和性设置相同
-    ...                                              
+    ...
 tolerations:                                           # 节点容忍设置
 - key: string                                          # 容忍的 Key
   operator: string                                     # 操作符 Exists，Equal
@@ -263,10 +263,10 @@ failure-domain.beta.kubernetes.io/zone
 failure-domain.beta.kubernetes.io/region
 ```
 
-拓补域用于定义一个节点集合。目前常用的拓补域的 key 有如上三种。拓补域与 Pod 的 亲和性/反亲和性 相关。  
-一个拓补域至少有一个节点，所有的 亲和性/反亲和性 的权重计算都是在一个域中进行。  
-比如有多个域，当一个 Pod 在调度时，调度器会根据 亲和性/反亲和性 的设置，在多个域中寻找一个权重最高的域，然后将 Pod 调度到该域中的一个节点上。  
-`kubernetes.io/hostname`与其他两个稍有不同。这个 key 在每个节点上都有不同的值，也就是说，集群里的每个节点都构成了只有一个节点的域。  
+拓补域用于定义一个节点集合。目前常用的拓补域的 key 有如上三种。拓补域与 Pod 的 亲和性/反亲和性 相关。
+一个拓补域至少有一个节点，所有的 亲和性/反亲和性 的权重计算都是在一个域中进行。
+比如有多个域，当一个 Pod 在调度时，调度器会根据 亲和性/反亲和性 的设置，在多个域中寻找一个权重最高的域，然后将 Pod 调度到该域中的一个节点上。
+`kubernetes.io/hostname`与其他两个稍有不同。这个 key 在每个节点上都有不同的值，也就是说，集群里的每个节点都构成了只有一个节点的域。
 
 容忍策略 NoExecute 尚未实现。
 
@@ -280,6 +280,9 @@ subdomain: string("")                  # 子域名
 termination: uint(30)                  # 优雅退出时间
 serviceAccountName: string("")         # ServiceAccount
 priorityClassName: string("")          # PriorityClassName
+nameservers:                           # poddns 配置
+- 114.114.114.114
+- 8.8.8.8
 host:
   network: bool(false)                 # 与主机共享 network namespace
   pid: bool(false)                     # 与主机共享 pid namespace
@@ -295,8 +298,8 @@ annotations:                           # 容器组附加信息,仅用于保存�
     value: string                      # 值
 
 ```
-在 controller 类型为 Deployment 时，restart 只能为 Always。  
-主机名和子域名构成 Pod 的访问域名：hostname.subdomain.namespace.svc.clusterdomain。  
+在 controller 类型为 Deployment 时，restart 只能为 Always。
+主机名和子域名构成 Pod 的访问域名：hostname.subdomain.namespace.svc.clusterdomain。
 容器组的 annotations 用于存放用于扩展容器组能力的额外信息。可以被其他组件读取和识别，实现其他功能。
 key 的规范参考 [controller 的 annotations](#类型controller)
 
@@ -308,7 +311,7 @@ image: string                          # 镜像地址
 imagePullPolicy: string(Always)        # 镜像拉取策略，可以设置为 Always，IfNotPresent
 tty: bool(false)                       # 是否使用 tty
 command:                               # 即 Docker EntryPoint
-- string    
+- string
 args:                                  # 即 Docker CMD
 - string
 workingDir: string("")                 # 工作目录
@@ -370,8 +373,8 @@ lifecycle:                             # 生命周期（参考 handler 设置）
   preStop:                             # 停止前调用，调用后无论成功失败都会终止容器
     ...
 ```
-initContainer 不支持 readiness probe 和 lifecycle，因此在 initContainer 中不能设置这几项。  
-initContainer 是串行执行的，一个成功后才能执行下一个。 
+initContainer 不支持 readiness probe 和 lifecycle，因此在 initContainer 中不能设置这几项。
+initContainer 是串行执行的，一个成功后才能执行下一个。
 默认的环境变量包括：
 
 - `POD_NAMESPACE`
@@ -379,12 +382,12 @@ initContainer 是串行执行的，一个成功后才能执行下一个。
 - `POD_IP`
 - `NODE_NAME`
 
-可以通过 downwardPrefix 为上述环境变量增加前缀。比如 downwardPrefix 为 `ENV_` 时：`POD_NAMESPACE` 变为 `ENV_POD_NAMESPACE`。  
+可以通过 downwardPrefix 为上述环境变量增加前缀。比如 downwardPrefix 为 `ENV_` 时：`POD_NAMESPACE` 变为 `ENV_POD_NAMESPACE`。
 
 ##### probe：liveness，readiness
 ```yaml
 handler:                               # 调用 handler 检查方式
-  ... 
+  ...
 delay: uint(0)                         # 从容器启动到发送健康检查请求的时间间隔（秒）
 timeout: pint(1)                       # 单次请求的超时时间（秒）
 period: pint(10)                       # 请求时间间隔（秒）
@@ -429,7 +432,7 @@ port: pint                             # TCP 端口
 name: string                           # 数据卷名称，在容器中被引用
 type: string("Scratch")                # 可选项为 Dedicated，Dynamic，Static，Scratch，Config，Secret，HostPath。Dedicated 仅在控制器为 StatefulSet 时可用
 source:                                # source 的设置与 type 有关
-  ... 
+  ...
 storage:                               # 存储需求
   request: string("5Gi")               # 请求的最小存储容量
   limit: string("10Gi")                # 请求的最大存储容量
@@ -441,8 +444,8 @@ class: string                          # 存储方案名称
 modes:
 - string("ReadWriteOnce")              # 数据卷读写模式，可以为 ReadWriteOnce，ReadOnlyMany，ReadWriteMany
 ```
-Dynamic 和 Dedicated 两种类型的数据卷实际上都是使用存储方案来实现，即通过创建 PVC 并关联 storage class。  
-但是 Dynamic 只用于创建单一的 PVC，如果多个容器引用同一个 Dynamic，那么实际上多个副本是共享数据卷的（多副本时 mode 不能为 ReadWriteOnce）。  
+Dynamic 和 Dedicated 两种类型的数据卷实际上都是使用存储方案来实现，即通过创建 PVC 并关联 storage class。
+但是 Dynamic 只用于创建单一的 PVC，如果多个容器引用同一个 Dynamic，那么实际上多个副本是共享数据卷的（多副本时 mode 不能为 ReadWriteOnce）。
 Dedicated 类型仅用于 StatefulSet 类型的控制器。StatefulSet 会根据 Dedicated 的设置动态创建多个 PVC，并且每个 Pod 会绑定不同的 PVC，即每个 Pod 的数据卷是独立的。
 这两种类型的数据卷在部署后，volume 中的所有字段值都不能进行更改。
 
@@ -502,7 +505,7 @@ selector:                              # 服务会将流量路由到标签匹配
 - ClusterIP：使用该形式暴露的服务，其它应用可以通过服务名访问当前服务
 - NodePort：使用该形式暴露的服务，其它应用可以通过节点 IP 访问当前服务
 
-服务类型为 NodePort 时，才可以设置 ports 中的 nodePort 字段。  
+服务类型为 NodePort 时，才可以设置 ports 中的 nodePort 字段。
 服务在部署后，服务名称不可变更。
 
 #### 类型：config
@@ -599,6 +602,9 @@ _config:
                 - heavy
                 - midium
     pod:
+      nameservers:
+      - 114.114.114.114
+      - 8.8.8.8
       host:
         network: true
     initContainers:
