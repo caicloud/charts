@@ -1,0 +1,4 @@
+name: eureka-cluster
+version: 2.0.0
+description: |
+  Eureka Cluster is a high available REST (Representational State Transfer) based service that is primarily used in the AWS cloud for locating services for the purpose of load balancing and failover of middle-tier servers.
