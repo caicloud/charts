@@ -1,0 +1,27 @@
+name: eureka-cluster
+briefDesc: Eureka 是一个开源的服务发现框架。
+desc: |
+  Eureka 是 Netflix 开发的服务发现框架，Eureka Cluster 是一个基于 REST 的高可用服务，主要用于定位运行在 AWS 域中的中间层服务，以达到负载均衡和中间层服务故障转移的目的。SpringCloud 将它集成在其子项目 spring-cloud-netflix 中，以实现 SpringCloud 的服务发现功能。
+introduce:
+  brief: |
+    Eureka 包含两个组件：Eureka Server 和 Eureka Client。
+    Eureka Server 提供服务注册服务，各个节点启动后，会在 Eureka Server 中进行注册，这样 Eureka Server 中的服务注册表中将会存储所有可用服务节点的信息，服务节点的信息可以在界面中直观的看到。
+    Eureka Client 是一个 java 客户端，用于简化与 Eureka Server 的交互，客户端同时也就别一个内置的、使用轮询(round-robin)负载算法的负载均衡器。
+    在应用启动后，将会向 Eureka Server 发送心跳,默认周期为 30 秒，如果 Eureka Server 在多个心跳周期内没有接收到某个节点的心跳，Eureka Server 将会从服务注册表中把这个服务节点移除(默认 90 秒)。
+    Eureka Server 之间通过复制的方式完成数据的同步，Eureka 还提供了客户端缓存机制，即使所有的 Eureka Server 都挂掉，客户端依然可以利用缓存中的信息消费其他服务的 API。综上，Eureka 通过心跳检查、客户端缓存等机制，确保了系统的高可用性、灵活性和可伸缩性。
+    Eureka-Cluster 通过部署三个 Eureka 副本，实现了 Eureka 的高可集群模式。
+  howToUse: |
+    直接从模版部署出一个完整的 Eureka 应用，不需要任何外部依赖。
+    **环境变量**
+    - EUREKA_PORT：容器内端口。
+    - PARAM：Eureka Cluster 配置参数。
+  version: |
+    基于 2.0.0 稳定版。
+  resources: |
+    最低资源要求：CPU: 1 Core，内存：1G。
+    推荐资源配置：CPU: 2 Core，内存：4G。
+    Eureka 对资源较高，如果资源分配不足，可能导致启动失败。
+  service: |
+    默认使用集群内部 IP 暴露服务的 8762 端口。
+    默认服务名为 eureka-cluster，如果服务名冲突，请修改为其他名称。可通过服务名 + 端口访问 Eureka Cluster。
+    如果要提供对外服务, 可以使用对接负载均衡来暴露服务。

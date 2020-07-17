@@ -1,0 +1,48 @@
+_config:
+  _metadata:
+    name: eureka-cluster
+    version: 2.0.0
+    description: |
+      Eureka is a REST (Representational State Transfer) based service that is primarily used in the AWS cloud for locating services for the purpose of load balancing and failover of middle-tier servers.
+  controllers:
+  - containers:
+    - env:
+      - name: EUREKA_PORT
+        value: 8762
+      - name: PARAM
+        value: -Deureka.client.service-url.defaultZone=http://eureka-cluster-0.eureka-cluster-server.${POD_NAMESPACE}.svc.cluster.local:${server.port}/eureka/,http://eureka-cluster-1.eureka-cluster-server.${POD_NAMESPACE}.svc.cluster.local:${server.port}/eureka/,http://eureka-cluster-2.eureka-cluster-server.${POD_NAMESPACE}.svc.cluster.local:${server.port}/eureka/
+      command: []
+      args: []
+      image: cargo.caicloudprivatetest.com/release/eureka:2.0.0
+      imagePullPolicy: Always
+      probe: {}
+      resources:
+        limits:
+          cpu: '2'
+          memory: 4Gi
+        requests:
+          cpu: '1'
+          memory: 1Gi
+    services:
+    - type: NodePort
+      name: eureka-cluster-server
+      ports:
+      - protocol: HTTP
+        targetPort: 8762
+        port: 8762
+        nodePort: 0
+    pod:
+      dns: ClusterFirst
+      host:
+        ipc: false
+        network: false
+        pid: false
+      restart: Always
+      termination: 30
+    controller:
+      domain: eureka-cluster
+      name: ''
+      replica: 3
+      strategy:
+        type: RollingUpdate
+    type: StatefulSet
