@@ -8,7 +8,7 @@ _config:
   - containers:
     - env:
       - name: EUREKA_PORT
-        value: 8762
+        value: 8761
       - name: PARAM
         value: -Deureka.client.service-url.defaultZone=http://eureka-cluster-0.eureka-cluster-server.${POD_NAMESPACE}.svc.cluster.local:${server.port}/eureka/,http://eureka-cluster-1.eureka-cluster-server.${POD_NAMESPACE}.svc.cluster.local:${server.port}/eureka/,http://eureka-cluster-2.eureka-cluster-server.${POD_NAMESPACE}.svc.cluster.local:${server.port}/eureka/
       command: []
@@ -28,8 +28,8 @@ _config:
       name: eureka-cluster-server
       ports:
       - protocol: HTTP
-        targetPort: 8762
-        port: 8762
+        targetPort: 8761
+        port: 8761
         nodePort: 0
     pod:
       dns: ClusterFirst

@@ -1,0 +1,63 @@
+_config:
+  _metadata:
+    name: zuul-cluster
+    version: 2.0.0
+    description: |
+      Zuul Cluster is the high available front door for all requests from devices and web sites to the backend of the Netflix streaming application. As an edge service application, Zuul is built to enable dynamic routing, monitoring, resiliency and security. It also has the ability to route requests to multiple Amazon Auto Scaling Groups as appropriate.
+  controllers:
+  - type: Deployment
+    controller:
+      replica: '3'
+      ready: 0
+      strategy:
+        type: RollingUpdate
+        unavailable: 0
+        surge: 1
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      hostAliases: []
+      host:
+        network: false
+        pid: false
+        ipc: false
+      annotations: []
+    containers:
+    - env: 
+      - name: ZUUL_NAME
+        value: zuul-gateway-cluster
+      - name: ZUUL_PORT
+        value: 8080
+      - name: EUREKA_URL
+        value: http://eureka-cluster-server:8761/eureka
+      envFrom: []
+      mounts: []
+      command: []
+      lifecycle: {}
+      image: cargo.caicloudprivatetest.com/release/zuul:2.0.0
+      imagePullPolicy: Always
+      probe: {}
+      resources:
+        limits:
+          cpu: '2'
+          memory: 4Gi
+        requests:
+          cpu: '1'
+          memory: 1Gi
+    volumes: []
+    services:
+    # - type: ClusterIP
+    #   name: zuul-server-cluster
+    #   ports:
+    #   - protocol: HTTP
+    #     targetPort: 8080
+    #     port: 8080
+    #     nodePort: 0
+    - type: NodePort
+      name: zuul-cluster-server
+      ports:
+      - protocol: HTTP
+        targetPort: 8080
+        port: 8080
+        nodePort: 0

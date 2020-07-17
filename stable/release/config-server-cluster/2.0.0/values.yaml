@@ -1,0 +1,65 @@
+_config:
+  _metadata:
+    name: config-server-cluster
+    version: 2.0.0
+    description: |
+      Spring Cloud Config Server Cluster provides a high available HTTP resource-based API for external configuration (name-value pairs or equivalent YAML content). The server is embeddable in a Spring Boot application, by using the @EnableConfigServer annotation. 
+  controllers:
+  - type: Deployment
+    controller:
+      replica: '3'
+      ready: 0
+      strategy:
+        type: RollingUpdate
+        unavailable: 0
+        surge: 1
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      hostAliases: []
+      host:
+        network: false
+        pid: false
+        ipc: false
+      annotations: []
+    containers:
+    - env: 
+      - name: CONFIG_SERVER_PORT
+        value: 8888
+      - name: ENABLE_EUREKA
+        value: true
+      - name: EUREKA_URL
+        value: http://eureka-cluster-server:8761/eureka
+      - name: CONFIG_SERVER_NAME
+        value: config-server-cluster
+      envFrom: []
+      mounts: []
+      command: []
+      lifecycle: {}
+      image: cargo.caicloudprivatetest.com/release/config-server:2.0.0
+      imagePullPolicy: Always
+      probe: {}
+      resources:
+        limits:
+          cpu: '2'
+          memory: 4Gi
+        requests:
+          cpu: '1'
+          memory: 1Gi
+    volumes: []
+    services:
+    - type: NodePort
+      name: caicloud-config-server-cluster
+      ports:
+      - protocol: HTTP
+        targetPort: 8888
+        port: 8888
+        nodePort: 0
+    # - type: ClusterIP
+    #   name: caicloud-config-server-cluster
+    #   ports:
+    #   - protocol: HTTP
+    #     targetPort: 8888
+    #     port: 8888
+    #     nodePort: 0
