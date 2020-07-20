@@ -1,0 +1,69 @@
+_config:
+  _metadata:
+    name: mongo-cluster
+    version: 3.4.1
+    description: |
+      NoSQL document-oriented database that stores JSON-like documents with dynamic schemas, simplifying the integration of data in content-driven applications.
+  controllers:
+  - controller:
+      domain: mongo-cluster
+      name: ''
+      replica: 3
+      strategy:
+        type: RollingUpdate
+    type: StatefulSet
+    selector:
+      matchLabels:
+        role: mongo-cluster
+        environment: test
+        replicaset: MainRepSet
+    labels:
+      role: mongo
+      environment: test
+      replicaset: MainRepSet
+    containers:
+    - name: mongo-cluster
+      env: []
+      mounts:
+      - path: "/data/db"
+        name: data
+      command:
+      args: []
+        imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/mongo:3.4.1-cluster
+      resources:
+        limits:
+          cpu: '1'
+          memory: 1Gi
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+      ports:
+      - protocol: HTTP
+        port: 27017
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 27017
+        port: 27017
+        nodePort: 0
+      name: mongo
+      type: ClusterIP
+    volumes:
+    - storage:
+        limit: 10Gi
+        request: 10Gi
+      source: {}
+      type: Dedicated
+      name: data
+    pod:
+      restart: Always
+      serviceAccount: default:default
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+
