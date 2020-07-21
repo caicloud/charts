@@ -45,17 +45,10 @@ _config:
           memory: 1Gi
     volumes: []
     services:
-    - type: NodePort
+    - type: ClusterIP
       name: eureka-server
       ports:
       - protocol: HTTP
         targetPort: 8761
         port: 8761
         nodePort: 0
-    # - type: ClusterIP
-    #   name: eureka-server
-    #   ports:
-    #   - protocol: HTTP
-    #     targetPort: 8761
-    #     port: 8761
-    #     nodePort: 0
