@@ -1,0 +1,33 @@
+name: config-server-cluster
+briefDesc: 
+  Config Server Cluster 是 Spring Cloud 架构中的一套用于配置管理的高可用组件。
+desc: |
+  Spring Cloud Config Cluster 提供一种基于客户端与服务端（C/S）模式的分布式的高可用配置管理。可以把配置管理在应用之外（config server 端），并且可以在外部对配置进行不同环境的管理，比如开发/测试/生产环境隔离，并且还能够做到实时更新配置。
+introduce:
+  brief: |
+    拉取配置时更新 git 仓库副本，保证是最新结果。
+    支持数据结构丰富，yml, json, properties。
+    配合 eureka 可实现服务发现，配合 cloud bus 可实现配置推送更新。
+    配置存储基于 git 仓库，可进行版本管理。
+    简单可靠，有丰富的配套方案。
+  howToUse: |
+    直接从模版部署出三个完整的 config-server 应用，需要配置仓库地址。
+    **环境变量**
+    - CONFIG_SERVER_PORT：容器内端口。
+    - CONFIG_SERVER_NAME：主机名称。
+    - ENABLE_EUREKA：开启 eureka 客户端。
+    - EUREKA_URL：eureka 服务地址。
+    - GIT_URL：配置仓库地址。
+    - SEARCH_PATH：搜索路径。
+    - USERNAME：用户名。
+    - PASSWORD：密码。
+  version: |
+    基于 2.0.0 稳定版。
+  resources: |
+    最低资源要求：CPU: 1 Core，内存：1G。
+    推荐资源配置：CPU: 2 Core，内存：4G。
+    config-server 对资源较高，如果资源分配不足，可能导致启动失败。
+  service: |
+    默认使用集群内部 IP 暴露服务的 8888 端口。
+    默认服务名为 config-server-cluster ，如果服务名冲突，请修改为其他名称。可通过服务名 + 端口访问 config-server-cluster。
+    如果要提供对外服务, 可以使用对接负载均衡来暴露服务。

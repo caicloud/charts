@@ -1,0 +1,4 @@
+name: config-server-cluster
+version: 2.0.0
+description: |
+  Spring Cloud Config Server Cluster provides a high available HTTP resource-based API for external configuration (name-value pairs or equivalent YAML content). The server is embeddable in a Spring Boot application, by using the @EnableConfigServer annotation. 
