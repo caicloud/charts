@@ -33,6 +33,14 @@ _config:
         value: http://eureka-cluster-server:8761/eureka
       - name: CONFIG_SERVER_NAME
         value: config-server-cluster
+      - name: GIT_URL
+        value: ''
+      - name: SEARCH_PATH
+        value: ''
+      - name: USERNAME
+        value: ''
+      - name: PASSWORD
+        value: ''
       envFrom: []
       mounts: []
       command: []
@@ -49,17 +57,10 @@ _config:
           memory: 1Gi
     volumes: []
     services:
-    - type: NodePort
-      name: caicloud-config-server-cluster
+    - type: ClusterIP
+      name: config-server-cluster
       ports:
       - protocol: HTTP
         targetPort: 8888
         port: 8888
         nodePort: 0
-    # - type: ClusterIP
-    #   name: caicloud-config-server-cluster
-    #   ports:
-    #   - protocol: HTTP
-    #     targetPort: 8888
-    #     port: 8888
-    #     nodePort: 0

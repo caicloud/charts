@@ -29,5 +29,5 @@ introduce:
     config-server 对资源较高，如果资源分配不足，可能导致启动失败。
   service: |
     默认使用集群内部 IP 暴露服务的 8888 端口。
-    默认服务名为 caicloud-config-server-cluster ，如果服务名冲突，请修改为其他名称。可通过服务名 + 端口访问 config-server-cluster。
+    默认服务名为 config-server-cluster ，如果服务名冲突，请修改为其他名称。可通过服务名 + 端口访问 config-server-cluster。
     如果要提供对外服务, 可以使用对接负载均衡来暴露服务。

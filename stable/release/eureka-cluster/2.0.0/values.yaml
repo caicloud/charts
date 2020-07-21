@@ -24,7 +24,7 @@ _config:
           cpu: '1'
           memory: 1Gi
     services:
-    - type: NodePort
+    - type: ClusterIP
       name: eureka-cluster-server
       ports:
       - protocol: HTTP

@@ -47,14 +47,7 @@ _config:
           memory: 1Gi
     volumes: []
     services:
-    # - type: ClusterIP
-    #   name: zuul-server-cluster
-    #   ports:
-    #   - protocol: HTTP
-    #     targetPort: 8080
-    #     port: 8080
-    #     nodePort: 0
-    - type: NodePort
+    - type: ClusterIP
       name: zuul-cluster-server
       ports:
       - protocol: HTTP
