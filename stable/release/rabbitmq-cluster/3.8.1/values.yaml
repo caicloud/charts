@@ -1,0 +1,95 @@
+_config:
+  _metadata:
+    name: rabbitmq-cluster
+    version: 3.8.1
+    description: |
+      RabbitMQ is the most widely deployed open source message broker.
+  controllers:
+  - controller:
+      replica: 3
+      domain: rabbitmq-cluster
+      strategy:
+        type: "RollingUpdate"
+      podManagementPolicy: OrderedReady
+    type: StatefulSet
+    serviceName: rabbitmq-cluster
+    terminationGracePeriodSeconds: 10
+    revisionHistoryLimit: 3
+    selector:
+      matchLabels:
+        app: rabbitmq-cluster
+    template:
+      metadata:
+        name: rabbitmq-cluster
+        labels:
+          app: rabbitmq-cluster
+    containers:
+    - env:
+      - name: MY_POD_NAME
+        value: $(POD_NAME)
+      - name: MY_POD_NAMESPACE
+        value: $(POD_NAMESPACE)
+      - name: RABBITMQ_USE_LONGNAME
+        value: "true"
+      - name: K8S_SERVICE_NAME
+        value: "rabbitmq-cluster"
+      - name: RABBITMQ_NODENAME
+        value: "rabbit@$(POD_NAME).$(K8S_SERVICE_NAME).$(POD_NAMESPACE).svc.cluster.local"
+      - name: K8S_HOSTNAME_SUFFIX
+        value: ".$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local"
+      - name: RABBITMQ_ERLANG_COOKIE
+        value: "mycookie"
+      command: ["/bin/sh","-c","/start.sh"]
+      args: []
+      imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/rabbitmq:3.8.1-cluster
+      resources:
+        limits:
+          cpu: '2'
+          memory: 2Gi
+        requests:
+          cpu: '2'
+          memory: 2Gi
+      probe:
+        liveness:
+          handler:
+            type: EXEC
+            method:
+              command: ["rabbitmq-diagnostics", "status"]
+          delay: 60
+          # See https://www.rabbitmq.com/monitoring.html for monitoring frequency recommendations.
+          period: 60
+          timeout: 15
+        readiness:
+          handler:
+            type: EXEC
+            method:
+              command: ["rabbitmq-diagnostics", "status"]
+          delay: 20
+          # See https://www.rabbitmq.com/monitoring.html for monitoring frequency recommendations.
+          period: 60
+          timeout: 10
+      mounts:
+      - path: "/var/lib/rabbitmq"
+        name: data
+      ports:
+      - protocol: HTTP
+        port: 5672
+      - protocol: HTTP
+        port: 15672
+    volumes:
+    - storage:
+        limit: 5Gi
+        request: 5Gi
+      source: {}
+      type: Dedicated
+      name: data
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+
