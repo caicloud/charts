@@ -1,0 +1,36 @@
+_config:
+  _metadata:
+    name: nginx-cluster
+    version: 1.13.8
+    description: |
+      Nginx-Cluster [engine x] is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP/UDP proxy server.
+  controllers:
+  - type: Deployment
+    controller:
+      replica: 3
+      strategy:
+        type: "RollingUpdate"
+    services:
+    - name: nginx-cluster
+      type: ClusterIP
+      ports:
+      - protocol: HTTP
+        targetPort: 80
+        port: 80
+        nodePort: 0
+    containers:
+    - imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/nginx:1.13.8-alpine
+      mounts: []
+      env: []
+      resources:
+        requests:
+          cpu: '0.5'
+          memory: 0.5Gi
+        limits:
+          cpu: '0.5'
+          memory: 0.5Gi
+      ports:
+      - protocol: HTTP
+        port: 80
+    volumes: []
