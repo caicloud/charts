@@ -1,0 +1,70 @@
+_config:
+  _metadata:
+    name: redis-cluster
+    version: 4.0.6
+    description: |
+      Redis-Cluster is HA of Redis, Redis is an open source (BSD licensed), in-memory data structure store,
+      used as a database, cache and message broker. 
+      It supports data structures such as strings, hashes, lists, sets, 
+      sorted sets with range queries, bitmaps, hyperloglogs and geospatial indexes with radius queries. 
+      Redis has built-in replication, Lua scripting, LRU eviction, transactions and 
+      different levels of on-disk persistence, and provides high availability via Redis Sentinel and 
+      automatic partitioning with Redis Cluster.
+  controllers:
+  - controller:
+      domain: redis-cluster
+      name: ''
+      replica: 3
+      strategy:
+        type: RollingUpdate
+    type: StatefulSet
+    template:
+      metadata:
+        labels:
+          app: redis-cluster
+    containers:
+    - image: cargo.caicloudprivatetest.com/library/redis:4.0.6-alpine-cluster
+      imagePullPolicy: Always
+      command:
+      mounts:
+      - name: data
+        path: "/data"
+      resources:
+        requests:
+          cpu: 1 
+          memory: 2Gi
+        limits:
+          cpu: 4
+          memory: 4Gi
+      readinessProbe:
+        exec:
+          command:
+          - sh
+          - -c
+          - "/usr/local/bin/redis-cli -h $(hostname) ping"
+        initialDelaySeconds: 15
+        timeoutSeconds: 5
+    pod:
+      dns: ClusterFirst
+      host:
+        ipc: false
+        network: false
+        pid: false
+      restart: Always
+      termination: 30
+    services:
+    - name: redis
+      type: ClusterIP
+      ports:
+      - protocol: TCP
+        targetPort: 6379
+        port: 6379
+      selector:
+        app: redis-cluster
+    volumes:
+    - name: data
+      source: {}
+      storage:
+        limit: 10Gi
+        request: 10Gi
+      type: Dedicated
