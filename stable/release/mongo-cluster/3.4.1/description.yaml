@@ -11,13 +11,10 @@ introduce:
     **配置**
     MongoDB 使用默认配置。如果需要自定义配置，可以将配置挂载到 `/etc/mongo/mongod.conf`，然后修改启动参数为 `mongo -f /etc/mongo/mongod.conf`。
     不要把配置直接挂载到 `/etc/mongod.conf`。
-    **启动**
-    statefulset 只会把容器启动，需要执行 poststart.sh 脚本来创建主从拓扑结构
-    1. 进入 mongo-cluster-0 终端
-    2. 执行 /poststart.sh
     **关于扩容**
-    支持扩容。请不要增加副本数量。
-    service 的名称不建议修改，因为脚本 `/poststart.sh` 使用了服务名（如果一定要修改，需要修改该脚本）
+    支持扩容。
+    由于默认使用了支持3个节点，mongo-cluster-0 为 primary 节点，mongo-cluster-1，mongo-cluster-2 为 secondary 。
+    所以新增加的节点需要使用命令 `rs.add("mongo-cluster- <x> .mongo-cluster")`  x 是 primary 节点。
   version: |
     基于社区 MongoDB 3.4.1 稳定版本。
   resources: |

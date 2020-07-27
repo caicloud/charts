@@ -39,7 +39,7 @@ _config:
         port: 50000
         nodePort: 0
       name: jenkins-cluster
-      type: NodePort
+      type: ClusterIP
     volumes:
     - storage:
         limit: 10Gi

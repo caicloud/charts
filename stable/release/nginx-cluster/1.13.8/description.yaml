@@ -1,9 +1,9 @@
 name: Nginx-Cluster
 briefDesc: Nginx 是一看轻量级的 Web 服务器和反向代理服务器
 desc: |
-  Nginx（发音同engine x）是一个 Web服务器，也可以用作反向代理，负载平衡器和 HTTP缓存。
+  Nginx（发音同engine x）是一个 Web 服务器，也可以用作反向代理，负载平衡器和 HTTP缓存。
   该软件由 Igor Sysoev 创建，并于2004年首次公开发布。同名公司成立于2011年，以提供支持。
-  Nginx是一款免费的开源软件，根据类BSD许可证的条款发布。大部分 Web服务器通常使用 NGINX 作为负载均衡器。
+  Nginx是一款免费的开源软件，根据类 BSD 许可证的条款发布。大部分 Web服务器通常使用 NGINX 作为负载均衡器。
 introduce:
   brief: |
     基于 Nginx 社区版本（Repo(https://github.com/nginxinc/docker-nginx) - [Dockerfile](https://github.com/nginxinc/docker-nginx/blob/f8fad321cf58d5cbcafa3d9fa15314b8a77b5e65/mainline/alpine/Dockerfile)）
@@ -14,6 +14,9 @@ introduce:
     配置挂载在 `/etc/nginx/nginx.conf`
     **配置**
     更加详细的配置说明请看官方文档 [Beginner Guide](http://nginx.org/en/docs/beginners_guide.html) [Full Example Configuration](https://www.nginx.com/resources/wiki/start/topics/examples/full/)
+    **关于扩容**
+    支持扩容。
+    扩容的 pod 和其他 pod 挂载相同目录的配置文件。
   version: |
     基于社区 1.13.8 稳定版本。
   resources: |
