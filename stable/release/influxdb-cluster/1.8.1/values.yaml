@@ -1,0 +1,73 @@
+_config:
+  _metadata:
+    name: influxdb-cluster
+    version: 1.4.2
+    description: |
+      InfluxData provides a high available Modern Time Series Platform, designed from the ground up to handle metrics and events. 
+  controllers:
+  - containers:
+    - env:
+      - name: BITNAMI_DEBUG
+        value: false
+      - name: INFLUXDB_DB
+        value: my_database
+      - name: INFLUXDB_HTTP_AUTH_ENABLED
+        value: true
+      - name: INFLUXDB_ADMIN_USER
+        value: admin
+      - name: INFLUXDB_ADMIN_USER_PASSWORD
+        value: ''
+      mounts:
+      - path: "/bitnami/influxdb"
+        name: data
+      command: []
+      args: []
+      imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/influxdb:1.8.1-debian-10-r3
+      resources:
+        limits:
+          cpu: '1'
+          memory: 1Gi
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+      ports:
+      - protocol: HTTP
+        port: 8086
+      - protocol: TCP
+        port: 8088
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 8086
+        port: 8086
+        nodePort: 0
+      - protocol: TCP
+        targetPort: 8088
+        port: 8088
+        nodePort: 0
+      name: influxdb-cluster-server
+      type: ClusterIP
+    volumes:
+    - storage:
+        limit: 10Gi
+        request: 10Gi
+      source: {}
+      type: Static
+      name: data
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: StatefulSet
+    controller:
+      domain: influxdb-cluster
+      name: ''
+      replica: 3
+      strategy:
+        type: RollingUpdate
