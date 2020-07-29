@@ -1,0 +1,70 @@
+_config:
+  _metadata:
+    name: memcached-cluster
+    version: 1.6.6
+    description: |
+      Free & open source, high-performance, distributed memory object caching.
+  controllers:
+  - containers:
+    - imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/memcached:1.6.6-debian-10-r54
+      args:
+      - /run.sh
+      - -e/cache-state/memory_file
+      lifecycle:
+        preStop:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - /usr/bin/pkill -10 memcached ; sleep 60s
+      resources:
+        limits:
+          cpu: '1'
+          memory: 4Gi
+        requests:
+          cpu: '0.25'
+          memory: 512Mi
+      mounts:
+      - path: "/cache-state"
+        name: data
+      - path: "/tmp"
+        name: tmp
+      ports:
+      - protocol: HTTP
+        port: 11211
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 11211
+        port: 11211
+        nodePort: 0
+      name: memcached-cluster-server
+      type: ClusterIP
+    volumes:
+    - storage:
+        limit: 10Gi
+        request: 10Gi
+      source: {}
+      type: Static
+      name: data
+    - name: tmp
+      type: Scratch
+      source:
+        medium: "memory"
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: StatefulSet
+    controller:
+      domain: memcached-cluster
+      name: ''
+      replica: 3
+      strategy:
+        type: RollingUpdate

@@ -15,19 +15,6 @@ _config:
     pod:
       securityContext:
         fsGroup: 1000
-    schedule:
-      antiaffinity:
-        pod:
-          type: Prefered
-          terms:
-          - weight: 1
-            topologyKey: kubernetes.io/hostname
-            selector:
-              expressions:
-              - key: controller.caicloud.io/release
-                operator: In
-                values:
-                - "elasticsearch"
     initContainers:
     - image: cargo.caicloudprivatetest.com/library/elasticsearch:6.5.4
       name: chown

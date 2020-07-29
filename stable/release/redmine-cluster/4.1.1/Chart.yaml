@@ -1,0 +1,4 @@
+name: redmine-cluster
+version: 4.1.1
+description: |
+  Redmine is a high available flexible project management web application. Written using the Ruby on Rails framework, it is cross-platform and cross-database.

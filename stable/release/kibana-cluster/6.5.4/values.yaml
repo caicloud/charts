@@ -1,0 +1,38 @@
+_config:
+  _metadata:
+    name: kibana-cluster
+    version: 6.5.4
+    description: |
+      Kibana Cluster is your high available window into the Elastic Stack. Specifically, it's a browser-based analytics and search dashboard for Elasticsearch.
+  controllers:
+  - type: Deployment
+    controller:
+      replica: 3
+      strategy:
+        type: "RollingUpdate"
+      name: kibana-cluster
+    services:
+    - name: kibana-cluster
+      type: ClusterIP
+      ports:
+      - protocol: TCP
+        targetPort: 5601
+        port: 5601
+        nodePort: 0
+    containers:
+    - imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/kibana:6.5.4
+      mounts: []
+      env:
+      - name: ELASTICSEARCH_URL
+        value: http://elasticsearch:9200
+      resources:
+        requests:
+          cpu: '0.1'
+          memory: 0.5Gi
+        limits:
+          cpu: '1'
+          memory: 2Gi
+      ports:
+      - protocol: TCP
+        port: 5601

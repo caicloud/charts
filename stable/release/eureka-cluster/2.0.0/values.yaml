@@ -15,6 +15,9 @@ _config:
       args: []
       image: cargo.caicloudprivatetest.com/release/eureka:2.0.0
       imagePullPolicy: Always
+      mounts:
+        - path: "/caicloud/tmp"
+          name: tmp
       probe: {}
       resources:
         limits:
@@ -31,6 +34,11 @@ _config:
         targetPort: 8761
         port: 8761
         nodePort: 0
+    volumes:
+    - name: tmp
+      type: Scratch
+      source:
+        medium: "memory"
     pod:
       dns: ClusterFirst
       host:

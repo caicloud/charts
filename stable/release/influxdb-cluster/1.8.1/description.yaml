@@ -1,0 +1,22 @@
+name: influxdb-cluster
+briefDesc: InfluxDB Cluster 是一个开源的高可用时序数据库
+desc: InfluxDB Cluster 是一个开源的高可用时序数据库，专门用于处理高频读写请求。并且主要用于存储大量的时序数据，包括监控信息，应用指标数据，IoT 传感器数据等。
+introduce:
+  brief: |
+    基于 InfluxDB Bitnami 版本（[Repo](https://github.com/bitnami/charts/blob/master/bitnami/influxdb/README.md)）
+  howToUse: |
+    直接从模板部署出三个完整的 InfluxDB 数据库，不需要任何外部依赖。
+    **如何挂载数据**
+    InfluxDB 的所有数据都挂载在 `/bitnami/influxdb`.
+    **配置**
+    InfluxDB 的配置路径为 Workdir 下的 `files/conf`，如果需要自定义 InfluxDB 的配置，请将配置挂载到该位置。
+    InfluxDB 也提供了使用环境变量的方式设置配置，请参考[配置](https://docs.influxdata.com/influxdb/v1.4/administration/config/)。
+  version: |
+    基于 Bitnami InfluxDB 1.8.1 稳定版本。
+  resources: |
+    最低资源要求：CPU：0.25 Core，内存：512 MiB
+    推荐资源配置：CPU：1 Core，内存：1 GiB
+  service: |
+    默认使用集群内部 IP 暴露服务的 8086 和 8088 端口。8086 端口提供 HTTP API 服务，8088 端口提供 RPC 服务用于备份和恢复。
+    默认服务名为 influxdb-cluster-server，如果服务名冲突，请修改为其他名称。可通过服务名访问数据库。
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。

@@ -1,0 +1,74 @@
+_config:
+  _metadata:
+    name: redmine
+    version: 4.1.1
+    description: |
+      Redmine is a flexible project management web application. Written using the Ruby on Rails framework, it is cross-platform and cross-database.
+  controllers:
+  - containers:
+    - env:
+      - name: REDMINE_DB_MYSQL
+        value: mysql
+      - name: REDMINE_DB_PORT
+        value: '3306'
+      - name: REDMINE_DB_NAME
+        value: db
+      - name: REDMINE_DB_USERNAME
+        value: user
+      - name: REDMINE_DB_PASSWORD
+        value: password
+      - name: REDMINE_USERNAME
+        value: user
+      - name: REDMINE_PASSWORD
+        value: password
+      - name: REDMINE_EMAIL
+        value: user@example.com
+      - name: REDMINE_LANG
+        value: zh
+      mounts:
+      - name: data
+        path: /bitnami/redmine
+      command: []
+      args: []
+      imagePullPolicy: Always
+      image: cargo.caicloudprivatetest.com/library/redmine:4.1.1-debian-10-r80
+      resources:
+        limits:
+          cpu: '0.5'
+          memory: 512Mi
+        requests:
+          cpu: '0.25'
+          memory: 128Mi
+      ports:
+      - protocol: HTTP
+        port: 80
+      probe: {}
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 3000
+        port: 80
+        nodePort: 0
+      name: redmine-cluster
+      type: ClusterIP
+    volumes:
+    - storage:
+      limit: 10Gi
+      request: 10Gi
+    source: {}
+    type: Static
+    name: data
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: Deployment
+    controller:
+      replica: 3
+      strategy:
+        unavailable: 0
+        surge: 1

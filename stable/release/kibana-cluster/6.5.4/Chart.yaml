@@ -1,0 +1,4 @@
+name: kibana-cluster
+version: 6.5.4
+description: |
+  Kibana cluster is your high available window into the Elastic Stack. Specifically, it's a browser-based analytics and search dashboard for Elasticsearch.
