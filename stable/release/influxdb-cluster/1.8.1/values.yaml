@@ -1,7 +1,7 @@
 _config:
   _metadata:
     name: influxdb-cluster
-    version: 1.4.2
+    version: 1.8.1
     description: |
       InfluxData provides a high available Modern Time Series Platform, designed from the ground up to handle metrics and events. 
   controllers:

@@ -35,12 +35,6 @@ _config:
         value: config-server
       - name: GIT_URL
         value: ''
-      - name: SEARCH_PATH
-        value: ''
-      - name: USERNAME
-        value: ''
-      - name: PASSWORD
-        value: ''
       envFrom: []
       mounts: []
       command: []
