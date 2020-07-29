@@ -1,0 +1,4 @@
+name: memcached-cluster
+version: 1.6.6
+description: |
+  Free & open source, high-performance, distributed memory object caching.

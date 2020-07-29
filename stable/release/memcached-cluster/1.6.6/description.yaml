@@ -1,0 +1,22 @@
+name: Memcached-cluster 
+briefDesc: Memcached Cluster 是一套分布式的高速缓存系统
+desc: |
+  memcached cluster 是一套分布式的高速缓存系统，由 LiveJournal 的 Brad Fitzpatrick 开发，但目前被许多网站使用。
+  这是一套开放源代码软件，以 BSD license 授权发布。
+  memcached 缺乏认证以及安全管制，这代表应该将 memcached 服务器放置在防火墙后。
+  memcached 的 API 使用三十二比特的循环冗余校验（CRC-32）计算键值后，将数据分散在不同的机器上。
+  当表格满了以后，接下来新增的数据会以 LRU 机制替换掉。由于 memcached 通常只是当作缓存系统使用，
+  所以使用 memcached 的应用程序在写回较慢的系统时（像是后端的数据库）需要额外的代码更新memcached内的数据。
+introduce:
+  brief: |
+    基于 Memcached Bitnami 版本（Repo(https://github.com/bitnami/charts/blob/master/bitnami/memcached/README.md) - [Dockerfile](https://github.com/docker-library/memcached/blob/6af843ea5c1ada3cc711424c6a533292cca31a40/alpine/Dockerfile)）
+  howToUse: |
+    直接从模板部署出三个完整的 Memcached 应用，**需要配置存储**。
+  version: |
+    基于 Bitnami 1.6.6 稳定版本。
+  resources: |
+    没有最低配置的要求，资源配置视使用情况而定, CPU 占用较低，最好给足够的内存
+    推荐资源配置：CPU：1 Core，内存：4 GiB
+  service: |
+    默认使用集群内部 IP 暴露服务的 11211 端口
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。
