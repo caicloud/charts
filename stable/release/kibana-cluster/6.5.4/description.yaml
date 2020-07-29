@@ -1,0 +1,20 @@
+name: Kibana-Cluster 
+briefDesc: Kibana Cluster 能够对 Elasticsearch 中的数据进行高可用可视化操作，因此您可以在这里解开任何疑问。
+desc: |
+  Kibana 能够对 Elasticsearch 中的数据进行高可用可视化操作，因此您可以在这里解开任何疑问。
+introduce:
+  brief: |
+    基于 Kibana 社区版本（Repo(https://github.com/elastic/kibana-docker) - Dockerfile）
+  howToUse: |
+    直接从模板部署出三个完整的 Kibana 服务，不需要任何外部依赖。
+    通过环境变量 ELASTICSEARCH_URL 配置 Elasticsearch 服务器地址。
+    配置
+    更加详细的配置说明请看[自解释的配置](https://hub.helm.sh/charts/stable/kibana/1.1.2)
+  version: |
+    基于社区 6.5.4 稳定版本。
+  resources: |
+    最低资源要求：CPU：0.1 Core，内存：0.5 GiB
+    推荐资源配置：CPU：1 Core，内存：2 GiB
+  service: |
+    默认使用集群内部 IP 暴露服务的 5601 端口
+    如果要提供对外服务, 可以使用节点端口或者对接负载均衡来暴露服务。
