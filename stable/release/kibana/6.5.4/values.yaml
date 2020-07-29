@@ -25,7 +25,7 @@ _config:
       mounts: []
       env:
       - name: ELASTICSEARCH_URL
-        value: http://192.168.21.98:9200
+        value: http://elasticsearch:9200
       resources:
         requests:
           cpu: '0.1'
