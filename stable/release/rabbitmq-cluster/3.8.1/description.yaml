@@ -9,6 +9,7 @@ introduce:
     基于 RabbitMQ 社区版本（Repo(https://github.com/docker-library/rabbitmq) - [Dockerfile](https://github.com/docker-library/rabbitmq/blob/31a69457c8adbe0d7fe7e33afeaa95e4faf2b73e/3.7/alpine/Dockerfile)）
   howToUse: |
     直接从模板部署出一个完整的 RabbitMQ 应用，不需要任何外部依赖。
+    安装的时候是按照 pod 的启动顺序进行安装的，需要等待一段时间才能够正常使用。
     RabbitMQ 使用节点名（hostname）来存储数据，我们在应用内部使用了 `StatefulSet` 来启动多个副本，
     保证每次启动的 RabbitMQ hostname 都是固定的。
     **如何挂载数据**
