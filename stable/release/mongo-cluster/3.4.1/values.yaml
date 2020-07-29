@@ -29,7 +29,7 @@ _config:
         name: data
       command:
       args: []
-        imagePullPolicy: Always
+      imagePullPolicy: Always
       image: cargo.caicloudprivatetest.com/library/mongo:3.4.1-cluster
       resources:
         limits:

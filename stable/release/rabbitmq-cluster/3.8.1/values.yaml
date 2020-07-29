@@ -45,7 +45,7 @@ _config:
       image: cargo.caicloudprivatetest.com/library/rabbitmq:3.8.1-cluster
       resources:
         limits:
-          cpu: '2'
+          cpu: '1'
           memory: 2Gi
         requests:
           cpu: '2'
@@ -65,7 +65,7 @@ _config:
             type: EXEC
             method:
               command: ["rabbitmq-diagnostics", "status"]
-          delay: 20
+          delay: 60
           # See https://www.rabbitmq.com/monitoring.html for monitoring frequency recommendations.
           period: 60
           timeout: 10
