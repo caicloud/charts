@@ -1,0 +1,6 @@
+name: gitlab-ce-cluster
+version: 10.3.3
+description: |
+    GitLab is the leading integrated product for modern software development. 
+    Connecting issue management, version control, code review, CI, CD, 
+    and monitoring into a single, easy-to-install application.

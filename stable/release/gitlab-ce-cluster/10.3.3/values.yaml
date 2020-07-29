@@ -1,0 +1,102 @@
+_config:
+  _metadata:
+    name: gitlab-ce-cluster
+    version: 10.3.3
+    description: |
+      GitLab is the leading integrated product for modern software development. 
+      Connecting issue management, version control, code review, CI, CD, 
+      and monitoring into a single, easy-to-install application.
+  controllers:
+  - containers:
+    - env: []
+      mounts:
+      - name: log
+        path: "/var/log/gitlab"
+      - name: data
+        path: "/var/opt/gitlab"
+      command: []
+      args: []
+      image: cargo.caicloudprivatetest.com/library/gitlab-ce:10.3.3-ce.0
+      imagePullPolicy: Always
+      resources:
+        limits:
+          cpu: '2'
+          memory: 4Gi
+        requests:
+          cpu: '1'
+          memory: 2Gi
+      ports:
+      - protocol: HTTP
+        port: 80
+      - protocol: HTTPS
+        port: 443
+      - protocol: TCP
+        port: 22
+      probe:
+        liveness:
+          handler:
+            type: HTTP
+            method:
+              scheme: HTTP
+              path: "/help"
+              port: '80'
+          delay: 200
+          timeout: 10
+          period: 60
+          threshold:
+            success: 1
+            failure: 10
+        readiness:
+          handler:
+            type: HTTP
+            method:
+              scheme: HTTP
+              port: '80'
+              path: "/help"
+          delay: 30
+          timeout: 10
+          period: 60
+          threshold:
+            success: 1
+            failure: 10
+    services:
+    - ports:
+      - protocol: HTTP
+        targetPort: 80
+        port: 80
+        nodePort: 0
+      - protocol: HTTPS
+        targetPort: 443
+        port: 443
+        nodePort: 0
+      - protocol: TCP
+        targetPort: 22
+        port: 22
+        nodePort: 0
+      name: gitlab-cluster
+      type: ClusterIP
+    volumes:
+    - storage:
+        limit: 10Gi
+        request: 10Gi
+      type: Static
+      name: log
+    - storage:
+        limit: 10Gi
+        request: 10Gi
+      type: Static
+      name: data
+    pod:
+      restart: Always
+      dns: ClusterFirst
+      termination: 30
+      host:
+        network: false
+        pid: false
+        ipc: false
+    type: Deployment
+    controller:
+      replica: 3
+      strategy:
+        unavailable: 1
+        surge: 1
