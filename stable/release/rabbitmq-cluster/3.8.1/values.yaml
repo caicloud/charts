@@ -45,10 +45,10 @@ _config:
       image: cargo.caicloudprivatetest.com/library/rabbitmq:3.8.1-cluster
       resources:
         limits:
-          cpu: '1'
+          cpu: '2'
           memory: 2Gi
         requests:
-          cpu: '2'
+          cpu: '1'
           memory: 2Gi
       probe:
         liveness:
