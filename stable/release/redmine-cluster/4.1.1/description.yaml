@@ -7,6 +7,10 @@ introduce:
   howToUse: |
     Redmine 依赖 Mysql 数据库，因此在部署 Redmine 之前，需要先部署一个 Mysql 数据库。
     Redmine 配置的存储必须为支持多重写的存储（RWX）
+    **管理员信息**
+    账号： admin
+    密码： admin
+    请在首次登陆后修改管理员密码。
     **环境变量**
     - REDMINE_DB_MYSQL：Mysql 服务名。
     - REDMINE_DB_PORT：Mysql 服务端口，一般为 3306.

@@ -34,7 +34,7 @@ _config:
       - name: CONFIG_SERVER_NAME
         value: config-server-cluster
       - name: GIT_URL
-        value: ''
+        value: https://github.com/
       envFrom: []
       mounts: []
       command: []

@@ -11,6 +11,9 @@ introduce:
     **配置**
     InfluxDB 的配置路径为 Workdir 下的 `files/conf`，如果需要自定义 InfluxDB 的配置，请将配置挂载到该位置。
     InfluxDB 也提供了使用环境变量的方式设置配置，请参考[配置](https://docs.influxdata.com/influxdb/v1.4/administration/config/)。
+    **管理员信息**
+    账号： admin
+    密码： admin
   version: |
     基于 Bitnami InfluxDB 1.8.1 稳定版本。
   resources: |
