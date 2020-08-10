@@ -18,9 +18,9 @@ _config:
       - name: REDMINE_DB_PASSWORD
         value: password
       - name: REDMINE_USERNAME
-        value: user
+        value: admin
       - name: REDMINE_PASSWORD
-        value: password
+        value: admin
       - name: REDMINE_EMAIL
         value: user@example.com
       - name: REDMINE_LANG

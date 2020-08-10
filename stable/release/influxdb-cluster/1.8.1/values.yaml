@@ -16,7 +16,7 @@ _config:
       - name: INFLUXDB_ADMIN_USER
         value: admin
       - name: INFLUXDB_ADMIN_USER_PASSWORD
-        value: ''
+        value: admin
       mounts:
       - path: "/bitnami/influxdb"
         name: data
