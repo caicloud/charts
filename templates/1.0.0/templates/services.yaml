@@ -26,6 +26,7 @@ spec:
   selector:
     {{/* we do not add appLabels in selector to let service select all versions */}}
 {{/*    {{- include "controllerlabels" $controllerName | indent 4 }}*/}}
+    {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 4 }}
     {{- range $k, $v := .selector }}
     {{ $k | quote }}: {{ $v | quote }}
     {{- end }}
