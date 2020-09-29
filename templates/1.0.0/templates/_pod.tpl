@@ -8,6 +8,11 @@
 {{- with $controller.pod }}
 restartPolicy: {{ .restart | quote }}
 dnsPolicy: {{ .dns | quote }}
+dnsConfig:
+  nameservers:
+  {{- range .nameservers }}
+  - {{ . | quote }}
+  {{- end }}
 hostname: {{ .hostname | quote }}
 subdomain: {{ .subdomain | quote }}
 terminationGracePeriodSeconds: {{ .termination }}
