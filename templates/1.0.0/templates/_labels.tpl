@@ -3,8 +3,16 @@
 {{- define "releaselabels" -}}
 {{- $release := index . 0 -}}
 {{- $chart:= index . 1 }}
+{{- $project := index . 2 }}
+{{- $component := index . 3 }}
 "controller.caicloud.io/release": {{ $release | quote }}
 "controller.caicloud.io/chart": {{ $chart | quote }}
+{{- if $project }}
+"project.cmdb.caicloud.io/name": {{ $project | quote }}
+{{- end -}}
+{{- if $component }}
+"component.cmdb.caicloud.io/name": {{ $component | quote }}
+{{- end -}}
 {{- end -}}
 
 {{- define "controllerlabels" -}}
@@ -19,3 +27,4 @@
 "app": {{ $app | quote }}
 "version": {{ $version | quote }}
 {{- end -}}
+
