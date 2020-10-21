@@ -29,7 +29,7 @@ export APPLICATION_OUTPUT_DIR=./bin/application
 export APPLICATION_INPUT_DIR=./stable/application
 export TEMPLATES_DIR=./templates
 export TEMPLATE_VERSION="1.0.0"
-export IMAGE_DOMAIN=cargo.caicloudprivatetest.com
+export IMAGE_DOMAIN=cargo.dev.caicloud.xyz
 export FORCE_UPDATE=true
 
 build/charts/build.sh
