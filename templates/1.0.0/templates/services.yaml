@@ -18,7 +18,7 @@ metadata:
   name: {{ .name | quote }}
   labels:
     {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 4 }}
-    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
+    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name $metadata.project $metadata.component) | indent 4 }}
   annotations:
     {{- include "annotations" . | indent 4 }}
 spec:

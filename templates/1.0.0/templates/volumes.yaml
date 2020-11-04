@@ -3,6 +3,7 @@
 
 {{/* Creates pvc for storage class */}}
 {{- $g := . -}}
+{{- $metadata := $g.Values._config._metadata -}}
 {{- range $index, $controller := .Values._config.controllers -}}
 {{- $controllerName := include "onlyname" (list $g $index) | default (include "fullname" (list $g $index)) -}}
 {{- range $controller.volumes -}}
@@ -19,7 +20,7 @@ metadata:
   {{- end }}
   labels:
     "volume.caicloud.io/type" : {{ .type | quote }}
-    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
+    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name $metadata.project $metadata.component) | indent 4 }}
 spec:
   accessModes:
   {{- range .source.modes }}

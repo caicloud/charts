@@ -19,7 +19,7 @@ metadata:
   name: {{ $controllerName | quote }}
   labels:
     {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 4 }}
-    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 4 }}
+    {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name $metadata.project $metadata.component) | indent 4 }}
   annotations:
     {{- include "annotations" $controller.controller | indent 4 }}
 {{- with $controller }}
@@ -43,14 +43,14 @@ spec:
   selector:
     matchLabels:
       {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 6 }}
-      {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
+      {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name $metadata.project $metadata.component) | indent 6 }}
       {{- include "controllerlabels"  $controllerName | indent 6 }}
       {{- include "schelabels" $controller.schedule | indent 6 }}
   template:
     metadata:
       labels:
         {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 8 }}
-        {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
+        {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name $metadata.project $metadata.component) | indent 8 }}
         {{- include "controllerlabels"  $controllerName | indent 8 }}
         {{- include "schelabels" $controller.schedule | indent 8 }}
       annotations:

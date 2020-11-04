@@ -8,6 +8,8 @@ _config:
     revision: 1
     appVersion: v1
     class: Default
+    project: "cpt-gateway"
+    component: "route"
     template:
       type: "template.caicloud.io/application"
       version: 1.0.0
