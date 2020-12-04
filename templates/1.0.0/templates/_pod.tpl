@@ -38,6 +38,12 @@ hostAliases:
 {{- with .securityContext }}
 securityContext:
   runAsNonRoot: {{ .runAsNonRoot }}
+  {{- with .runAsGroup }}
+  runAsGroup: {{ . }}
+  {{- end}}
+  {{- with .runAsUser }}
+  runAsUser: {{ . }}
+  {{- end}}
 {{- end }}
 {{- end }}
 {{- with $controller.schedule }}
@@ -83,6 +89,12 @@ containers:
   {{- with .securityContext }}
   securityContext:
     privileged: {{ .privileged }}
+    {{- with .runAsUser }}
+    runAsUser: {{ . }}
+    {{- end}}
+    {{- with .runAsGroup }}
+    runAsGroup: {{ . }}
+    {{- end}}
     {{- with .capabilities }}
     capabilities:
       add: 
