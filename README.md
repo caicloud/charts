@@ -292,6 +292,8 @@ hostAliases:                           # 向容器组的 /etc/hosts 文件添加
     - string
 securityContext:
   runAsNonRoot: bool(false)            # 是否以非 root 用户运行
+  runAsUser: uint(0)                   # 启动用户
+  runAsGroup: uint(0)                  # 启动用户组                 
 annotations:                           # 容器组附加信息,仅用于保存容器组额外信息
   - key: string                        # 键
     value: string                      # 值
@@ -316,6 +318,8 @@ args:                                  # 即 Docker CMD
 workingDir: string("")                 # 工作目录
 securityContext:
   privileged: bool(false)              # 是否启动特权模式
+  runAsUser: uint(0)                   # 启动用户
+  runAsGroup: uint(0)                  # 启动用户组 
   capabilities:                        # POISX CAP
     add:                               # 添加 POISX CAP
     - string
