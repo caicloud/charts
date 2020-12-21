@@ -42,26 +42,28 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- if hasPrefix "canary-" $g.Release.Name }}
+      {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
+      {{- if hasPrefix "canary-" $g.Release.Name -}}
       {{- $realReleaseName := $g.Release.Name | trimPrefix "canary-" -}}
       {{- include "appLabels" (list $realReleaseName $metadata.appVersion) | indent 6 }}
-      {{- else}}
+      {{- include "controllerlabels" $realReleaseName | indent 6 }}
+      {{- else -}}
       {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 6 }}
-      {{- end}}
-      {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 6 }}
-      {{- include "controllerlabels"  $controllerName | indent 6 }}
+      {{- include "controllerlabels" $controllerName | indent 6 }}
+      {{- end -}}
       {{- include "schelabels" $controller.schedule | indent 6 }}
   template:
     metadata:
       labels:
+        {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
         {{- if hasPrefix "canary-" $g.Release.Name }}
         {{- $realReleaseName := $g.Release.Name | trimPrefix "canary-" -}}
         {{- include "appLabels" (list $realReleaseName $metadata.appVersion) | indent 8 }}
-        {{- else}}
+        {{- include "controllerlabels" $realReleaseName | indent 8 }}
+        {{- else -}}
         {{- include "appLabels" (list $g.Release.Name $metadata.appVersion) | indent 8 }}
-        {{- end}}
-        {{- include "releaselabels" (list $g.Release.Name $g.Chart.Name) | indent 8 }}
-        {{- include "controllerlabels"  $controllerName | indent 8 }}
+        {{- include "controllerlabels" $controllerName | indent 8 }}
+        {{- end -}}
         {{- include "schelabels" $controller.schedule | indent 8 }}
       annotations:
         {{- include "annotations" $controller.pod | indent 8 }}
