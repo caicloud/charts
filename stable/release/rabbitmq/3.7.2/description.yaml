@@ -1,16 +1,19 @@
 name: RabbitMQ
+tag:
+  - middleware
 briefDesc: RabbitMQ 是实现了高级消息队列协议的开源消息代理软件
 desc: |
   RabbitMQ是实现了高级消息队列协议（AMQP）的开源消息代理软件（亦称面向消息的中间件）。
   RabbitMQ服务器是用Erlang语言编写的，而群集和故障转移是构建在开放电信平台框架上的。
   所有主要的编程语言均有与代理接口通讯的客户端库。
+controllerType: StatefulSet
 introduce:
   brief: |
     基于 RabbitMQ 社区版本（Repo(https://github.com/docker-library/rabbitmq) - [Dockerfile](https://github.com/docker-library/rabbitmq/blob/31a69457c8adbe0d7fe7e33afeaa95e4faf2b73e/3.7/alpine/Dockerfile)）
   howToUse: |
-    直接从模板部署出一个完整的 RabbitMQ 应用，不需要任何外部依赖。
-    RabbitMQ 使用节点名（hostname）来存储数据，我们在应用内部使用了 `StatefulSet` 来启动多个副本，
-    保证每次启动的 RabbitMQ hostname 都是固定的。
+    直接从模板部署出一个完整的 RabbitMQ 服务，不需要任何外部依赖。
+    RabbitMQ 使用节点名（hostname）来存储数据，我们在服务内部使用了 `StatefulSet` 来启动多个副本，
+    保证每次启动的 RabbitMQ hostname 都是固定的
     **如何挂载数据**
     数据挂载在 `/var/lib/rabbitmq`
     database 路径 `/var/lib/rabbitmq/mnesia/rabbit@hostname`
@@ -20,7 +23,6 @@ introduce:
     **Erlang Cookie**
     节点之间使用 cookie（[关于 RabbitMQ 集群](https://www.rabbitmq.com/clustering.html#erlang-cookie)） 来判断是否通信，唯有 cookie 相同的节点之间才能通信。
     你可使用 `RABBITMQ_ERLANG_COOKIE` 来设置 RabbitMQ 实例的 cookie
-
   version: |
     基于社区 3.7.2 稳定版本。
   resources: |

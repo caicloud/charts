@@ -1,6 +1,9 @@
-name: influxdb
+name: InfluxDB
+tag:
+  - db
 briefDesc: InfluxDB 是一个开源的时序数据库
 desc: InfluxDB 是一个开源的时序数据库，专门用于处理高频读写请求。并且主要用于存储大量的时序数据，包括监控信息，应用指标数据，IoT 传感器数据等。
+controllerType: Deployment
 introduce:
   brief: |
     基于 InfluxDB 开源版本（[Repo](https://github.com/influxdata/influxdb) [Dockerfile](https://github.com/influxdata/influxdata-docker/blob/master/influxdb/1.4/Dockerfile)）

@@ -1,5 +1,7 @@
-name: zipkin
+name: Zipkin
 briefDesc: Zipkin 是一个分布式跟踪系统。
+tag:
+  - microservice
 desc: |
   跟踪器(Tracer)位于你的应用程序中，并记录发生的操作的时间和元数据,提供了相应的类库，对用户的使用来说是透明的，收集的跟踪数据称为Span;将数据发送到Zipkin的仪器化应用程序中的组件称为Reporter,Reporter通过几种传输方式之一将追踪数据发送到Zipkin收集器(collector)，然后将跟踪数据进行存储(storage),由API查询存储以向UI提供数据。
 introduce:

@@ -1,13 +1,16 @@
-name: zipkin
+name: Zipkin
 briefDesc: Zipkin 是一个分布式跟踪系统。
+tag:
+  - microservice
 desc: |
-  跟踪器(Tracer)位于你的应用程序中，并记录发生的操作的时间和元数据,提供了相应的类库，对用户的使用来说是透明的，收集的跟踪数据称为Span;将数据发送到Zipkin的仪器化应用程序中的组件称为Reporter,Reporter通过几种传输方式之一将追踪数据发送到Zipkin收集器(collector)，然后将跟踪数据进行存储(storage),由API查询存储以向UI提供数据。
+  跟踪器 (Tracer) 位于你的应用程序中，并记录发生的操作的时间和元数据，提供了相应的类库，对用户的使用来说是透明的，收集的跟踪数据称为 Span; 将数据发送到 Zipkin 的仪器化应用程序中的组件称为 Reporter,Reporter 通过几种传输方式之一将追踪数据发送到 Zipkin 收集器 (collector)，然后将跟踪数据进行存储 (storage), 由 API 查询存储以向 UI 提供数据。
+controllerType: Deployment
 introduce:
   brief: |
     基于官方 2.9.3 稳定版本。
     基于 Zipkin 开源版本（[Repo](https://github.com/openzipkin/zipkin) [Dockerfile](https://github.com/openzipkin/docker-zipkin/blob/2.9.3/zipkin/Dockerfile)）
   howToUse: |
-    直接从模版部署出一个完整的 Zipkin 应用，不需要任何外部依赖。
+    直接从模板部署出一个完整的 Zipkin 服务，不需要任何外部依赖。
   version: |
     基于官方 2.9.3 稳定版本。
   resources: |
@@ -15,5 +18,5 @@ introduce:
     推荐资源配置：CPU：2 Core，内存：4G
   service: |
     默认使用集群内部IP 暴露服务的 9411 端口。
-    默认服务名为zipkin，如果服务名冲突，请修改为其他名称。可通过服务名+端口访问Zipkin。
+    默认服务名为 zipkin，如果服务名冲突，请修改为其他名称。可通过服务名+端口访问 Zipkin。
     如果要提供对外服务, 可以使用对接负载均衡来暴露服务。

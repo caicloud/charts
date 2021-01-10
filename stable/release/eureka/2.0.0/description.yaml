@@ -1,16 +1,19 @@
-name: eureka
+name: Eureka
 briefDesc: Eureka 是一个开源的服务发现框架。
+tag:
+  - microservice
 desc: |
   Eureka 是 Netflix 开发的服务发现框架，本身是一个基于 REST 的服务，主要用于定位运行在 AWS 域中的中间层服务，以达到负载均衡和中间层服务故障转移的目的。SpringCloud 将它集成在其子项目 spring-cloud-netflix 中，以实现 SpringCloud 的服务发现功能。
+controllerType: Deployment
 introduce:
   brief: |
     Eureka 包含两个组件：Eureka Server 和 Eureka Client。
     Eureka Server 提供服务注册服务，各个节点启动后，会在 Eureka Server 中进行注册，这样 Eureka Server 中的服务注册表中将会存储所有可用服务节点的信息，服务节点的信息可以在界面中直观的看到。
-    Eureka Client 是一个 java 客户端，用于简化与 Eureka Server 的交互，客户端同时也就别一个内置的、使用轮询(round-robin)负载算法的负载均衡器。
-    在应用启动后，将会向 Eureka Server 发送心跳,默认周期为 30 秒，如果 Eureka Server 在多个心跳周期内没有接收到某个节点的心跳，Eureka Server 将会从服务注册表中把这个服务节点移除(默认 90 秒)。
+    Eureka Client 是一个 java 客户端，用于简化与 Eureka Server 的交互，客户端同时也就别一个内置的、使用轮询 (round-robin) 负载算法的负载均衡器。
+    在服务启动后，将会向 Eureka Server 发送心跳,默认周期为 30 秒，如果 Eureka Server 在多个心跳周期内没有接收到某个节点的心跳，Eureka Server 将会从服务注册表中把这个服务节点移除(默认 90 秒)。
     Eureka Server 之间通过复制的方式完成数据的同步，Eureka 还提供了客户端缓存机制，即使所有的 Eureka Server 都挂掉，客户端依然可以利用缓存中的信息消费其他服务的 API。综上，Eureka 通过心跳检查、客户端缓存等机制，确保了系统的高可用性、灵活性和可伸缩性。
   howToUse: |
-    直接从模版部署出一个完整的 Eureka 应用，不需要任何外部依赖。
+    直接从模板部署出一个完整的 Eureka 服务，不需要任何外部依赖。
     **环境变量**
     - EUREKA_PORT：容器内端口。
     - EUREKA_HOST_NAME：主机名称。

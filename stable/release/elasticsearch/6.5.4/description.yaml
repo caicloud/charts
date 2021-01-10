@@ -7,10 +7,10 @@ introduce:
     基于 Elasticsearch 社区版本（Repo(https://github.com/elastic/elasticsearch-docker) - Dockerfile）
   howToUse: |
     直接从模板部署出一个完整的 Elasticsearch 服务，不需要任何外部依赖。
-    如何挂载数据
+    如何挂载数据：
     数据挂载在 /usr/share/elasticsearch/data
     配置挂载在 /usr/share/elasticsearch/config/elasticsearch.yml
-    配置
+    配置：
     更加详细的配置说明请看[自解释的配置](https://hub.helm.sh/charts/stable/elasticsearch/1.15.4)
   version: |
     基于社区 6.5.4 稳定版本。

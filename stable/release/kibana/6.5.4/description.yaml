@@ -1,4 +1,4 @@
-name: Kibana 
+name: Kibana
 briefDesc: Kibana 能够对 Elasticsearch 中的数据进行可视化操作，因此您可以在这里解开任何疑问。
 desc: |
   Kibana 能够对 Elasticsearch 中的数据进行可视化操作，因此您可以在这里解开任何疑问。
@@ -8,7 +8,7 @@ introduce:
   howToUse: |
     直接从模板部署出一个完整的 Kibana 服务，不需要任何外部依赖。
     通过环境变量 ELASTICSEARCH_URL 配置 Elasticsearch 服务器地址。
-    配置
+    配置：
     更加详细的配置说明请看[自解释的配置](https://hub.helm.sh/charts/stable/kibana/1.1.2)
   version: |
     基于社区 6.5.4 稳定版本。
