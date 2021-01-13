@@ -1,6 +1,9 @@
-name: redmine
+name: Redmine
+tag:
+  - tool
 briefDesc: Redmine 是一个基于 Web 的项目管理工具
 desc: Redmine 是一个开源的基于 Web 的项目管理和问题跟踪的工具。它让用户能够同时管理多个项目和子项目，每个项目都有 wiki，论坛，时间跟踪，以及基于角色的权限管理。Redmine 也集成了多种版本控制系统以查看项目源码。
+controllerType: Deployment
 introduce:
   brief: |
     基于 Redmine 开源版本（[Repo](https://github.com/redmine/redmine) [Dockerfile](https://github.com/docker-library/redmine/blob/master/3.4/Dockerfile)）

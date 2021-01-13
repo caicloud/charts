@@ -1,6 +1,9 @@
-name: mongo
+name: Mongo
+tag:
+  - db
 briefDesc: MongoDB 是一个开源的 NoSQL 数据库
 desc: MongoDB 是一个开源的面向文档的数据库系统。MongoDB 使用类似 JSON 格式的文档规范，提供了较高的扩展性和灵活性。
+controllerType: Deployment
 introduce:
   brief: |
     基于 MongoDB 开源版本（[Repo](https://github.com/mongodb/mongo) [Dockerfile](https://github.com/docker-library/mongo/blob/master/3.6/Dockerfile)）

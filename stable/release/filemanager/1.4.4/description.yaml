@@ -1,11 +1,14 @@
-name: filemanager
+name: File Manager
+tag:
+  - tool
 briefDesc: File Manager 是一个文件管理系统
 desc: File Manager 提供管理指定目录的 Web UI 界面。支持上传，下载，修改，删除，预览，重命名等功能。同时支持多个用户，并且每个用户可以拥有自己的目录。
+controllerType: Deployment
 introduce:
   brief: |
     基于 File Manager 开源版本（[Repo](https://github.com/hacdias/filemanager) [Dockerfile](https://github.com/hacdias/filemanager/blob/master/Dockerfile)）
   howToUse: |
-    直接从模板部署出一个完整的 File Manager 应用，不需要任何外部依赖。
+    直接从模板部署出一个完整的 File Manager 服务，不需要任何外部依赖。
     File Manager 拥有 Web UI，可通过 UI 登陆并管理文件。
     **管理员信息**
     账号： admin

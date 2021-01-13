@@ -1,25 +1,28 @@
-name: mysql
-briefDesc: Mysql 是一个开源的关系型数据库管理系统
-desc: Mysql 是一个开源的基于 SQL 的关系型数据库系统。Mysql 具有多种数据库引擎，用户可以根据不同的业务需求进行选择。
+name: MySQL
+tag:
+  - db
+briefDesc: MySQL 是一个开源的关系型数据库管理系统
+desc: MySQL 是一个开源的基于 SQL 的关系型数据库系统。MySQL 具有多种数据库引擎，用户可以根据不同的业务需求进行选择。
+controllerType: Deployment
 introduce:
   brief: |
-    基于 Mysql 开源版本（[Repo](https://github.com/mysql/mysql-server) [Dockerfile](https://github.com/docker-library/mysql/blob/master/5.7/Dockerfile)）
+    基于 MySQL 开源版本（[Repo](https://github.com/mysql/mysql-server) [Dockerfile](https://github.com/docker-library/mysql/blob/master/5.7/Dockerfile)）
   howToUse: |
-    直接从模板部署出一个完整的 Mysql 数据库，不需要任何外部依赖。
+    直接从模板部署出一个完整的 MySQL 数据库，不需要任何外部依赖。
     **环境变量**
-    - MYSQL_ROOT_PASSWORD：Mysql root 用户密码。
+    - MYSQL_ROOT_PASSWORD：MySQL root 用户密码。
     - MYSQL_DATABASE：数据库初始化时默认创建的数据库。
     - MYSQL_USER：数据库初始化时默认创建的用户。
     - MYSQL_PASSWORD：数据库初始化时默认创建的用户密码。
     其中 MYSQL_DATABASE，MYSQL_USER，MYSQL_PASSWORD 三项可不填写。不填则默认不创建数据库和新用户。
     **如何挂载数据**
-    Mysql 的所有数据都挂载在 `/var/lib/mysql`. 默认使用的是临时数据卷，如果需要持久化文件数据，请挂载其他类型的数据卷。
+    MySQL 的所有数据都挂载在 `/var/lib/mysql`. 默认使用的是临时数据卷，如果需要持久化文件数据，请挂载其他类型的数据卷。
     **配置**
-    Mysql 的配置在 `/etc/mysql` 目录中，如果需要自定义 Mysql 的配置，请将配置挂载到该目录中。
+    MySQL 的配置在 `/etc/mysql` 目录中，如果需要自定义 Mysql 的配置，请将配置挂载到该目录中。
     **关于扩容**
     目前不支持扩容。请不要增加副本数量。如果需要使用 Mysql 集群，请使用 Galera。
   version: |
-    基于社区 Mysql 5.7.20 稳定版本。
+    基于社区 MySQL 5.7.20 稳定版本。
   resources: |
     最低资源要求：CPU：0.25 Core，内存：512 MiB
     推荐资源配置：CPU：1 Core，内存：1 GiB

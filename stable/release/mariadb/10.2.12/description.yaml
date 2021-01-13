@@ -1,6 +1,9 @@
-name: mariadb
+name: MariaDB
+tag:
+  - db
 briefDesc: MariaDB 是一个开源的关系型数据库管理系统
 desc: MariaDB 是一个开源的基于 SQL 的关系型数据库系统。MariaDB 是 Mysql 的一个分支，由社区维护。MariaDB 兼容 Mysql 5.5 及以前的所有特性，与 Mysql 后续版本特性可能不兼容。
+controllerType: Deployment
 introduce:
   brief: |
     基于 MariaDB 开源版本（[Repo](https://github.com/MariaDB/server) [Dockerfile](https://github.com/docker-library/mariadb/blob/master/10.2/Dockerfile)）

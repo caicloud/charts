@@ -65,6 +65,7 @@ function packChart() {
       tar -czf $output/chart.tgz -C $versionPath .
       cat $versionPath/Chart.yaml | ruby -ryaml -rjson -e 'puts JSON.generate(YAML.load(ARGF))' >$output/metadata.dat
       cat $versionPath/values.yaml | ruby -ryaml -rjson -e 'puts JSON.generate(YAML.load(ARGF))' >$output/values.dat
+      cat $versionPath/description.yaml | ruby -ryaml -rjson -e 'puts JSON.generate(YAML.load(ARGF))' >$output/description.dat
       echo -n "SUCCESS" >$output/.status
 
       echo "Packed $chart-$version.tgz"

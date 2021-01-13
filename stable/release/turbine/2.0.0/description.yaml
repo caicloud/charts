@@ -1,14 +1,16 @@
-name: turbine
-briefDesc: 
-  Turbine 来对服务的 Hystrix 数据进行聚合展示。
+name: Turbine
+briefDesc: Turbine 来对服务的 Hystrix 数据进行聚合展示。
+tag:
+  - microservice
 desc: |
-  Turbine是聚合服务器发送事件流数据的一个工具，Hystrix的监控中，只能监控单个节点，实际生产中都为集群，因此可以通过Turbine来监控集群下Hystrix的metrics情况。
+  Turbine 是聚合服务器发送事件流数据的一个工具，Hystrix 的监控中，只能监控单个节点，实际生产中都为集群，因此可以通过 Turbine 来监控集群下 Hystrix 的 metrics 情况。
+controllerType: Deployment
 introduce:
   brief: |
-    在复杂的分布式系统中，相同服务的节点经常需要部署上百甚至上千个，很多时候，运维人员希望能够把相同服务的节点状态以一个整体集群的形式展现出来，这样可以更好的把握整个系统的状态。 
-    为此，Netflix提供了一个开源项目（Turbine）来提供把多个hystrix.stream的内容聚合为一个数据源供Dashboard展示。
+    在复杂的分布式系统中，相同服务的节点经常需要部署上百甚至上千个，很多时候，运维人员希望能够把相同服务的节点状态以一个整体集群的形式展现出来，这样可以更好的把握整个系统的状态。
+    为此，Netflix 提供了一个开源项目（Turbine）来提供把多个 hystrix.stream 的内容聚合为一个数据源供 Dashboard 展示。
   howToUse: |
-    直接从模版部署出一个完整的 turbine 应用，需要eureka服务。
+    直接从模板部署出一个完整的 Turbine 服务，需要 Eureka 服务。
     **环境变量**
     - TURBINE_PORT：容器内端口。
     - TURBINE_NAME：主机名称。
@@ -21,7 +23,7 @@ introduce:
   resources: |
     最低资源要求：CPU: 1 Core，内存：1G。
     推荐资源配置：CPU: 2 Core，内存：4G。
-    turbine 对资源较高，如果资源分配不足，可能导致启动失败。
+    Turbine 对资源较高，如果资源分配不足，可能导致启动失败。
   service: |
     默认使用集群内部 IP 暴露服务的 8761 端口。
     默认服务名为 turbine-server ，如果服务名冲突，请修改为其他名称。可通过服务名 + 端口访问 turbine-server。

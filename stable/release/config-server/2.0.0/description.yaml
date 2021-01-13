@@ -1,8 +1,10 @@
-name: config-server
-briefDesc: 
-  Config Server 是 Spring Cloud 架构中的一套用于配置管理的组件。
+name: Config Server
+briefDesc: 提供一种基于客户端与服务端（C/S）模式的分布式的配置管理。
+tag:
+  - microservice
 desc: |
-  Spring Cloud Config 提供一种基于客户端与服务端（C/S）模式的分布式的配置管理。可以把配置管理在应用之外（config server 端），并且可以在外部对配置进行不同环境的管理，比如开发/测试/生产环境隔离，并且还能够做到实时更新配置。
+  Spring Cloud Config 提供一种基于客户端与服务端（C/S）模式的分布式的配置管理。可以在外部对配置进行不同环境的管理，比如开发 / 测试 / 生产环境隔离，并且还能够做到实时更新配置。
+controllerType: Deployment
 introduce:
   brief: |
     拉取配置时更新 git 仓库副本，保证是最新结果。
@@ -11,7 +13,7 @@ introduce:
     配置存储基于 git 仓库，可进行版本管理。
     简单可靠，有丰富的配套方案。
   howToUse: |
-    直接从模版部署出一个完整的 config-server 应用，需要配置仓库地址。
+    直接从模板部署出一个完整的 config-server 服务，需要配置仓库地址。
     **环境变量**
     - CONFIG_SERVER_PORT：容器内端口。
     - CONFIG_SERVER_NAME：主机名称。
