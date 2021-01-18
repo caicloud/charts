@@ -29,7 +29,7 @@ _config:
       resources:
         requests:
           cpu: '0.1'
-          memory: 0.5Gi
+          memory: 512Mi
         limits:
           cpu: '1'
           memory: 2Gi
