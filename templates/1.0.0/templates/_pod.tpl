@@ -4,15 +4,25 @@
 {{- define "podspec" -}}
 {{- $controller := index . 0 -}}
 {{- $name := index . 1 -}}
+{{- $namespace := index . 2 -}}
 
 {{- with $controller.pod }}
 restartPolicy: {{ .restart | quote }}
 dnsPolicy: {{ .dns | quote }}
+{{- if eq .dns "None" }}
 dnsConfig:
-    nameservers:
-    {{- range .nameservers }}
-      - {{ . }}
-    {{- end }}
+  nameservers:
+  {{- range .nameservers }}
+    - {{ . }}
+  {{- end }}
+  searches:
+    - {{ $namespace }}.svc.cluster.local
+    - svc.cluster.local
+    - cluster.local
+  options:
+    - name: ndots
+      value: "5"
+{{- end }}
 hostname: {{ .hostname | quote }}
 subdomain: {{ .subdomain | quote }}
 terminationGracePeriodSeconds: {{ .termination }}
