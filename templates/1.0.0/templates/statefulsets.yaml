@@ -73,7 +73,7 @@ spec:
       annotations:
         {{- include "annotations" $controller.pod | indent 8 }}
     spec:
-    {{- include "podspec" (list $controller $controllerName) | indent 6 }}
+    {{- include "podspec" (list $controller $controllerName $g.Release.Namespace) | indent 6 }}
   volumeClaimTemplates:
   {{- include "dedicated" (list $g $controllerName $controller.volumes) | indent 2 }}
 ---
